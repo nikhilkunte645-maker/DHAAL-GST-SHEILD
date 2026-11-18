@@ -88,7 +88,7 @@ flowchart TD
 
 ---
 
-## 💻 Tech Stack
+## ✨ Core Features & Workflow
 
 | Layer | Technologies |
 | :--- | :--- |
