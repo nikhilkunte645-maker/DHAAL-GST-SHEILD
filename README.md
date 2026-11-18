@@ -1,4 +1,4 @@
-![Dhaal Banner](docs/screenshots/DHAAL-github-header.png)
+![Dhaal Banner](docs/screenshots/DHAAL-github-header.jpg)
 
 # Dhaal (ढाल) — GST Scrutiny Notice Shield (Form ASMT-10)
 
@@ -196,4 +196,5 @@ python -m pytest backend/tests -v
 ## ⚖️ Legal Disclaimer
 
 *Dhaal is an assistive compliance drafting aid designed for pre-submission analysis by businesses and Chartered Accountants. It does not file any documents with the GST Common Portal and does not constitute formal legal counsel.*
+
 
