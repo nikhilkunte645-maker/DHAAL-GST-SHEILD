@@ -35,6 +35,9 @@
     "vitest": "^1.5.2"
   },
   "allowScripts": {
+    "core-js": true,
+    "esbuild": true,
+    "puppeteer": true,
     "core-js@3.51.0": true,
     "esbuild@0.21.5": true,
     "puppeteer@25.18.1": true
