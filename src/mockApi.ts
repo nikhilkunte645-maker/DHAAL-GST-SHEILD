@@ -14,7 +14,7 @@ interface CustomImportMeta {
 export const API_BASE_URL =
   (typeof import.meta !== 'undefined' &&
     (import.meta as unknown as CustomImportMeta)?.env?.VITE_API_BASE_URL) ||
-  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8001' : '');
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8001' : '/api');
 
 // 4. Zero Type Mismatches - Strict Pydantic Model Equivalents
 export interface NoticeMetadata {
