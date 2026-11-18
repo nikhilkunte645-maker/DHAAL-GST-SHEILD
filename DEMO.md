@@ -2,7 +2,8 @@
 
 > **Target Audience:** Hackathon Judges, FinTech Mentors & Compliance Evaluators  
 > **Total Time:** Exactly 3 Minutes (180 Seconds)  
-> **Key Value Proposition:** Transforming GST notice anxiety into an audit-ready CA brief with mathematical certainty, zero hallucinations, and human-in-the-loop safety.
+> **Key Value Proposition:** Transforming GST notice anxiety into an audit-ready CA brief with mathematical certainty, zero hallucinations, and human-in-the-loop safety.  
+> **Live Production App:** [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)
 
 ---
 
