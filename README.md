@@ -196,3 +196,4 @@ python -m pytest backend/tests -v
 ## ⚖️ Legal Disclaimer
 
 *Dhaal is an assistive compliance drafting aid designed for pre-submission analysis by businesses and Chartered Accountants. It does not file any documents with the GST Common Portal and does not constitute formal legal counsel.*
+
