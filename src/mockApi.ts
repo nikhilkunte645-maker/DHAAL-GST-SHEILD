@@ -86,7 +86,7 @@ export interface BriefGenerateResponse {
 }
 
 // Offline fallback data (retained only if server is physically unreachable)
-const FALLBACK_NOTICE: NoticeMetadata = {
+export const FALLBACK_NOTICE: NoticeMetadata = {
   notice_id: 'ZA270525008912M',
   section: '61',
   tax_period: 'Apr-Jun 2024',
@@ -176,13 +176,20 @@ export const dhaalApi = {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Server responded with HTTP ${res.status}`);
+        const msg = errorData.message || errorData.detail || errorData.error || `Server responded with HTTP ${res.status}`;
+        const err = new Error(msg);
+        (err as unknown as { status: number }).status = res.status;
+        throw err;
       }
 
       const data: NoticeMetadata = await res.json();
       console.log(`[Dhaal API] Live notice extracted via ${API_BASE_URL}/api/notice/upload:`, data);
       return data;
     } catch (err: unknown) {
+      // Re-throw server errors (400, 413, 422) so the UI can display the message to the user
+      if (err instanceof Error && 'status' in err) {
+        throw err;
+      }
       const errorMsg = err instanceof Error ? err.message : String(err);
       console.warn(`[Dhaal API] Live upload unreachable at ${API_BASE_URL}/api/notice/upload (${errorMsg}). Using offline fallback.`);
       return FALLBACK_NOTICE;

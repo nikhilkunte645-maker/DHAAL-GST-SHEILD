@@ -218,7 +218,9 @@ def health_check():
         "disclaimer": "Statutory Drafting aid for professional review. Not legal advice. Nothing is filed."
     }
 
-def extract_notice_metadata_from_pdf(file_bytes: bytes, filename: str = "") -> NoticeMetadata:
+MAX_FILE_SIZE = 4 * 1024 * 1024  # 4 MB (Vercel serverless request limit is 4.5 MB)
+
+def extract_notice_metadata_from_pdf(file_bytes: bytes, filename: str = "", pre_extracted_text: str = "") -> NoticeMetadata:
     """
     Physical PDF text extraction with regex parsing for:
     - Assessee GSTIN
@@ -226,10 +228,10 @@ def extract_notice_metadata_from_pdf(file_bytes: bytes, filename: str = "") -> N
     - Tax Period
     - Discrepancy Amount
     - Notice ID / Reference
-    Falls back gracefully to canonical case data if text is unparsed or smudged.
+    Falls back gracefully to canonical case data if specific regex fields are unparsed.
     """
-    extracted_text = ""
-    if pypdf and len(file_bytes) > 0:
+    extracted_text = pre_extracted_text
+    if not extracted_text and pypdf and len(file_bytes) > 0:
         try:
             reader = pypdf.PdfReader(io.BytesIO(file_bytes))
             for page in reader.pages:
@@ -321,43 +323,116 @@ def extract_notice_metadata_from_pdf(file_bytes: bytes, filename: str = "") -> N
         gstin=gstin
     )
 
-@app.post("/api/notice/upload", response_model=NoticeMetadata)
+@app.post("/api/notice/upload")
 async def upload_notice_metadata(file: UploadFile = File(...)):
-    if not file.filename:
-        raise HTTPException(status_code=400, detail="Invalid file.")
+    """
+    Physical PDF text extraction with strict input validation:
+    - 400 Bad Request: missing filename, empty file, non-PDF or missing %PDF magic bytes
+    - 413 Payload Too Large: file > 4 MB (fits Vercel's 4.5 MB request limit)
+    - 422 Unprocessable Entity: unreadable/corrupt PDF structure or image-only PDF with no text layer
+    Returns NoticeMetadata on success. Never crashes with unhandled 500.
+    """
+    if not file.filename or len(file.filename.strip()) == 0:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "error": "INVALID_FILENAME",
+                "message": "File name is required. Please select a valid document."
+            }
+        )
 
     try:
         file_bytes = await file.read()
-        is_pdf = file.filename.lower().endswith(".pdf") or file_bytes.startswith(b"%PDF")
-        
-        if is_pdf and len(file_bytes) > 0:
-            metadata = extract_notice_metadata_from_pdf(file_bytes, file.filename)
-            logger.info(f"Dynamically parsed metadata: notice_id={metadata.notice_id}, amount={metadata.discrepancy_amount}")
-            return metadata
-        else:
-            # Non-PDF or empty payload: return canonical fallback
-            return NoticeMetadata(
-                notice_id="ZA270525008912M",
-                section="61",
-                tax_period="Apr-Jun 2024",
-                discrepancy_amount=184250,
-                notice_date="2025-05-14",
-                reply_deadline="2025-06-13",
-                assessee_name="M/s Sharma Garments",
-                gstin="27XXXXX1234X1ZX"
+
+        # 1. Size checks
+        if len(file_bytes) == 0:
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={
+                    "error": "EMPTY_FILE",
+                    "message": "Uploaded file is empty (0 bytes). Please upload a valid PDF notice."
+                }
             )
+
+        if len(file_bytes) > MAX_FILE_SIZE:
+            return JSONResponse(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                content={
+                    "error": "FILE_TOO_LARGE",
+                    "message": "File size exceeds the 4 MB limit for serverless upload. Please upload a smaller PDF."
+                }
+            )
+
+        # 2. File type and magic bytes validation
+        is_pdf_ext = file.filename.lower().endswith(".pdf")
+        has_pdf_magic = file_bytes.startswith(b"%PDF")
+        if not (is_pdf_ext and has_pdf_magic):
+            return JSONResponse(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                content={
+                    "error": "INVALID_FILE_TYPE",
+                    "message": "Invalid file format. Only valid PDF files starting with %PDF magic header are accepted."
+                }
+            )
+
+        # 3. PDF extraction & readability check
+        extracted_text = ""
+        pypdf_failed = False
+        if pypdf:
+            try:
+                reader = pypdf.PdfReader(io.BytesIO(file_bytes))
+                for page in reader.pages:
+                    txt = page.extract_text()
+                    if txt:
+                        extracted_text += "\n" + txt
+            except Exception as pdf_err:
+                logger.warning(f"pypdf reader encountered an issue on {file.filename}: {pdf_err}")
+                pypdf_failed = True
+
+        # Direct stream fallback for raw text embedded in streams or mock payloads
+        if len(extracted_text.strip()) < 10:
+            try:
+                raw_text = file_bytes.decode("utf-8", errors="ignore")
+                printable = re.sub(r"[^\x20-\x7E\n\r\t]", " ", raw_text)
+                pdf_syntax_words = {"pdf", "obj", "endobj", "type", "catalog", "pages", "page", "count", "kids", "trailer", "xref", "startxref", "stream", "endstream"}
+                content_words = [w for w in re.findall(r"[A-Za-z0-9]{2,}", printable) if w.lower() not in pdf_syntax_words]
+                if len(" ".join(content_words)) >= 10:
+                    extracted_text += "\n" + printable
+            except Exception:
+                pass
+
+        # If pypdf failed AND no text could be recovered from stream
+        if pypdf_failed and len(extracted_text.strip()) < 10:
+            return JSONResponse(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                content={
+                    "error": "CORRUPT_PDF",
+                    "message": "Unable to read PDF structure. The file may be corrupt or encrypted."
+                }
+            )
+
+        # 4. Image-only PDF check (no extractable text layer)
+        if len(extracted_text.strip()) < 10:
+            return JSONResponse(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                content={
+                    "error": "NO_TEXT_LAYER",
+                    "message": "The uploaded PDF appears to be an image-only scan with no text layer. Please upload a text-searchable PDF notice."
+                }
+            )
+
+        metadata = extract_notice_metadata_from_pdf(file_bytes, file.filename, pre_extracted_text=extracted_text)
+        logger.info(f"Dynamically parsed metadata: notice_id={metadata.notice_id}, amount={metadata.discrepancy_amount}")
+        return metadata.model_dump() if hasattr(metadata, "model_dump") else metadata.dict()
+
     except Exception as exc:
         logger.error(f"Error parsing notice upload: {exc}", exc_info=True)
-        # Graceful fallback to deterministic dummy data
-        return NoticeMetadata(
-            notice_id="ZA270525008912M",
-            section="61",
-            tax_period="Apr-Jun 2024",
-            discrepancy_amount=184250,
-            notice_date="2025-05-14",
-            reply_deadline="2025-06-13",
-            assessee_name="M/s Sharma Garments",
-            gstin="27XXXXX1234X1ZX"
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content={
+                "error": "PARSE_ERROR",
+                "message": f"Could not parse notice details: {str(exc)}"
+            }
         )
 
 @app.post("/api/verify/draft", response_model=DraftVerifyResponse)
