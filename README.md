@@ -1,4 +1,6 @@
-![Dhaal Banner](docs/screenshots/DHAAL-github-header.jpg)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nikhilkunte645-maker/DHAAL-GST-SHEILD/main/docs/screenshots/DHAAL-github-header.jpg" alt="Dhaal Banner" width="100%">
+</p>
 
 # Dhaal (ढाल) - GST Scrutiny Notice Shield (Form ASMT-10)
 
@@ -9,7 +11,7 @@ Dhaal is an AI-powered full-stack web application designed to help businesses an
 ---
 
 ## 🚀 Live Production URL & Demo
-* **Official Live Application:** [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)[cite: 6]
+* **Official Live Application:** [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)
 * **Judges' Walkthrough Guide:** [🎯 3-Minute Hackathon Demo Script](./DEMO.md)
 
 ---
