@@ -87,6 +87,18 @@ export const App: React.FC = () => {
           {step === 5 && <Screen5DraftVerifier />}
           {step === 6 && <Screen6CaReadyBrief />}
         </main>
+
+        {/* Statutory Footer & In-Memory Privacy Notice */}
+        <footer className="mt-auto py-5 px-4 sm:px-6 lg:px-8 border-t border-[#E3E8F0] bg-white text-center text-xs text-[#5B6B82] no-print">
+          <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="font-medium text-[#0B1F3A]">
+              Drafting aid. Final review and submission by a Chartered Accountant required.
+            </span>
+            <span className="text-[11px] text-[#5B6B82]">
+              Privacy Notice: All notices are processed entirely in-memory. No documents, logs, or taxpayer records are saved or retained.
+            </span>
+          </div>
+        </footer>
       </div>
 
       {/* Mobile Sticky Bottom Action Bar */}

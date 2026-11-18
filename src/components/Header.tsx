@@ -46,9 +46,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenHelp }) =
         <span className="font-mono text-[11px] uppercase tracking-wider font-medium">
           Statutory Drafting aid for professional review. Not legal advice. Nothing is filed.
         </span>
-        <span className="hidden md:inline-block text-[10px] bg-white/10 px-1.5 py-0.2 rounded text-[#cbdbf6]">
-          Synthetic demo data
-        </span>
+        {(isDemoMode || !apiOnline) && (
+          <span className="inline-flex items-center gap-1 text-[10px] bg-[#FEF3C7] text-[#92400E] font-bold px-2 py-0.5 rounded border border-[#FDE68A]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D97706]"></span>
+            Demo data
+          </span>
+        )}
       </div>
 
       <div className="h-16 px-4 md:px-6 flex items-center justify-between gap-3">
@@ -92,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenHelp }) =
                 !isDemoMode && apiOnline ? 'bg-[#12805C] animate-pulse' : 'bg-[#F59E0B]'
               }`}
             ></span>
-            <span>{!isDemoMode && apiOnline ? 'Live API :8001' : !isDemoMode ? 'API Offline (Fallback)' : 'Demo Mode'}</span>
+            <span>{!isDemoMode && apiOnline ? 'Live API :8001' : !isDemoMode ? 'API Offline (Demo data)' : 'Demo Mode'}</span>
           </button>
         </div>
 

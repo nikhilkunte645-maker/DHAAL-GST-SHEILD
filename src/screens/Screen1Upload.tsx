@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDhaalStore } from '../store/useDhaalStore';
 import { I18N } from '../data/i18n';
 import { CANONICAL_DEMO_CASE } from '../data/demoCase';
-import { dhaalApi } from '../mockApi';
+import { dhaalApi, FALLBACK_NOTICE } from '../mockApi';
 
 export const Screen1Upload: React.FC = () => {
   const {
@@ -75,6 +75,9 @@ export const Screen1Upload: React.FC = () => {
       })
       .catch((err) => {
         console.error('[Dhaal API] Upload failed:', err);
+        const errorMsg = err instanceof Error ? err.message : 'Upload failed. Please check the file.';
+        setFileValidationError(errorMsg);
+        setUploadError('unreadable');
       });
   };
 
@@ -100,8 +103,12 @@ export const Screen1Upload: React.FC = () => {
   };
 
   const handleLoadSample = () => {
+    setFileValidationError(null);
     startUpload('FORM_GST_ASMT-10.pdf');
-    const sampleBlob = new Blob(['%PDF-1.4 Mock GST Notice Scan Content'], { type: 'application/pdf' });
+    const sampleBlob = new Blob(
+      ['%PDF-1.4\nForm GST ASMT-10 Notice Reference ZA270525008912M GSTIN 27XXXXX1234X1ZX Discrepancy Amount Rs. 1,84,250 Period Apr-Jun 2024 Section 61\n%%EOF'],
+      { type: 'application/pdf' }
+    );
     dhaalApi
       .uploadNotice(sampleBlob, 'FORM_GST_ASMT-10.pdf')
       .then((metadata) => {
@@ -109,7 +116,9 @@ export const Screen1Upload: React.FC = () => {
         console.log('[Dhaal API] Sample Notice Metadata from FastAPI:', metadata);
       })
       .catch((err) => {
-        console.error('[Dhaal API] Sample upload failed:', err);
+        console.warn('[Dhaal API] Sample upload falling back to local demo case:', err);
+        setUploadedNotice(FALLBACK_NOTICE);
+        setUploadProgress(100);
       });
   };
 
@@ -183,9 +192,9 @@ export const Screen1Upload: React.FC = () => {
               className="inline-flex items-center gap-2 px-5 py-3.5 rounded-control bg-white hover:bg-[#EFF4FF] text-[#0F172A] text-xs font-semibold transition-all border border-[#E3E8F0] shadow-sm hover:border-[#2B4C9B]"
             >
               <span className="material-symbols-outlined text-base text-[#2B4C9B]">description</span>
-              <span>{t.trySampleCta}</span>
-              <span className="px-1.5 py-0.5 rounded bg-[#EFF4FF] text-[#5B6B82] font-mono text-[10px]">
-                PDF 1.4MB
+              <span>Try with sample notice</span>
+              <span className="px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] font-mono text-[10px] font-bold border border-[#FDE68A]">
+                Sample data
               </span>
             </button>
           </div>
@@ -441,7 +450,10 @@ export const Screen1Upload: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-control bg-[#EFF4FF] hover:bg-[#DCE9FF] text-[#0B1F3A] text-xs font-semibold transition-colors border border-[#CBD5E1] shadow-2xs"
           >
             <span className="material-symbols-outlined text-base text-[#2B4C9B]">bolt</span>
-            <span>Quick Test: Load Sample ASMT-10 Notice</span>
+            <span>Try with sample notice</span>
+            <span className="px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] font-mono text-[10px] font-bold border border-[#FDE68A]">
+              Sample data
+            </span>
           </button>
         </div>
 
