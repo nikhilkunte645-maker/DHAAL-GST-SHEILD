@@ -1,4 +1,6 @@
-![Dhaal Banner](DHAAL-github-header.png)
+<p align="center">
+  <img src="DHAAL-github-header.jpg" alt="Dhaal Banner" width="100%">
+</p>
 
 # Dhaal (ढाल) - GST Scrutiny Notice Shield (Form ASMT-10)
 
