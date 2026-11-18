@@ -10,11 +10,21 @@ interface CustomImportMeta {
   };
 }
 
-// 1. Base URL Configuration (targets live backend on port 8001)
-export const API_BASE_URL =
-  (typeof import.meta !== 'undefined' &&
-    (import.meta as unknown as CustomImportMeta)?.env?.VITE_API_BASE_URL) ||
-  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:8001' : '/api');
+const isLocal =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1');
+
+const rawEnvBase =
+  typeof import.meta !== 'undefined' &&
+  (import.meta as unknown as CustomImportMeta)?.env?.VITE_API_BASE_URL;
+
+// 1. Base URL Configuration (targets live backend on port 8001 locally, or same-origin /api routes on Vercel)
+export const API_BASE_URL = rawEnvBase
+  ? rawEnvBase.replace(/\/+$/, '')
+  : isLocal
+  ? 'http://localhost:8001'
+  : '';
 
 // 4. Zero Type Mismatches - Strict Pydantic Model Equivalents
 export interface NoticeMetadata {
@@ -126,12 +136,13 @@ function isDemoActive(): boolean {
 // 2. Endpoint Mapping & Live Client Implementation
 export const dhaalApi = {
   /**
-   * Health Check: GET /
-   * Verifies live FastAPI backend availability on http://localhost:8001
+   * Health Check: GET /api or GET /
+   * Verifies live FastAPI backend availability locally or on Vercel serverless
    */
   async checkHealth(): Promise<{ status: string; system: string; version?: string } | null> {
     try {
-      const res = await fetch(`${API_BASE_URL}/`, {
+      const healthUrl = API_BASE_URL ? `${API_BASE_URL}/api` : '/api';
+      const res = await fetch(healthUrl, {
         method: 'GET',
         headers: { Accept: 'application/json' },
       });
@@ -139,7 +150,7 @@ export const dhaalApi = {
       const data = await res.json();
       return data;
     } catch (err) {
-      console.warn(`[Dhaal API] Live backend check failed on ${API_BASE_URL}:`, err);
+      console.warn(`[Dhaal API] Live backend check failed on ${API_BASE_URL || '/api'}:`, err);
       return null;
     }
   },

@@ -208,6 +208,8 @@ case_state = {
 # ============================================================================
 
 @app.get("/")
+@app.get("/api")
+@app.get("/api/")
 def health_check():
     return {
         "status": "online",
