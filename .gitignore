@@ -1,12 +1,32 @@
-node_modules
+# Dependencies
 node_modules/
-dist
+node_modules
+
+# Build artifacts
 dist/
+dist
+
+# Environment variables
+.env*
+!.env.example
 .env
 .env.local
 .env.*.local
+
+# Python cache & virtual environments
 __pycache__/
 *.py[cod]
 *$py.class
 backend/__pycache__/
 .pytest_cache/
+.venv/
+.venv
+
+# Vercel & IDE
+.vercel/
+.vercel
+.DS_Store
+
+# Logs & backups
+*.log
+*.bak
