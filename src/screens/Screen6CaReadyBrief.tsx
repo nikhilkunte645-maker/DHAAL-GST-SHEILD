@@ -29,25 +29,34 @@ export const Screen6CaReadyBrief: React.FC = () => {
   // Compute real SHA-256 content hash on brief payload and call live FastAPI backend
   useEffect(() => {
     const briefPayload = `${CANONICAL_DEMO_CASE.caseId}|${CANONICAL_DEMO_CASE.gstin}|${amount}|${CANONICAL_DEMO_CASE.noticeDate}|${CANONICAL_DEMO_CASE.replyDeadline}`;
-    computeSha256(briefPayload).then((res) => {
-      setContentHash(res);
-    });
+    computeSha256(briefPayload)
+      .then((res) => {
+        setContentHash(res);
+      })
+      .catch((err) => {
+        console.warn('[Dhaal] Hash calculation error:', err);
+      });
 
-    dhaalApi.generateBrief({
-      notice_id: CANONICAL_DEMO_CASE.caseId,
-      draft_text: `Form GST ASMT-11 draft reply for ${CANONICAL_DEMO_CASE.noticeRef}`,
-      evidence_checklist_status: {
-        invoices: true,
-        bank_payment: true,
-        differential_ledger: true,
-        supplier_declaration: false,
-        eway_bills: true,
-        ca_memo: true,
-      },
-      confirmed_amount: amount,
-    }).then((dossier) => {
-      console.log('[Dhaal API] Sealed CA Dossier from FastAPI:', dossier);
-    });
+    dhaalApi
+      .generateBrief({
+        notice_id: CANONICAL_DEMO_CASE.caseId,
+        draft_text: `Form GST ASMT-11 draft reply for ${CANONICAL_DEMO_CASE.noticeRef}`,
+        evidence_checklist_status: {
+          invoices: true,
+          bank_payment: true,
+          differential_ledger: true,
+          supplier_declaration: false,
+          eway_bills: true,
+          ca_memo: true,
+        },
+        confirmed_amount: amount,
+      })
+      .then((dossier) => {
+        console.log('[Dhaal API] Sealed CA Dossier from FastAPI:', dossier);
+      })
+      .catch((err) => {
+        console.warn('[Dhaal API] Brief generation catch:', err);
+      });
   }, [amount]);
 
   // Real PDF Export using html2canvas + jsPDF

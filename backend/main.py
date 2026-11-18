@@ -238,6 +238,16 @@ def extract_notice_metadata_from_pdf(file_bytes: bytes, filename: str = "") -> N
         except Exception as e:
             logger.warning(f"pypdf reader encountered an issue on {filename}: {e}")
 
+    # Fallback to direct byte stream decoding if PDF reader yielded minimal text
+    if len(extracted_text.strip()) < 10 and len(file_bytes) > 0:
+        try:
+            raw_text = file_bytes.decode("utf-8", errors="ignore")
+            if len(raw_text.strip()) >= 10:
+                extracted_text += "\n" + raw_text
+        except Exception:
+            raw_text = file_bytes.decode("latin-1", errors="ignore")
+            extracted_text += "\n" + raw_text
+
     # Regex extraction with canonical fallbacks
     gstin_match = re.search(r"\b(\d{2}[A-Z0-9X]{10}[A-Z0-9]{3})\b", extracted_text, re.IGNORECASE)
     gstin = gstin_match.group(1).upper() if gstin_match else "27XXXXX1234X1ZX"
@@ -251,22 +261,52 @@ def extract_notice_metadata_from_pdf(file_bytes: bytes, filename: str = "") -> N
     period_match = re.search(r"(?:tax\s*period|period)[:\s]*([^\n,;.]{4,25})", extracted_text, re.IGNORECASE)
     tax_period = period_match.group(1).strip() if period_match else "Apr-Jun 2024"
 
-    # Match currency amounts (e.g. ₹1,84,250 or 184250)
-    amounts = []
-    for m in re.finditer(r"(?:₹|Rs\.?|INR)?\s*([0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]{2})?)", extracted_text):
-        raw = m.group(1).replace(",", "")
+    # Match currency amounts (priority: keyword context -> currency prefix -> general amounts)
+    discrepancy_amount = 184250
+    amount_found = None
+
+    # Priority 1: Keyword-bounded amounts (e.g. "Amount: Rs. 245000" or "Discrepancy: ₹1,84,250")
+    context_match = re.search(
+        r"(?:amount|discrepancy|demand|difference|mismatch)[^\d\n]{0,20}(?:₹|Rs\.?|INR)?\s*([0-9]{1,3}(?:,[0-9]{2,3})+|\d{4,9})(?:\.\d{2})?",
+        extracted_text,
+        re.IGNORECASE,
+    )
+    if context_match:
         try:
-            val = float(raw)
+            val = float(context_match.group(1).replace(",", ""))
             if 1000 <= val <= 100000000:
-                amounts.append(int(val))
+                amount_found = int(val)
         except ValueError:
             pass
 
-    discrepancy_amount = 184250
-    if 184250 in amounts:
-        discrepancy_amount = 184250
-    elif amounts:
-        discrepancy_amount = amounts[0]
+    # Priority 2: Direct currency symbol prefix (e.g. "₹1,84,250" or "Rs. 245000")
+    if amount_found is None:
+        curr_match = re.search(
+            r"(?:₹|Rs\.?|INR)\s*([0-9]{1,3}(?:,[0-9]{2,3})+|\d{4,9})(?:\.\d{2})?",
+            extracted_text,
+            re.IGNORECASE,
+        )
+        if curr_match:
+            try:
+                val = float(curr_match.group(1).replace(",", ""))
+                if 1000 <= val <= 100000000:
+                    amount_found = int(val)
+            except ValueError:
+                pass
+
+    # Priority 3: Any comma-formatted Indian rupee number
+    if amount_found is None:
+        for m in re.finditer(r"\b([0-9]{1,3}(?:,[0-9]{2,3})+)(?:\.[0-9]{2})?\b", extracted_text):
+            try:
+                val = float(m.group(1).replace(",", ""))
+                if 1000 <= val <= 100000000:
+                    amount_found = int(val)
+                    break
+            except ValueError:
+                pass
+
+    if amount_found is not None:
+        discrepancy_amount = amount_found
 
     return NoticeMetadata(
         notice_id=notice_id,

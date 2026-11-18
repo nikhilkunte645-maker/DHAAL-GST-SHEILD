@@ -108,6 +108,21 @@ const FALLBACK_EXPLANATIONS: Record<string, ExplanationResponse> = {
   },
 };
 
+function isDemoActive(): boolean {
+  try {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      const saved = window.sessionStorage.getItem('dhaal_demo_state_v1');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.isDemoMode === true) return true;
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return false;
+}
+
 // 2. Endpoint Mapping & Live Client Implementation
 export const dhaalApi = {
   /**
@@ -134,6 +149,11 @@ export const dhaalApi = {
    * Calls live FastAPI multi-part upload endpoint
    */
   async uploadNotice(file: File | Blob, filename = 'notice_scan.pdf'): Promise<NoticeMetadata> {
+    if (isDemoActive()) {
+      console.log('[Dhaal API] Demo Mode active: returning canonical fallback notice.');
+      return FALLBACK_NOTICE;
+    }
+
     try {
       const formData = new FormData();
       formData.append('file', file, filename);
@@ -163,6 +183,10 @@ export const dhaalApi = {
    * Deterministic draft verification against live FastAPI backend
    */
   async verifyDraft(payload: DraftVerifyRequest): Promise<DraftVerifyResponse> {
+    if (isDemoActive()) {
+      return this.runLocalVerification(payload);
+    }
+
     try {
       const res = await fetch(`${API_BASE_URL}/api/verify/draft`, {
         method: 'POST',
@@ -184,44 +208,49 @@ export const dhaalApi = {
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : String(err);
       console.warn(`[Dhaal API] Live verifyDraft unreachable at ${API_BASE_URL}/api/verify/draft (${errorMsg}). Using deterministic offline fallback.`);
+      return this.runLocalVerification(payload);
+    }
+  },
 
-      // Deterministic offline fallback
-      const amountInText =
-        payload.draft_text.includes(String(payload.confirmed_amount)) ||
-        payload.draft_text.includes('1,84,250');
-      const mismatches: VerificationMismatch[] = [];
+  /**
+   * Deterministic client-side fallback verification
+   */
+  runLocalVerification(payload: DraftVerifyRequest): DraftVerifyResponse {
+    const amountInText =
+      payload.draft_text.includes(String(payload.confirmed_amount)) ||
+      payload.draft_text.includes('1,84,250');
+    const mismatches: VerificationMismatch[] = [];
 
-      if (payload.confirmed_amount !== 184250 && !amountInText) {
-        mismatches.push({
-          field: 'Discrepancy Amount',
-          expected: `₹${payload.confirmed_amount.toLocaleString('en-IN')}`,
-          found_in_draft: 'Mismatch',
-          severity: 'CRITICAL',
-        });
-      }
+    if (payload.confirmed_amount !== 184250 && !amountInText) {
+      mismatches.push({
+        field: 'Discrepancy Amount',
+        expected: `₹${payload.confirmed_amount.toLocaleString('en-IN')}`,
+        found_in_draft: 'Mismatch',
+        severity: 'CRITICAL',
+      });
+    }
 
-      if (!payload.draft_text.includes(payload.confirmed_section)) {
-        mismatches.push({
-          field: 'Section Code',
-          expected: `Section ${payload.confirmed_section}`,
-          found_in_draft: 'Missing',
-          severity: 'WARNING',
-        });
-      }
+    if (!payload.draft_text.includes(payload.confirmed_section)) {
+      mismatches.push({
+        field: 'Section Code',
+        expected: `Section ${payload.confirmed_section}`,
+        found_in_draft: 'Missing',
+        severity: 'WARNING',
+      });
+    }
 
-      if (mismatches.length === 0) {
-        return {
-          status: 'PASS',
-          message: 'Checks passed.',
-          checks: { amount_match: true, section_match: true, period_match: true },
-        };
-      } else {
-        return {
-          status: 'FAIL',
-          message: 'Export blocked.',
-          mismatches,
-        };
-      }
+    if (mismatches.length === 0) {
+      return {
+        status: 'PASS',
+        message: 'Checks passed.',
+        checks: { amount_match: true, section_match: true, period_match: true },
+      };
+    } else {
+      return {
+        status: 'FAIL',
+        message: 'Export blocked.',
+        mismatches,
+      };
     }
   },
 
@@ -231,6 +260,10 @@ export const dhaalApi = {
    */
   async getExplanation(language: 'en' | 'hi' | 'mr' | string): Promise<ExplanationResponse> {
     const langKey = language.toLowerCase();
+    if (isDemoActive()) {
+      return FALLBACK_EXPLANATIONS[langKey] || FALLBACK_EXPLANATIONS.en;
+    }
+
     try {
       const res = await fetch(`${API_BASE_URL}/api/explain/${langKey}`, {
         method: 'GET',
@@ -255,6 +288,17 @@ export const dhaalApi = {
    * Generates sealed CA Dossier on live FastAPI backend
    */
   async generateBrief(payload: BriefGenerateRequest): Promise<BriefGenerateResponse> {
+    if (isDemoActive()) {
+      return {
+        status: 'SUCCESS',
+        dossier_id: payload.notice_id ? `DH-2025-ASMT10-8912` : 'DH-2025-ASMT10-8912',
+        timestamp: '2025-06-01T12:00:00Z',
+        assessee: { name: 'M/s Sharma Garments', gstin: '27XXXXX1234X1ZX' },
+        verified_draft: payload.draft_text,
+        disclaimer: 'Drafting aid prepared for professional CA review. Not official legal filing.',
+      };
+    }
+
     try {
       const res = await fetch(`${API_BASE_URL}/api/brief/generate`, {
         method: 'POST',

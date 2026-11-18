@@ -24,6 +24,17 @@ def test_upload_notice_metadata():
     assert data["discrepancy_amount"] == 184250
     assert data["reply_deadline"] == "2025-06-13"
 
+def test_dynamic_pdf_parsing():
+    content = b"%PDF-1.4\nNotice ID: ZA270525999999M\nGSTIN: 27AAAAA0000A1Z5\nSection 61\nTax Period: Jul-Sep 2024\nAmount: Rs. 245000\n"
+    files = {"file": ("dynamic_notice.pdf", io.BytesIO(content), "application/pdf")}
+    res = client.post("/api/notice/upload", files=files)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["notice_id"] == "ZA270525999999M"
+    assert data["gstin"] == "27AAAAA0000A1Z5"
+    assert data["discrepancy_amount"] == 245000
+    assert data["tax_period"] == "Jul-Sep 2024"
+
 def test_verify_draft_pass():
     payload = {
         "draft_text": "In response to notice under Section 61, the discrepancy of ₹1,84,250 for Apr-Jun 2024 is reconciled.",
@@ -75,6 +86,7 @@ def test_spa_endpoints():
 if __name__ == "__main__":
     test_health_check()
     test_upload_notice_metadata()
+    test_dynamic_pdf_parsing()
     test_verify_draft_pass()
     test_verify_draft_fail()
     test_explanations()

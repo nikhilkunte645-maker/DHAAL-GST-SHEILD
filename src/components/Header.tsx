@@ -81,7 +81,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, onOpenHelp }) =
             type="button"
             onClick={() => setIsDemoMode(!isDemoMode)}
             title="Click to toggle between Live API Mode and Offline Demo Mode"
-            className={`hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] transition-all border cursor-pointer ${
+            className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[11px] transition-all border cursor-pointer ${
               !isDemoMode && apiOnline
                 ? 'bg-[#E6F4EA] text-[#12805C] border-[#A8DAB5] hover:border-[#12805C]'
                 : 'bg-[#EFF4FF] text-[#2B4C9B] border-[#CBD5E1] hover:border-[#2B4C9B]'

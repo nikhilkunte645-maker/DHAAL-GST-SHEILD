@@ -24,9 +24,14 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
 
   // Fetch live multilingual explanation from FastAPI endpoint
   useEffect(() => {
-    dhaalApi.getExplanation(language).then((data) => {
-      setApiExplanation(data);
-    });
+    dhaalApi
+      .getExplanation(language)
+      .then((data) => {
+        setApiExplanation(data);
+      })
+      .catch((err) => {
+        console.warn('[Dhaal API] Explanation fetch error:', err);
+      });
   }, [language]);
 
   const amount = confirmedAmount || CANONICAL_DEMO_CASE.rows[1].difference;

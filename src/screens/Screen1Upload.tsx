@@ -67,10 +67,15 @@ export const Screen1Upload: React.FC = () => {
     }
 
     startUpload(file.name);
-    dhaalApi.uploadNotice(file, file.name).then((metadata) => {
-      setUploadedNotice(metadata);
-      console.log('[Dhaal API] Uploaded Notice Metadata from FastAPI:', metadata);
-    });
+    dhaalApi
+      .uploadNotice(file, file.name)
+      .then((metadata) => {
+        setUploadedNotice(metadata);
+        console.log('[Dhaal API] Uploaded Notice Metadata from FastAPI:', metadata);
+      })
+      .catch((err) => {
+        console.error('[Dhaal API] Upload failed:', err);
+      });
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -97,10 +102,15 @@ export const Screen1Upload: React.FC = () => {
   const handleLoadSample = () => {
     startUpload('FORM_GST_ASMT-10.pdf');
     const sampleBlob = new Blob(['%PDF-1.4 Mock GST Notice Scan Content'], { type: 'application/pdf' });
-    dhaalApi.uploadNotice(sampleBlob, 'FORM_GST_ASMT-10.pdf').then((metadata) => {
-      setUploadedNotice(metadata);
-      console.log('[Dhaal API] Sample Notice Metadata from FastAPI:', metadata);
-    });
+    dhaalApi
+      .uploadNotice(sampleBlob, 'FORM_GST_ASMT-10.pdf')
+      .then((metadata) => {
+        setUploadedNotice(metadata);
+        console.log('[Dhaal API] Sample Notice Metadata from FastAPI:', metadata);
+      })
+      .catch((err) => {
+        console.error('[Dhaal API] Sample upload failed:', err);
+      });
   };
 
   return (
