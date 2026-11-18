@@ -21,6 +21,14 @@ Dhaal (ढाल — *Shield*) is a full-stack compliance workspace designed for
 
 ---
 
+## 🛡️ Why Dhaal Stands Out (Market Differentiators)
+Unlike generic document parsers or basic AI wrappers, Dhaal provides a production-grade statutory compliance shield through:
+* **Deterministic + Probabilistic Hybrid Validation:** Combines flexible generative reasoning with strict Python regex/deterministic math checks to eliminate financial hallucinations.
+* **Statutory Section Mapping:** Automatically maps identified discrepancies directly to **Section 61 of the CGST Act and Rule 99(1)**.
+* **CA-Ready Structured Briefs:** Packages outputs into professional audit summaries optimized for client review and Chartered Accountant handoff.
+* **Zero-Retention Privacy Sandbox:** Enterprise-grade security processing sensitive taxpayer records strictly in-memory without persistent third-party database storage.
+
+---
 ## ⚠️ The Problem: GST ASMT-10 Scrutiny Anxiety
 When a taxpayer receives Form GST ASMT-10:
 1. **Strict 30-Day Statutory Deadline:** Rule 99(1) of the CGST Rules mandates a response within 30 days. Missing this timeline automatically escalates scrutiny into summary assessments under Section 73 or Section 74.
