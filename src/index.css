@@ -1,0 +1,121 @@
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
+@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/jetbrains-mono/700.css';
+@import '@fontsource/noto-sans-devanagari/400.css';
+@import '@fontsource/noto-sans-devanagari/600.css';
+@import '@fontsource/noto-sans-devanagari/700.css';
+@import '@fontsource/material-symbols-outlined/index.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-navy: #0B1F3A;
+  --color-indigo: #2B4C9B;
+  --color-saffron: #F59E0B;
+  --color-verified-teal: #0E9FA8;
+  --color-success: #12805C;
+  --color-warning: #B45309;
+  --color-danger: #C0392B;
+  --color-canvas: #F6F8FB;
+  --color-surface: #FFFFFF;
+  --color-border: #E3E8F0;
+  --color-text: #0F172A;
+  --color-muted: #5B6B82;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #F6F8FB;
+    color: #0F172A;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Indic font rules with expanded line-height to prevent matra clipping */
+  [lang="hi"], [lang="mr"] {
+    font-family: 'Noto Sans Devanagari', 'Inter', sans-serif !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Focus ring: 2px #2B4C9B on all interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #2B4C9B;
+    outline-offset: 2px;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Callout left accent border */
+.border-l-accent-saffron {
+  border-left: 3px solid #F59E0B;
+}
+
+.border-l-accent-danger {
+  border-left: 3px solid #C0392B;
+}
+
+.border-l-accent-indigo {
+  border-left: 3px solid #2B4C9B;
+}
+
+/* Print Styles */
+@media print {
+  header, aside, .no-print, #shareModal, #toastNotification, .demo-state-switcher {
+    display: none !important;
+  }
+  
+  body, main {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .pl-64 {
+    padding-left: 0 !important;
+  }
+
+  #printable-dossier {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+}
