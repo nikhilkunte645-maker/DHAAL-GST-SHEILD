@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nikhilkunte645-maker/DHAAL-GST-SHEILD/main/docs/screenshots/DHAAL-github-header.jpg" alt="Dhaal Banner" width="100%">
+  <img src="https://raw.githubusercontent.com/nikhilkunte645-maker/DHAAL-GST-SHEILD/main/docs/screenshots/DHAAL-github-header.png" alt="Dhaal Banner" width="100%">
 </p>
 
 # Dhaal (ढाल) - GST Scrutiny Notice Shield (Form ASMT-10)
