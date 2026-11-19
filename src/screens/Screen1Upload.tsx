@@ -408,11 +408,10 @@ export const Screen1Upload: React.FC = () => {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`relative group cursor-pointer rounded-card border-2 border-dashed transition-all p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3.5 ${
-            isDragOver
-              ? 'border-[#2B4C9B] bg-[#EFF4FF]'
-              : 'border-[#CBD5E1] bg-[#F8FAFC] hover:bg-[#EFF4FF] hover:border-[#2B4C9B]'
-          } ${upload.status === 'parsing' ? 'opacity-40 pointer-events-none' : ''}`}
+          className={`relative group cursor-pointer rounded-card border-2 border-dashed transition-all p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3.5 ${isDragOver
+            ? 'border-[#2B4C9B] bg-[#EFF4FF]'
+            : 'border-[#CBD5E1] bg-[#F8FAFC] hover:bg-[#EFF4FF] hover:border-[#2B4C9B]'
+            } ${upload.status === 'parsing' ? 'opacity-40 pointer-events-none' : ''}`}
         >
           <div className="w-14 h-14 rounded-2xl bg-white text-[#2B4C9B] flex items-center justify-center shadow-xs border border-[#E3E8F0] group-hover:scale-105 transition-transform">
             <span className="material-symbols-outlined text-3xl">cloud_upload</span>
@@ -616,11 +615,10 @@ export const Screen1Upload: React.FC = () => {
                       upload: { ...s.upload, status: 'idle', progress: 0 },
                     }));
                   }}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${
-                    upload.status === 'idle' && upload.errorType === 'none'
-                      ? 'bg-[#0B1F3A] text-white'
-                      : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
-                  }`}
+                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.status === 'idle' && upload.errorType === 'none'
+                    ? 'bg-[#0B1F3A] text-white'
+                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    }`}
                 >
                   1. Default
                 </button>
@@ -628,11 +626,10 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => startUpload('FORM_GST_ASMT-10.pdf')}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${
-                    upload.status === 'parsing'
-                      ? 'bg-[#0B1F3A] text-white'
-                      : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
-                  }`}
+                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.status === 'parsing'
+                    ? 'bg-[#0B1F3A] text-white'
+                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    }`}
                 >
                   2. Processing
                 </button>
@@ -640,11 +637,10 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setUploadError('unreadable')}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${
-                    upload.errorType === 'unreadable'
-                      ? 'bg-[#C0392B] text-white'
-                      : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
-                  }`}
+                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.errorType === 'unreadable'
+                    ? 'bg-[#C0392B] text-white'
+                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    }`}
                 >
                   3. Blurry Photo
                 </button>
@@ -652,11 +648,10 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setUploadError('unsupported')}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${
-                    upload.errorType === 'unsupported'
-                      ? 'bg-[#B45309] text-white'
-                      : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
-                  }`}
+                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.errorType === 'unsupported'
+                    ? 'bg-[#B45309] text-white'
+                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    }`}
                 >
                   4. Wrong Form
                 </button>

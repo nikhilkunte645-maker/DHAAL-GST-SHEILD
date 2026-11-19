@@ -143,24 +143,22 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setStep(s.num)}
                 title={s.fullTitle}
                 aria-label={s.fullTitle}
-                className={`px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap min-h-[36px] ${
-                  isCurrent
-                    ? 'bg-[#0B1F3A] text-white shadow-xs'
-                    : isCompleted
+                className={`px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all whitespace-nowrap min-h-[36px] ${isCurrent
+                  ? 'bg-[#0B1F3A] text-white shadow-xs'
+                  : isCompleted
                     ? 'text-[#0B1F3A] hover:bg-[#E2E8F0]'
                     : isAccessible
-                    ? 'text-[#475569] hover:bg-[#E2E8F0]'
-                    : 'text-[#94A3B8]/60 cursor-not-allowed'
-                }`}
+                      ? 'text-[#475569] hover:bg-[#E2E8F0]'
+                      : 'text-[#94A3B8]/60 cursor-not-allowed'
+                  }`}
               >
                 <span
-                  className={`w-4 h-4 rounded-full text-center leading-4 text-[10px] font-bold shrink-0 ${
-                    isCurrent
-                      ? 'bg-[#F59E0B] text-[#0F172A]'
-                      : isCompleted
+                  className={`w-4 h-4 rounded-full text-center leading-4 text-[10px] font-bold shrink-0 ${isCurrent
+                    ? 'bg-[#F59E0B] text-[#0F172A]'
+                    : isCompleted
                       ? 'bg-[#12805C] text-white'
                       : 'bg-[#CBD5E1] text-[#0F172A]'
-                  }`}
+                    }`}
                 >
                   {isCompleted ? '✓' : s.num}
                 </span>
@@ -207,11 +205,10 @@ export const Header: React.FC<HeaderProps> = ({
                 key={lang}
                 type="button"
                 onClick={() => setLanguage(lang)}
-                className={`px-2 py-1 text-xs rounded transition-all min-h-[36px] sm:min-h-[28px] ${
-                  language === lang
-                    ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
-                    : 'text-[#5B6B82] hover:text-[#0B1F3A]'
-                }`}
+                className={`px-2 py-1 text-xs rounded transition-all min-h-[36px] sm:min-h-[28px] ${language === lang
+                  ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
+                  : 'text-[#5B6B82] hover:text-[#0B1F3A]'
+                  }`}
                 lang={lang}
                 aria-label={`Switch language to ${lang === 'en' ? 'English' : lang === 'hi' ? 'Hindi' : 'Marathi'}`}
               >

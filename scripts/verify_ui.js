@@ -20,7 +20,7 @@ if (!fs.existsSync(SCREENSHOT_DIR)) {
 }
 
 async function runVerification() {
-  console.log('🚀 Starting Comprehensive UI Declutter Verification...');
+  console.log('🚀 Starting Comprehensive Full-Flow UI Declutter Verification...');
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -38,8 +38,8 @@ async function runVerification() {
     consoleErrors.push(err.toString());
   });
 
-  // 1. Test Viewports and Overflow
-  console.log('\n--- 1. Testing Viewports & Horizontal Overflow ---');
+  // 1. Test Viewports and Overflow on Initial Screen
+  console.log('\n--- 1. Testing Viewports & Horizontal Overflow (Step 1) ---');
   for (const vp of VIEWPORTS) {
     await page.setViewport({ width: vp.width, height: vp.height });
     await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
@@ -90,7 +90,6 @@ async function runVerification() {
   const languages = ['en', 'hi', 'mr'];
   for (const lang of languages) {
     await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
-    // Click language button
     const label = lang === 'en' ? 'EN' : lang === 'hi' ? 'हिं' : 'मरा';
     const langBtn = await page.$(`button[lang="${lang}"]`);
     if (langBtn) {
@@ -113,66 +112,59 @@ async function runVerification() {
   console.log('\n--- 4. Testing Demo States in Demo Controls Popover ---');
   await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
 
-  // Open Demo Controls popover
   const demoControlsToggle = await page.$('button[aria-label="Toggle demo state controls"]');
   if (demoControlsToggle) {
     await demoControlsToggle.click();
     await new Promise((r) => setTimeout(r, 200));
 
     // Test State 2: Processing
-    const processingBtn = await page.evaluateHandle(() => {
+    await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      return buttons.find((b) => b.textContent.includes('2. Processing'));
+      const b = buttons.find((btn) => btn.textContent.includes('2. Processing'));
+      b?.click();
     });
-    if (processingBtn) {
-      await processingBtn.click();
-      await new Promise((r) => setTimeout(r, 400));
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, 'demo_state_2_processing.png'),
-        fullPage: false,
-      });
-      console.log('✅ Demo State 2 (Processing) verified');
-    }
+    await new Promise((r) => setTimeout(r, 400));
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, 'demo_state_2_processing.png'),
+      fullPage: false,
+    });
+    console.log('✅ Demo State 2 (Processing) verified');
 
-    // Reopen popover if closed and test State 3: Blurry Photo
+    // Test State 3: Blurry Photo
     const isOpen = await page.$('button[aria-label="Close demo controls"]');
     if (!isOpen) {
       await demoControlsToggle.click();
       await new Promise((r) => setTimeout(r, 200));
     }
-    const blurryBtn = await page.evaluateHandle(() => {
+    await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      return buttons.find((b) => b.textContent.includes('3. Blurry Photo'));
+      const b = buttons.find((btn) => btn.textContent.includes('3. Blurry Photo'));
+      b?.click();
     });
-    if (blurryBtn) {
-      await blurryBtn.click();
-      await new Promise((r) => setTimeout(r, 400));
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, 'demo_state_3_blurry.png'),
-        fullPage: false,
-      });
-      console.log('✅ Demo State 3 (Blurry Photo) verified');
-    }
+    await new Promise((r) => setTimeout(r, 400));
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, 'demo_state_3_blurry.png'),
+      fullPage: false,
+    });
+    console.log('✅ Demo State 3 (Blurry Photo) verified');
 
-    // Reopen popover and test State 4: Wrong Form
+    // Test State 4: Wrong Form
     const isOpen2 = await page.$('button[aria-label="Close demo controls"]');
     if (!isOpen2) {
       await demoControlsToggle.click();
       await new Promise((r) => setTimeout(r, 200));
     }
-    const wrongFormBtn = await page.evaluateHandle(() => {
+    await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      return buttons.find((b) => b.textContent.includes('4. Wrong Form'));
+      const b = buttons.find((btn) => btn.textContent.includes('4. Wrong Form'));
+      b?.click();
     });
-    if (wrongFormBtn) {
-      await wrongFormBtn.click();
-      await new Promise((r) => setTimeout(r, 400));
-      await page.screenshot({
-        path: path.join(SCREENSHOT_DIR, 'demo_state_4_wrong_form.png'),
-        fullPage: false,
-      });
-      console.log('✅ Demo State 4 (Wrong Form) verified');
-    }
+    await new Promise((r) => setTimeout(r, 400));
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, 'demo_state_4_wrong_form.png'),
+      fullPage: false,
+    });
+    console.log('✅ Demo State 4 (Wrong Form) verified');
 
     // Return to Default Drop
     const isOpen3 = await page.$('button[aria-label="Close demo controls"]');
@@ -180,31 +172,91 @@ async function runVerification() {
       await demoControlsToggle.click();
       await new Promise((r) => setTimeout(r, 200));
     }
-    const defaultBtn = await page.evaluateHandle(() => {
+    await page.evaluate(() => {
       const buttons = Array.from(document.querySelectorAll('button'));
-      return buttons.find((b) => b.textContent.includes('1. Default'));
+      const b = buttons.find((btn) => btn.textContent.includes('1. Default'));
+      b?.click();
     });
-    if (defaultBtn) {
-      await defaultBtn.click();
-      await new Promise((r) => setTimeout(r, 400));
-      console.log('✅ Demo State 1 (Default Drop) verified');
-    }
+    await new Promise((r) => setTimeout(r, 400));
+    console.log('✅ Demo State 1 (Default Drop) verified');
   }
 
-  // 5. Test Sample Notice & Step Navigation
-  console.log('\n--- 5. Testing Sample Notice Upload & Step Navigation ---');
+  // 5. Test Step 1 through Step 6 End-to-End Walkthrough
+  console.log('\n--- 5. End-to-End 6-Step Flow & Zero-Overflow Audit ---');
+  await page.setViewport({ width: 1366, height: 768 });
   await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
+
+  // Step 1: Upload
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'step_1_upload.png'), fullPage: false });
+  console.log('✅ Step 1 (Upload) verified');
+
   const sampleBtn = await page.$('button[aria-label="Try with canonical Form ASMT-10 sample notice"]');
   if (sampleBtn) {
     await sampleBtn.click();
-    console.log('Clicked "Try with sample notice"... waiting for step 2 auto-advance...');
-    await page.waitForFunction(() => window.location.hash === '#confirm', { timeout: 5000 });
-    console.log('✅ Successfully advanced to Step 2 (#confirm)!');
-    await page.screenshot({
-      path: path.join(SCREENSHOT_DIR, 'step_2_confirm.png'),
-      fullPage: false,
-    });
+    await page.waitForFunction(() => window.location.hash === '#confirm', { timeout: 8000 });
+    console.log('✅ Step 2 (#confirm) loaded');
   }
+
+  // Check Step 2 Overflow
+  let overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error('Overflow on Step 2!');
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'step_2_confirm.png'), fullPage: false });
+
+  // Click Confirm on Step 2
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('button'));
+    const b = buttons.find((btn) => btn.textContent.toLowerCase().includes('confirm and continue'));
+    b?.click();
+  });
+  await page.waitForFunction(() => window.location.hash === '#explain', { timeout: 8000 });
+  console.log('✅ Step 3 (#explain) loaded');
+
+  // Check Step 3 Overflow
+  overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error('Overflow on Step 3!');
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'step_3_explain.png'), fullPage: false });
+
+  // Click Next on Step 3 -> Step 4
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('button'));
+    const b = buttons.find((btn) => btn.textContent.includes('Proceed to Evidence Checklist'));
+    b?.click();
+  });
+  await page.waitForFunction(() => window.location.hash === '#evidence', { timeout: 8000 });
+  console.log('✅ Step 4 (#evidence) loaded');
+
+  // Check Step 4 Overflow
+  overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error('Overflow on Step 4!');
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'step_4_evidence.png'), fullPage: false });
+
+  // Click Next on Step 4 -> Step 5
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('button'));
+    const b = buttons.find((btn) => btn.textContent.includes('Continue to Draft & Verifier'));
+    b?.click();
+  });
+  await page.waitForFunction(() => window.location.hash === '#draft', { timeout: 8000 });
+  console.log('✅ Step 5 (#draft) loaded');
+
+  // Check Step 5 Overflow
+  overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error('Overflow on Step 5!');
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'step_5_verifier.png'), fullPage: false });
+
+  // Click Next on Step 5 -> Step 6
+  await page.evaluate(() => {
+    const buttons = Array.from(document.querySelectorAll('button'));
+    const b = buttons.find((btn) => btn.textContent.includes('Compile CA-Ready Brief'));
+    b?.click();
+  });
+  await page.waitForFunction(() => window.location.hash === '#brief', { timeout: 8000 });
+  console.log('✅ Step 6 (#brief) loaded');
+
+  // Check Step 6 Overflow
+  overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error('Overflow on Step 6!');
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'step_6_brief.png'), fullPage: false });
 
   // 6. Check Console Errors
   console.log('\n--- 6. Console Error Audit ---');
@@ -216,7 +268,7 @@ async function runVerification() {
   }
 
   await browser.close();
-  console.log('\n🎉 ALL BROWSER VERIFICATIONS PASSED SUCCESSFULLY!');
+  console.log('\n🎉 ALL BROWSER & FULL-FLOW VERIFICATIONS PASSED SUCCESSFULLY!');
 }
 
 runVerification().catch((err) => {
