@@ -8,9 +8,22 @@ Tests:
 - Missing financial year handling
 - Finalized proceedings exclusion
 """
+import sys
+import os
 import pytest
 from decimal import Decimal
-from backend.circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
+
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(BACKEND_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+if BACKEND_DIR not in sys.path:
+    sys.path.insert(0, BACKEND_DIR)
+
+try:
+    from backend.circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
+except ImportError:
+    from circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
 
 
 def test_circular_183_fy_2017_18_under_5_lakh():

@@ -10,14 +10,33 @@ Verifies:
 - Evidence Completeness Indicator (ECI) breakdown
 - Reproducible SHA-256 hashes
 """
+import sys
+import os
 import pytest
-from backend.evidence_graph import (
-    build_evidence_graph_for_case,
-    EvidenceGraph,
-    GraphNode,
-    GraphEdge,
-    EciScorecardBreakdown
-)
+
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(BACKEND_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+if BACKEND_DIR not in sys.path:
+    sys.path.insert(0, BACKEND_DIR)
+
+try:
+    from backend.evidence_graph import (
+        build_evidence_graph_for_case,
+        EvidenceGraph,
+        GraphNode,
+        GraphEdge,
+        EciScorecardBreakdown
+    )
+except ImportError:
+    from evidence_graph import (
+        build_evidence_graph_for_case,
+        EvidenceGraph,
+        GraphNode,
+        GraphEdge,
+        EciScorecardBreakdown
+    )
 
 
 def test_evidence_graph_basic_topology_and_uniqueness():
