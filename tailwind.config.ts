@@ -98,6 +98,13 @@ const config: Config = {
         '2xl': '1.5rem',
         full: '9999px',
       },
+      maxWidth: {
+        container: '1200px',
+      },
+      width: {
+        'sidebar-expanded': '240px',
+        'sidebar-rail': '64px',
+      },
       spacing: {
         gutter: '1.5rem',
         'gutter-sm': '1rem',
