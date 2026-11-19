@@ -31,7 +31,9 @@
 }
 
 @layer base {
-  html, body {
+
+  html,
+  body {
     margin: 0;
     padding: 0;
     background-color: #F6F8FB;
@@ -42,16 +44,58 @@
   }
 
   /* Indic font rules with expanded line-height to prevent matra clipping */
-  html[lang="hi"], html[lang="mr"],
-  [lang="hi"], [lang="mr"] {
+  html[lang="hi"],
+  html[lang="mr"],
+  [lang="hi"],
+  [lang="mr"] {
     font-family: 'Noto Sans Devanagari', 'Inter', sans-serif !important;
     line-height: 1.75 !important;
   }
 
-  html[lang="hi"] p, html[lang="hi"] span, html[lang="hi"] div, html[lang="hi"] h1, html[lang="hi"] h2, html[lang="hi"] h3, html[lang="hi"] h4, html[lang="hi"] button, html[lang="hi"] a, html[lang="hi"] label, html[lang="hi"] li,
-  html[lang="mr"] p, html[lang="mr"] span, html[lang="mr"] div, html[lang="mr"] h1, html[lang="mr"] h2, html[lang="mr"] h3, html[lang="mr"] h4, html[lang="mr"] button, html[lang="mr"] a, html[lang="mr"] label, html[lang="mr"] li,
-  [lang="hi"] p, [lang="hi"] span, [lang="hi"] div, [lang="hi"] h1, [lang="hi"] h2, [lang="hi"] h3, [lang="hi"] h4, [lang="hi"] button, [lang="hi"] a, [lang="hi"] label, [lang="hi"] li,
-  [lang="mr"] p, [lang="mr"] span, [lang="mr"] div, [lang="mr"] h1, [lang="mr"] h2, [lang="mr"] h3, [lang="mr"] h4, [lang="mr"] button, [lang="mr"] a, [lang="mr"] label, [lang="mr"] li {
+  html[lang="hi"] p,
+  html[lang="hi"] span,
+  html[lang="hi"] div,
+  html[lang="hi"] h1,
+  html[lang="hi"] h2,
+  html[lang="hi"] h3,
+  html[lang="hi"] h4,
+  html[lang="hi"] button,
+  html[lang="hi"] a,
+  html[lang="hi"] label,
+  html[lang="hi"] li,
+  html[lang="mr"] p,
+  html[lang="mr"] span,
+  html[lang="mr"] div,
+  html[lang="mr"] h1,
+  html[lang="mr"] h2,
+  html[lang="mr"] h3,
+  html[lang="mr"] h4,
+  html[lang="mr"] button,
+  html[lang="mr"] a,
+  html[lang="mr"] label,
+  html[lang="mr"] li,
+  [lang="hi"] p,
+  [lang="hi"] span,
+  [lang="hi"] div,
+  [lang="hi"] h1,
+  [lang="hi"] h2,
+  [lang="hi"] h3,
+  [lang="hi"] h4,
+  [lang="hi"] button,
+  [lang="hi"] a,
+  [lang="hi"] label,
+  [lang="hi"] li,
+  [lang="mr"] p,
+  [lang="mr"] span,
+  [lang="mr"] div,
+  [lang="mr"] h1,
+  [lang="mr"] h2,
+  [lang="mr"] h3,
+  [lang="mr"] h4,
+  [lang="mr"] button,
+  [lang="mr"] a,
+  [lang="mr"] label,
+  [lang="mr"] li {
     line-height: 1.75 !important;
   }
 
@@ -69,7 +113,10 @@
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -111,17 +158,26 @@
 
 /* Print Styles */
 @media print {
-  header, aside, .no-print, #shareModal, #toastNotification, .demo-state-switcher {
+
+  header,
+  aside,
+  .no-print,
+  #shareModal,
+  #toastNotification,
+  .demo-state-switcher {
     display: none !important;
   }
-  
-  body, main {
+
+  body,
+  main {
     background: white !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  .pl-64, .lg\:pl-60, .lg\:pl-16 {
+  .pl-64,
+  .lg\:pl-60,
+  .lg\:pl-16 {
     padding-left: 0 !important;
   }
 

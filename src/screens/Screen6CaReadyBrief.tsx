@@ -4,11 +4,10 @@ import { CANONICAL_DEMO_CASE } from '../data/demoCase';
 import { formatINR } from '../lib/format';
 import { computeSha256 } from '../lib/hash';
 import { dhaalApi } from '../mockApi';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Card } from '../components/ui/Card';
+import { exportDossierToPdf } from '../utils/pdfExport';
 
 export const Screen6CaReadyBrief: React.FC = () => {
   const { confirmedAmount, resetDemo } = useDhaalStore();
@@ -62,33 +61,19 @@ export const Screen6CaReadyBrief: React.FC = () => {
       });
   }, [amount]);
 
-  // Real PDF Export using html2canvas + jsPDF
+  // High-precision A4 multi-page PDF Export using smart section-slicing
   const handleExportPdf = async () => {
     if (!printableRef.current) return;
     setIsExportingPdf(true);
-    showToast('Compiling high-resolution PDF Dossier...');
+    showToast('Compiling high-resolution A4 PDF Dossier...');
 
     try {
-      const element = printableRef.current;
-      const canvas = await html2canvas(element, {
+      await exportDossierToPdf(printableRef.current, {
+        fileName: `DHAAL_CA_Brief_${CANONICAL_DEMO_CASE.caseId}.pdf`,
+        caseId: CANONICAL_DEMO_CASE.caseId,
+        marginMm: 12,
         scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#FFFFFF',
       });
-
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`DHAAL_CA_Brief_${CANONICAL_DEMO_CASE.caseId}.pdf`);
 
       showToast('PDF Dossier downloaded successfully!');
     } catch (err) {
@@ -123,12 +108,16 @@ export const Screen6CaReadyBrief: React.FC = () => {
     <div className="flex flex-col w-full pb-16">
       {/* Print Stylesheet */}
       <style>{`
+        @page {
+          size: A4 portrait;
+          margin: 12mm;
+        }
         @media print {
           body {
             background: #FFFFFF !important;
             color: #000000 !important;
           }
-          nav, header, footer, .print\\:hidden {
+          nav, header, footer, aside, .print\\:hidden, #shareModal, #toastNotification {
             display: none !important;
           }
           #printable-dossier {
@@ -138,6 +127,10 @@ export const Screen6CaReadyBrief: React.FC = () => {
             width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
+          }
+          .dossier-section, tr {
+            break-inside: avoid;
+            page-break-inside: avoid;
           }
         }
       `}</style>
@@ -546,19 +539,19 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <span>Pre-Filing Checklist</span>
             </h4>
             <div className="space-y-1 text-xs text-[#0F172A]">
-              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
                 <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
                 <span>Invoice &amp; E-Way bill values re-computed to 2 decimal places</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
                 <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
                 <span>Supplier filed GSTR-1 in subsequent month verified on GST portal</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
                 <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
                 <span>Bank payment confirmed against Tax Invoice date (Sec 16(2)(b))</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
                 <input
                   type="checkbox"
                   onChange={(e) => {

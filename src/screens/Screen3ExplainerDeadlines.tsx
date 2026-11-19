@@ -254,7 +254,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     {daysLeftOverride} days
                   </span>
                 </div>
-                <div className="py-1.5 flex items-center">
+                <div className="py-1 flex items-center min-h-[44px]">
                   <input
                     id="urgency-slider"
                     type="range"
@@ -262,7 +262,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     max="30"
                     value={daysLeftOverride}
                     onChange={(e) => setDaysLeftOverride(parseInt(e.target.value, 10))}
-                    className="w-full accent-[#2B4C9B] cursor-pointer min-h-[36px]"
+                    className="w-full accent-[#2B4C9B] cursor-pointer min-h-[44px] h-[44px] sm:min-h-[36px] sm:h-[36px]"
                     aria-label="Urgency slider"
                   />
                 </div>

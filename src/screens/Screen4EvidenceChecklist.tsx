@@ -164,7 +164,7 @@ export const Screen4EvidenceChecklist: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveFilter('all')}
-              className={`px-3 py-1.5 rounded-control text-xs font-semibold transition-all flex items-center gap-1.5 shadow-2xs border ${
+              className={`px-3 py-1.5 min-h-[44px] sm:min-h-[36px] rounded-control text-xs font-semibold transition-all flex items-center gap-1.5 shadow-2xs border ${
                 activeFilter === 'all'
                   ? 'bg-[#0B1F3A] text-white border-[#0B1F3A]'
                   : 'bg-white text-[#44474D] border-[#CBD5E1] hover:bg-[#EFF4FF]'
@@ -177,7 +177,7 @@ export const Screen4EvidenceChecklist: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveFilter('needs_action')}
-              className={`px-3 py-1.5 rounded-control text-xs font-semibold transition-all flex items-center gap-1.5 shadow-2xs border ${
+              className={`px-3 py-1.5 min-h-[44px] sm:min-h-[36px] rounded-control text-xs font-semibold transition-all flex items-center gap-1.5 shadow-2xs border ${
                 activeFilter === 'needs_action'
                   ? 'bg-[#B45309] text-white border-[#B45309]'
                   : 'bg-white text-[#B45309] border-[#FDE68A] hover:bg-[#FEF3C7]'
