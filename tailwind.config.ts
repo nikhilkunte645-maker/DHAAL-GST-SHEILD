@@ -6,20 +6,37 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // DHAAL Design System Tokens
+        dhaal: {
+          dark: '#073B3A',      // Deep Teal / Dark Navy Sidebar
+          teal: '#087F73',      // Primary Teal
+          emerald: '#119B72',   // Vibrant Emerald Accent
+          mint: '#E7F4EE',      // Soft Mint Accent Background
+          canvas: '#FAF9F5',    // Warm Ivory Canvas
+          white: '#FFFFFF',     // Clean White Surface
+          text: '#152B2A',      // Primary Text
+          muted: '#687674',     // Secondary Muted Text
+          border: '#E4E9E5',    // Subtle Card & Table Border
+          lightBorder: '#EEF2EF',
+          surface: '#FFFFFF',
+        },
         // Brand Aliases
         brand: {
-          navy: '#0B1F3A',
-          indigo: '#2B4C9B',
+          navy: '#073B3A',
+          teal: '#087F73',
+          emerald: '#119B72',
+          mint: '#E7F4EE',
+          indigo: '#087F73',
           saffron: '#F59E0B',
-          'verified-teal': '#0E9FA8',
-          success: '#12805C',
-          warning: '#B45309',
+          'verified-teal': '#119B72',
+          success: '#119B72',
+          warning: '#D97706',
           danger: '#C0392B',
-          canvas: '#F6F8FB',
+          canvas: '#FAF9F5',
           surface: '#FFFFFF',
-          border: '#E3E8F0',
-          text: '#0F172A',
-          muted: '#5B6B82',
+          border: '#E4E9E5',
+          text: '#152B2A',
+          muted: '#687674',
         },
         // Material Tokens
         surface: '#f8f9ff',

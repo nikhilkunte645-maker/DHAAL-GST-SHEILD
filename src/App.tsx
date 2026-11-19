@@ -73,7 +73,7 @@ export const App: React.FC = () => {
   }, [maxStep, setStep]);
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-[#0F172A] flex flex-col font-sans selection:bg-[#2B4C9B] selection:text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF9F5] text-[#152B2A] flex flex-col font-sans selection:bg-[#087F73] selection:text-white overflow-x-hidden">
       {/* Top Fixed Header with Integrated Single-line Disclaimer */}
       <Header
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -82,19 +82,20 @@ export const App: React.FC = () => {
         onDismissBanner={() => setIsBannerDismissed(true)}
       />
 
-      {/* Left Sidebar (Desktop Rail on 1024-1279px, 240px on >=1280px, Off-canvas on <1024px) */}
+      {/* Left Sidebar (Desktop Rail on 1024-1279px, 260px on >=1280px, Off-canvas on <1024px) */}
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         isBannerDismissed={isBannerDismissed}
+        onOpenHelp={() => setIsHelpOpen(true)}
       />
 
-      {/* Main Content Area: Responsive offsets and centered 1200px container */}
-      <div className="lg:pl-16 xl:pl-[240px] flex-1 flex flex-col transition-all duration-200 min-w-0">
+      {/* Main Content Area: Responsive offsets and centered 1240px container */}
+      <div className="lg:pl-16 xl:pl-[260px] flex-1 flex flex-col transition-all duration-200 min-w-0">
         <main
           className={`${
             isBannerDismissed ? 'pt-16 sm:pt-20' : 'pt-[88px] sm:pt-[96px]'
-          } pb-16 sm:pb-24 min-h-screen px-4 sm:px-6 max-w-[1200px] w-full mx-auto flex flex-col`}
+          } pb-16 sm:pb-24 min-h-screen px-4 sm:px-6 max-w-[1240px] w-full mx-auto flex flex-col`}
         >
           {step === 1 && <Screen1Upload />}
           {step === 2 && <Screen2ConfirmPause />}
@@ -105,12 +106,12 @@ export const App: React.FC = () => {
         </main>
 
         {/* Statutory Footer & In-Memory Privacy Notice */}
-        <footer className="mt-auto py-4 px-4 sm:px-6 border-t border-[#E3E8F0] bg-white text-center text-xs text-[#5B6B82] no-print">
-          <div className="max-w-[1200px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
-            <span className="font-medium text-[#0B1F3A]">
+        <footer className="mt-auto py-4 px-4 sm:px-6 border-t border-[#E4E9E5] bg-white text-center text-xs text-[#687674] no-print">
+          <div className="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
+            <span className="font-medium text-[#073B3A]">
               Drafting aid. Final review and submission by a Chartered Accountant required.
             </span>
-            <span className="text-[11px] text-[#5B6B82]">
+            <span className="text-[11px] text-[#687674]">
               In-Memory Processing: Notice files are processed purely in memory and never stored.
             </span>
           </div>
@@ -118,13 +119,13 @@ export const App: React.FC = () => {
       </div>
 
       {/* Mobile Sticky Bottom Action Bar (< 768px) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E3E8F0] px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg no-print">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E4E9E5] px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg no-print">
         <div className="flex flex-col">
-          <span className="font-mono text-[10px] text-[#5B6B82]">Step {step} of 6</span>
-          <span className="font-bold text-xs text-[#0B1F3A]">
+          <span className="font-mono text-[10px] text-[#687674]">Step {step} of 6</span>
+          <span className="font-bold text-xs text-[#073B3A]">
             {step === 1 && 'Upload Notice'}
             {step === 2 && 'Confirm Scanned Amount'}
-            {step === 3 && 'Statutory Deadlines'}
+            {step === 3 && 'Reconciliation & Deadlines'}
             {step === 4 && 'Evidence Checklist'}
             {step === 5 && 'Verify Legal Draft'}
             {step === 6 && 'Ready CA Brief'}
@@ -140,7 +141,7 @@ export const App: React.FC = () => {
               }
             }}
             disabled={step >= maxStep}
-            className="px-4 py-2 rounded-control bg-[#0B1F3A] text-white text-xs font-bold disabled:opacity-40 flex items-center gap-1 shadow-2xs min-h-[44px]"
+            className="px-4 py-2 rounded-lg bg-[#073B3A] hover:bg-[#087F73] text-white text-xs font-bold disabled:opacity-40 flex items-center gap-1 shadow-xs min-h-[44px]"
             aria-label="Proceed to next step"
           >
             <span>Next</span>

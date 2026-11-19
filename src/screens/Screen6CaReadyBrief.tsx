@@ -288,19 +288,19 @@ export const Screen6CaReadyBrief: React.FC = () => {
       {/* Success Header */}
       <Card variant="default" padding="md" className="print:hidden flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#12805C] text-white flex items-center justify-center shadow-xs shrink-0">
+          <div className="w-10 h-10 rounded-full bg-[#119B72] text-white flex items-center justify-center shadow-xs shrink-0">
             <span className="material-symbols-outlined text-2xl">task_alt</span>
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="font-headline text-lg sm:text-xl font-bold text-[#0B1F3A]">
+              <h1 className="font-headline text-lg sm:text-xl font-bold text-[#073B3A]">
                 Brief Ready. Your CA can take it from here.
               </h1>
               <Badge variant="success" size="sm">
                 AUDIT READY
               </Badge>
             </div>
-            <span className="text-xs text-[#5B6B82] mt-0.5">
+            <span className="text-xs text-[#687674] mt-0.5">
               Case #{CANONICAL_DEMO_CASE.caseId} • Content Hash: <span className="font-mono font-semibold">{contentHash.shortHash}</span>
             </span>
           </div>
@@ -314,7 +314,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
             size="sm"
             icon="share"
             onClick={() => setIsShareModalOpen(true)}
-            className="bg-[#12805C] hover:bg-[#0E9FA8] text-white"
+            className="bg-[#119B72] hover:bg-[#0E9FA8] text-white"
           >
             Send CA Pack
           </Button>
@@ -349,11 +349,11 @@ export const Screen6CaReadyBrief: React.FC = () => {
           <div
             id="printable-dossier"
             ref={printableRef}
-            className="relative bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] p-6 sm:p-10 w-full max-w-[794px] min-h-[1050px] flex flex-col justify-between text-[#0F172A] font-sans overflow-hidden"
+            className="relative bg-white rounded-modal shadow-tier3 border border-[#E4E9E5] p-6 sm:p-10 w-full max-w-[794px] min-h-[1050px] flex flex-col justify-between text-[#152B2A] font-sans overflow-hidden"
           >
             {/* Watermark */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center -rotate-45 opacity-5">
-              <span className="font-headline text-6xl text-[#0B1F3A] uppercase font-bold tracking-widest text-center">
+              <span className="font-headline text-6xl text-[#073B3A] uppercase font-bold tracking-widest text-center">
                 SYNTHETIC DEMO<br />CA BRIEF
               </span>
             </div>
@@ -361,30 +361,30 @@ export const Screen6CaReadyBrief: React.FC = () => {
             {/* Inner Content Container */}
             <div className="flex flex-col gap-6 relative z-10">
               {/* Official Printable Header */}
-              <div className="font-mono text-[10px] uppercase tracking-widest text-[#5B6B82] border-b border-[#CBD5E1] pb-1.5 mb-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                <span className="font-bold text-[#0B1F3A]">DHAAL COMPLIANCE DOSSIER | STRICTLY CONFIDENTIAL</span>
+              <div className="font-mono text-[10px] uppercase tracking-widest text-[#687674] border-b border-[#E4E9E5] pb-1.5 mb-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                <span className="font-bold text-[#073B3A]">DHAAL COMPLIANCE DOSSIER | STRICTLY CONFIDENTIAL</span>
                 <span>FORM ASMT-10 RESPONSE FILE • STATUTORY COMPLIANCE</span>
               </div>
 
               {/* Dossier Header */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b-2 border-[#0B1F3A] gap-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b-2 border-[#073B3A] gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#0B1F3A] text-white flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-xl bg-[#073B3A] text-white flex items-center justify-center font-bold">
                     <span className="material-symbols-outlined text-xl text-[#F59E0B]">shield</span>
                   </div>
                   <div>
-                    <h2 className="font-headline text-lg font-bold text-[#0B1F3A] tracking-tight">
+                    <h2 className="font-headline text-lg font-bold text-[#073B3A] tracking-tight">
                       DHAAL LEGAL SHIELD • CA BRIEF
                     </h2>
-                    <p className="font-mono text-xs text-[#5B6B82]">
+                    <p className="font-mono text-xs text-[#687674]">
                       Case Reference: #{CANONICAL_DEMO_CASE.caseId}
                     </p>
                   </div>
                 </div>
 
-                <div className="text-left sm:text-right font-mono text-xs text-[#5B6B82]">
+                <div className="text-left sm:text-right font-mono text-xs text-[#687674]">
                   <div>Generation: {CANONICAL_DEMO_CASE.fixedClockDate} | 14:38 IST</div>
-                  <div className="text-[11px] text-[#2B4C9B] font-bold mt-0.5">
+                  <div className="text-[11px] text-[#087F73] font-bold mt-0.5">
                     Content hash: {contentHash.shortHash}
                   </div>
                 </div>
@@ -393,39 +393,39 @@ export const Screen6CaReadyBrief: React.FC = () => {
               {/* Assessee Metadata Ribbon */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] text-xs">
                 <div>
-                  <span className="text-[#5B6B82] block">Assessee Legal Trade Name:</span>
-                  <span className="font-bold text-[#0B1F3A] block">{CANONICAL_DEMO_CASE.businessName}</span>
+                  <span className="text-[#687674] block">Assessee Legal Trade Name:</span>
+                  <span className="font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.businessName}</span>
                 </div>
                 <div>
-                  <span className="text-[#5B6B82] block">GSTIN / Registration:</span>
-                  <span className="font-mono font-bold text-[#0B1F3A] block">{CANONICAL_DEMO_CASE.gstin}</span>
+                  <span className="text-[#687674] block">GSTIN / Registration:</span>
+                  <span className="font-mono font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.gstin}</span>
                 </div>
                 <div>
-                  <span className="text-[#5B6B82] block">Jurisdiction:</span>
-                  <span className="font-bold text-[#0B1F3A] block">{CANONICAL_DEMO_CASE.office.ward} (Mumbai)</span>
+                  <span className="text-[#687674] block">Jurisdiction:</span>
+                  <span className="font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.office.ward} (Mumbai)</span>
                 </div>
               </div>
 
               {/* Section 1: Executive Summary */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
+                  <span className="w-5 h-5 rounded-full bg-[#073B3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                     1
                   </span>
-                  <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                  <h3 className="font-headline text-sm font-bold text-[#073B3A]">
                     Executive Summary &amp; Allegation Mapping
                   </h3>
                 </div>
                 <div className="p-4 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] space-y-2 text-xs">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                    <span className="font-mono font-bold text-[#2B4C9B]">
+                    <span className="font-mono font-bold text-[#087F73]">
                       Scrutiny Ground: Table 4(A)(5) GSTR-3B Discrepancy
                     </span>
-                    <span className="font-mono font-bold text-[#0B1F3A] bg-white px-2 py-0.5 rounded border border-[#CBD5E1] shrink-0">
+                    <span className="font-mono font-bold text-[#073B3A] bg-white px-2 py-0.5 rounded border border-[#E4E9E5] shrink-0">
                       Amount questioned: {formatINR(amount, true)}
                     </span>
                   </div>
-                  <p className="text-[#0F172A] leading-relaxed">
+                  <p className="text-[#152B2A] leading-relaxed">
                     Form ASMT-10 scrutiny notice received alleging an apparent excess Input Tax Credit (ITC) claim of{' '}
                     <strong>₹{amount.toLocaleString('en-IN')}</strong> in monthly return GSTR-3B compared with system-generated GSTR-2B for {CANONICAL_DEMO_CASE.taxPeriod}.
                   </p>
@@ -433,7 +433,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     <span className="font-mono text-[10px] text-[#B45309] block uppercase font-bold">
                       Probable cause (to be confirmed with supplier):
                     </span>
-                    <p className="text-xs text-[#0F172A] mt-0.5">
+                    <p className="text-xs text-[#152B2A] mt-0.5">
                       Principal vendor <strong>{CANONICAL_DEMO_CASE.supplier.name} ({CANONICAL_DEMO_CASE.supplier.gstin})</strong> reported supply in subsequent tax period. Assessee maintains verified physical possession of goods, original tax invoices ({CANONICAL_DEMO_CASE.supplier.invoiceNo}), valid E-Way bills, and prompt electronic bank settlement.
                     </p>
                   </div>
@@ -443,34 +443,34 @@ export const Screen6CaReadyBrief: React.FC = () => {
               {/* Section 2: Statutory Countdown */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
+                  <span className="w-5 h-5 rounded-full bg-[#073B3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                     2
                   </span>
-                  <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                  <h3 className="font-headline text-sm font-bold text-[#073B3A]">
                     Statutory Countdown &amp; Safe Filing Windows
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
-                    <span className="text-[#5B6B82] block text-[11px]">Statutory Deadline</span>
-                    <span className="font-mono text-sm font-bold text-[#0B1F3A] block mt-0.5">
+                    <span className="text-[#687674] block text-[11px]">Statutory Deadline</span>
+                    <span className="font-mono text-sm font-bold text-[#073B3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.replyDeadline}
                     </span>
                     <span className="text-[10px] text-[#B45309] font-bold">12 Days strictly remaining</span>
                   </div>
                   <div className="p-3 bg-[#FFFBEB] rounded-control border border-[#FDE68A]">
                     <span className="text-[#B45309] block text-[11px] font-semibold">Recommended CA Sign</span>
-                    <span className="font-mono text-sm font-bold text-[#0B1F3A] block mt-0.5">
+                    <span className="font-mono text-sm font-bold text-[#073B3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.recommendedCaSign}
                     </span>
                     <span className="text-[10px] text-[#B45309]">5-day contingency buffer</span>
                   </div>
                   <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
-                    <span className="text-[#5B6B82] block text-[11px]">Assigned Counsel / CA</span>
-                    <span className="font-bold text-[#0B1F3A] block mt-0.5">
+                    <span className="text-[#687674] block text-[11px]">Assigned Counsel / CA</span>
+                    <span className="font-bold text-[#073B3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.caCounsel.name}
                     </span>
-                    <span className="font-mono text-[10px] text-[#5B6B82]">{CANONICAL_DEMO_CASE.caCounsel.membershipNo}</span>
+                    <span className="font-mono text-[10px] text-[#687674]">{CANONICAL_DEMO_CASE.caCounsel.membershipNo}</span>
                   </div>
                 </div>
               </div>
@@ -479,10 +479,10 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
+                    <span className="w-5 h-5 rounded-full bg-[#073B3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                       3
                     </span>
-                    <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                    <h3 className="font-headline text-sm font-bold text-[#073B3A]">
                       Assembled Evidentiary Annexures
                     </h3>
                   </div>
@@ -493,7 +493,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
 
                 <div className="rounded-control border border-[#E2E8F0] overflow-x-auto text-xs">
                   <table className="w-full text-left min-w-[500px] sm:min-w-0">
-                    <thead className="bg-[#F8FAFC] text-[#0B1F3A] font-bold text-[11px] border-b border-[#E2E8F0]">
+                    <thead className="bg-[#F8FAFC] text-[#073B3A] font-bold text-[11px] border-b border-[#E2E8F0]">
                       <tr>
                         <th className="p-2 font-mono">Annexure</th>
                         <th className="p-2">Document Description</th>
@@ -503,39 +503,39 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     </thead>
                     <tbody className="divide-y divide-[#E2E8F0]">
                       <tr>
-                        <td className="p-2 font-mono font-bold text-[#0B1F3A]">ANNEX-A</td>
+                        <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-A</td>
                         <td className="p-2">Purchase Invoice (Apex Textiles)</td>
-                        <td className="p-2 font-mono text-[#5B6B82]">INV #{CANONICAL_DEMO_CASE.supplier.invoiceNo}</td>
-                        <td className="p-2 text-right text-[#12805C] font-bold">✓ Verified</td>
+                        <td className="p-2 font-mono text-[#687674]">INV #{CANONICAL_DEMO_CASE.supplier.invoiceNo}</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-mono font-bold text-[#0B1F3A]">ANNEX-B</td>
+                        <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-B</td>
                         <td className="p-2">Sample Bank Payment Advice &amp; UTR</td>
-                        <td className="p-2 font-mono text-[#5B6B82]">{CANONICAL_DEMO_CASE.banking.utr}</td>
-                        <td className="p-2 text-right text-[#12805C] font-bold">✓ Verified</td>
+                        <td className="p-2 font-mono text-[#687674]">{CANONICAL_DEMO_CASE.banking.utr}</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-mono font-bold text-[#0B1F3A]">ANNEX-C</td>
+                        <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-C</td>
                         <td className="p-2">Consignment Note &amp; E-Way Bill</td>
-                        <td className="p-2 font-mono text-[#5B6B82]">{CANONICAL_DEMO_CASE.transport.ewayBillNo}</td>
-                        <td className="p-2 text-right text-[#12805C] font-bold">✓ Verified</td>
+                        <td className="p-2 font-mono text-[#687674]">{CANONICAL_DEMO_CASE.transport.ewayBillNo}</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-mono font-bold text-[#0B1F3A]">ANNEX-D</td>
+                        <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-D</td>
                         <td className="p-2">Supplier 16(2)(c) Tax Clearance Cert.</td>
-                        <td className="p-2 font-mono text-[#5B6B82]">Apex / CA Declaration</td>
-                        <td className="p-2 text-right text-[#12805C] font-bold">✓ Verified</td>
+                        <td className="p-2 font-mono text-[#687674]">Apex / CA Declaration</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
                       </tr>
                       <tr>
-                        <td className="p-2 font-mono font-bold text-[#0B1F3A]">ANNEX-E</td>
+                        <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-E</td>
                         <td className="p-2">Reconciliation Ledger &amp; GSTR-2B Proof</td>
-                        <td className="p-2 font-mono text-[#5B6B82]">Dhaal Match Run #109</td>
-                        <td className="p-2 text-right text-[#12805C] font-bold">✓ Verified</td>
+                        <td className="p-2 font-mono text-[#687674]">Dhaal Match Run #109</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
                       </tr>
                       <tr className="bg-[#FFFBEB]/40">
                         <td className="p-2 font-mono font-bold text-[#B45309]">ANNEX-F</td>
                         <td className="p-2 font-semibold">Practicing CA Verification Certificate</td>
-                        <td className="p-2 font-mono text-[#5B6B82]">Requires UDIN Signature</td>
+                        <td className="p-2 font-mono text-[#687674]">Requires UDIN Signature</td>
                         <td className="p-2 text-right text-[#B45309] font-bold">CA Pending</td>
                       </tr>
                     </tbody>
@@ -547,10 +547,10 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
+                    <span className="w-5 h-5 rounded-full bg-[#073B3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                       4
                     </span>
-                    <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                    <h3 className="font-headline text-sm font-bold text-[#073B3A]">
                       Verified Statutory Form ASMT-11 Reply (Extract)
                     </h3>
                   </div>
@@ -559,7 +559,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   </Badge>
                 </div>
                 <div className="bg-[#F8FAFC] p-3 rounded-control border border-[#E2E8F0] text-xs font-mono leading-relaxed space-y-1">
-                  <div className="flex justify-between border-b border-[#E2E8F0] pb-1 text-[10px] text-[#5B6B82]">
+                  <div className="flex justify-between border-b border-[#E2E8F0] pb-1 text-[10px] text-[#687674]">
                     <span>Format: Form GST ASMT-11</span>
                     <span>Rule 99(2) CGST Rules</span>
                   </div>
@@ -570,31 +570,31 @@ export const Screen6CaReadyBrief: React.FC = () => {
               </div>
 
               {/* Section 5: Statutory Disclaimer Box */}
-              <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#CBD5E1] flex items-start gap-2.5 text-xs">
-                <span className="material-symbols-outlined text-[#0B1F3A] text-base shrink-0 mt-0.5">
+              <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E4E9E5] flex items-start gap-2.5 text-xs">
+                <span className="material-symbols-outlined text-[#073B3A] text-base shrink-0 mt-0.5">
                   gavel
                 </span>
-                <p className="text-[11px] text-[#5B6B82] leading-tight">
-                  <strong className="text-[#0B1F3A]">Statutory Disclaimer:</strong> This CA Brief is an algorithmic compliance compilation designed strictly as an assistive drafting aid for independent professional review. It does not constitute formal legal opinion or tax filing. The brief must be independently verified, endorsed, and uploaded under valid digital signature / UDIN by a practicing Chartered Accountant before GST portal submission.
+                <p className="text-[11px] text-[#687674] leading-tight">
+                  <strong className="text-[#073B3A]">Statutory Disclaimer:</strong> This CA Brief is an algorithmic compliance compilation designed strictly as an assistive drafting aid for independent professional review. It does not constitute formal legal opinion or tax filing. The brief must be independently verified, endorsed, and uploaded under valid digital signature / UDIN by a practicing Chartered Accountant before GST portal submission.
                 </p>
               </div>
 
               {/* Signatures Block */}
               <div className="pt-4 border-t border-[#E2E8F0] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-xs font-mono">
                 <div>
-                  <span className="text-[10px] text-[#5B6B82] uppercase block">Assessee</span>
-                  <span className="font-headline text-sm font-bold text-[#0B1F3A] block mt-0.5">
+                  <span className="text-[10px] text-[#687674] uppercase block">Assessee</span>
+                  <span className="font-headline text-sm font-bold text-[#073B3A] block mt-0.5">
                     {CANONICAL_DEMO_CASE.proprietorName}
                   </span>
-                  <span className="text-[10px] text-[#5B6B82]">Proprietor, Sharma Garments</span>
+                  <span className="text-[10px] text-[#687674]">Proprietor, Sharma Garments</span>
                 </div>
 
                 <div className="text-left sm:text-right">
-                  <span className="text-[10px] text-[#5B6B82] uppercase block">Attesting CA</span>
-                  <div className="w-44 h-7 rounded-control bg-[#F8FAFC] border border-[#CBD5E1] flex items-center justify-center text-[10px] text-[#5B6B82] mt-0.5">
+                  <span className="text-[10px] text-[#687674] uppercase block">Attesting CA</span>
+                  <div className="w-44 h-7 rounded-control bg-[#F8FAFC] border border-[#E4E9E5] flex items-center justify-center text-[10px] text-[#687674] mt-0.5">
                     [ Digitally Signed via DSC ]
                   </div>
-                  <span className="text-[10px] text-[#5B6B82] block mt-0.5">UDIN: Pending Filing</span>
+                  <span className="text-[10px] text-[#687674] block mt-0.5">UDIN: Pending Filing</span>
                 </div>
               </div>
             </div>
@@ -609,10 +609,10 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <Badge variant="warning" size="sm">
                 STEP 6 OF 6 • READY TO TRANSMIT
               </Badge>
-              <h3 className="font-headline text-base font-bold text-[#0B1F3A] mt-2">
+              <h3 className="font-headline text-base font-bold text-[#073B3A] mt-2">
                 Hand Off To CA
               </h3>
-              <p className="text-xs text-[#5B6B82] mt-0.5 leading-relaxed">
+              <p className="text-xs text-[#687674] mt-0.5 leading-relaxed">
                 Deliver the complete digital dossier, raw ledgers, and Form ASMT-11 draft directly to your tax consultant.
               </p>
             </div>
@@ -623,7 +623,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                 variant="primary"
                 icon="share"
                 onClick={() => setIsShareModalOpen(true)}
-                className="w-full bg-[#12805C] hover:bg-[#0E9FA8] text-white"
+                className="w-full bg-[#119B72] hover:bg-[#0E9FA8] text-white"
               >
                 Send CA Pack via WhatsApp
               </Button>
@@ -652,17 +652,17 @@ export const Screen6CaReadyBrief: React.FC = () => {
 
             {/* Secure CA Passcode Handshake */}
             <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] space-y-1.5">
-              <div className="flex items-center justify-between text-xs font-semibold text-[#0B1F3A]">
+              <div className="flex items-center justify-between text-xs font-semibold text-[#073B3A]">
                 <span className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-base text-[#2B4C9B]">lock</span>
+                  <span className="material-symbols-outlined text-base text-[#087F73]">lock</span>
                   <span>Encrypted CA Passcode</span>
                 </span>
                 <Badge variant="success" size="sm">
                   Active
                 </Badge>
               </div>
-              <div className="flex items-center justify-between bg-white p-2 rounded-control border border-[#CBD5E1]">
-                <span className="font-mono text-xs font-bold text-[#0B1F3A] tracking-wider">
+              <div className="flex items-center justify-between bg-white p-2 rounded-control border border-[#E4E9E5]">
+                <span className="font-mono text-xs font-bold text-[#073B3A] tracking-wider">
                   {CANONICAL_DEMO_CASE.caCounsel.passcode}
                 </span>
                 <button
@@ -671,12 +671,12 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     navigator.clipboard.writeText(CANONICAL_DEMO_CASE.caCounsel.passcode);
                     showToast('CA Access Passkey copied!');
                   }}
-                  className="text-xs font-semibold text-[#2B4C9B] hover:underline min-h-[44px] px-2 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] rounded-control"
+                  className="text-xs font-semibold text-[#087F73] hover:underline min-h-[44px] px-2 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087F73] rounded-control"
                 >
                   Copy Passkey
                 </button>
               </div>
-              <p className="text-[10px] text-[#5B6B82]">
+              <p className="text-[10px] text-[#687674]">
                 Your CA accesses raw GSTIN ledgers and editable tables with end-to-end audit logging.
               </p>
             </div>
@@ -684,21 +684,21 @@ export const Screen6CaReadyBrief: React.FC = () => {
 
           {/* Pre-Filing Checklist Card */}
           <Card variant="default" padding="md" className="space-y-3">
-            <h4 className="font-headline text-sm font-bold text-[#0B1F3A] flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#2B4C9B]">checklist_rtl</span>
+            <h4 className="font-headline text-sm font-bold text-[#073B3A] flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#087F73]">checklist_rtl</span>
               <span>Pre-Filing Checklist</span>
             </h4>
-            <div className="space-y-1 text-xs text-[#0F172A]">
+            <div className="space-y-1 text-xs text-[#152B2A]">
               <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
-                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
+                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#073B3A] focus:ring-[#087F73] shrink-0" />
                 <span>Invoice &amp; E-Way bill values re-computed to 2 decimal places</span>
               </label>
               <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
-                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
+                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#073B3A] focus:ring-[#087F73] shrink-0" />
                 <span>Supplier filed GSTR-1 in subsequent month verified on GST portal</span>
               </label>
               <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
-                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
+                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#073B3A] focus:ring-[#087F73] shrink-0" />
                 <span>Bank payment confirmed against Tax Invoice date (Sec 16(2)(b))</span>
               </label>
               <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
@@ -709,19 +709,19 @@ export const Screen6CaReadyBrief: React.FC = () => {
                       showToast('Status updated: Brief signed and ready for GST Portal submission!');
                     }
                   }}
-                  className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0"
+                  className="w-4 h-4 rounded text-[#073B3A] focus:ring-[#087F73] shrink-0"
                 />
-                <span className="font-semibold text-[#0B1F3A]">Chartered Accountant review &amp; UDIN generated</span>
+                <span className="font-semibold text-[#073B3A]">Chartered Accountant review &amp; UDIN generated</span>
               </label>
             </div>
           </Card>
 
           {/* Start New Notice / Reset Demo */}
           <Card variant="default" padding="md" className="space-y-3">
-            <h4 className="font-headline text-sm font-bold text-[#0B1F3A]">
+            <h4 className="font-headline text-sm font-bold text-[#073B3A]">
               Other Scrutiny Notices?
             </h4>
-            <p className="text-xs text-[#5B6B82]">
+            <p className="text-xs text-[#687674]">
               Have an ASMT-10 for another tax period or assessment year?
             </p>
             <Button
@@ -746,19 +746,19 @@ export const Screen6CaReadyBrief: React.FC = () => {
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1F3A]/40 backdrop-blur-xs animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#073B3A]/40 backdrop-blur-xs animate-in fade-in duration-150"
         >
-          <div className="bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] max-w-lg w-full p-6 flex flex-col gap-4">
+          <div className="bg-white rounded-modal shadow-tier3 border border-[#E4E9E5] max-w-lg w-full p-6 flex flex-col gap-4">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-[#E6F4EA] text-[#12805C] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-[#E6F4EA] text-[#119B72] flex items-center justify-center">
                   <span className="material-symbols-outlined text-lg">send</span>
                 </div>
                 <div>
-                  <h3 className="font-headline text-base font-bold text-[#0B1F3A]">
+                  <h3 className="font-headline text-base font-bold text-[#073B3A]">
                     Share Legal Pack with CA
                   </h3>
-                  <p className="text-xs text-[#5B6B82]">
+                  <p className="text-xs text-[#687674]">
                     Delivery via WhatsApp or direct message
                   </p>
                 </div>
@@ -766,7 +766,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsShareModalOpen(false)}
-                className="text-[#5B6B82] hover:text-[#0B1F3A] hover:bg-[#F1F5F9] p-1.5 rounded-control transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
+                className="text-[#687674] hover:text-[#073B3A] hover:bg-[#F1F5F9] p-1.5 rounded-control transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087F73]"
                 aria-label="Close"
               >
                 <span className="material-symbols-outlined">close</span>
@@ -775,14 +775,14 @@ export const Screen6CaReadyBrief: React.FC = () => {
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-[11px] font-bold text-[#5B6B82] block mb-1">
+                <label className="text-[11px] font-bold text-[#687674] block mb-1">
                   Prepared Message Payload
                 </label>
                 <textarea
                   readOnly
                   rows={4}
                   value={shareWhatsAppMessage}
-                  className="w-full p-2.5 rounded-control bg-[#F8FAFC] font-mono text-xs text-[#0F172A] border border-[#CBD5E1] resize-none focus:outline-none"
+                  className="w-full p-2.5 rounded-control bg-[#F8FAFC] font-mono text-xs text-[#152B2A] border border-[#E4E9E5] resize-none focus:outline-none"
                 />
               </div>
             </div>
@@ -802,7 +802,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                 size="sm"
                 icon="send"
                 onClick={handleDispatchWhatsApp}
-                className="bg-[#12805C] hover:bg-[#0E9FA8] text-white"
+                className="bg-[#119B72] hover:bg-[#0E9FA8] text-white"
               >
                 Open in WhatsApp
               </Button>
@@ -814,7 +814,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom duration-200">
-          <div className="bg-[#0B1F3A] text-white px-4 py-3 rounded-card shadow-tier3 flex items-center gap-2.5 border border-[#2B4C9B]">
+          <div className="bg-[#073B3A] text-white px-4 py-3 rounded-card shadow-tier3 flex items-center gap-2.5 border border-[#087F73]">
             <span className="material-symbols-outlined text-[#F59E0B] text-lg">check_circle</span>
             <span className="text-xs font-medium">{toastMessage}</span>
           </div>

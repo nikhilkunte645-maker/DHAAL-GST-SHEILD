@@ -16,18 +16,22 @@
 @tailwind utilities;
 
 :root {
-  --color-navy: #0B1F3A;
-  --color-indigo: #2B4C9B;
+  --color-dhaal-dark: #073B3A;
+  --color-dhaal-teal: #087F73;
+  --color-dhaal-emerald: #119B72;
+  --color-dhaal-mint: #E7F4EE;
+  --color-navy: #073B3A;
+  --color-indigo: #087F73;
   --color-saffron: #F59E0B;
-  --color-verified-teal: #0E9FA8;
-  --color-success: #12805C;
-  --color-warning: #B45309;
+  --color-verified-teal: #119B72;
+  --color-success: #119B72;
+  --color-warning: #D97706;
   --color-danger: #C0392B;
-  --color-canvas: #F6F8FB;
+  --color-canvas: #FAF9F5;
   --color-surface: #FFFFFF;
-  --color-border: #E3E8F0;
-  --color-text: #0F172A;
-  --color-muted: #5B6B82;
+  --color-border: #E4E9E5;
+  --color-text: #152B2A;
+  --color-muted: #687674;
 }
 
 @layer base {
@@ -36,8 +40,8 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: #F6F8FB;
-    color: #0F172A;
+    background-color: #FAF9F5;
+    color: #152B2A;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -66,10 +66,10 @@ export const Screen2ConfirmPause: React.FC = () => {
     <div className="flex flex-col w-full pb-12">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="font-headline text-2xl sm:text-3xl font-bold text-[#0B1F3A] tracking-tight">
+        <h1 className="font-headline text-2xl sm:text-3xl font-bold text-[#073B3A] tracking-tight">
           Confirm Questioned Amount
         </h1>
-        <p className="text-sm text-[#5B6B82] mt-1">
+        <p className="text-sm text-[#687674] mt-1">
           Review extracted parameters from Form ASMT-10 and confirm the authentic discrepancy figure.
         </p>
       </div>
@@ -80,12 +80,12 @@ export const Screen2ConfirmPause: React.FC = () => {
         <div className="lg:col-span-6 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#2B4C9B] text-lg">description</span>
-              <h2 className="font-headline text-base font-bold text-[#0B1F3A]">
+              <span className="material-symbols-outlined text-[#087F73] text-lg">description</span>
+              <h2 className="font-headline text-base font-bold text-[#073B3A]">
                 Scanned Notice ASMT-10
               </h2>
             </div>
-            <span className="text-xs text-[#5B6B82] font-mono">
+            <span className="text-xs text-[#687674] font-mono">
               Ward 102 • Mumbai Div-IV
             </span>
           </div>
@@ -100,7 +100,7 @@ export const Screen2ConfirmPause: React.FC = () => {
             {/* Top Accent Strip */}
             <div
               className={`h-1.5 transition-colors ${
-                isConfirmedSuccess ? 'bg-[#12805C]' : 'bg-[#F59E0B]'
+                isConfirmedSuccess ? 'bg-[#119B72]' : 'bg-[#F59E0B]'
               }`}
             />
 
@@ -110,14 +110,14 @@ export const Screen2ConfirmPause: React.FC = () => {
                 role="alert"
                 className={`flex items-start gap-3 p-3.5 sm:p-4 rounded-control border-l-4 transition-all ${
                   isConfirmedSuccess
-                    ? 'bg-[#E6F4EA] border-[#12805C] text-[#12805C]'
+                    ? 'bg-[#E6F4EA] border-[#119B72] text-[#119B72]'
                     : 'bg-[#FEF3C7] border-[#B45309] text-[#B45309]'
                 }`}
               >
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                     isConfirmedSuccess
-                      ? 'bg-[#12805C] text-white'
+                      ? 'bg-[#119B72] text-white'
                       : 'bg-[#B45309] text-white'
                   }`}
                 >
@@ -126,7 +126,7 @@ export const Screen2ConfirmPause: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-headline text-sm sm:text-base font-bold text-[#0F172A]">
+                  <span className="font-headline text-sm sm:text-base font-bold text-[#152B2A]">
                     {isConfirmedSuccess
                       ? 'Discrepancy Amount Confirmed'
                       : 'Verification Checkpoint: Ambiguity Detected'}
@@ -142,7 +142,7 @@ export const Screen2ConfirmPause: React.FC = () => {
               {/* Magnification Comparison Crop Module */}
               <div className="bg-[#F8FAFC] rounded-control p-3.5 sm:p-4 border border-[#E2E8F0]">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-[#5B6B82] font-bold">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-[#687674] font-bold">
                     Micro-Scan Area [Row 2: Discrepancy Amount]
                   </span>
                   <Badge variant="neutral" size="sm">
@@ -153,7 +153,7 @@ export const Screen2ConfirmPause: React.FC = () => {
                 {/* Zoomed Crop Display */}
                 <div className="bg-white rounded-control p-3 flex flex-col sm:flex-row items-center justify-between gap-3 border border-[#E2E8F0] shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="w-32 h-12 bg-[#EFF4FF] rounded-control flex items-center justify-center relative overflow-hidden font-mono text-base font-bold tracking-wider text-[#0B1F3A] border border-[#CBD5E1]">
+                    <div className="w-32 h-12 bg-[#E7F4EE] rounded-control flex items-center justify-center relative overflow-hidden font-mono text-base font-bold tracking-wider text-[#073B3A] border border-[#E4E9E5]">
                       <span>
                         ₹1,8
                         <span className="relative inline-block text-[#B45309]">
@@ -167,17 +167,17 @@ export const Screen2ConfirmPause: React.FC = () => {
                       </span>
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xs text-[#0B1F3A] font-bold">
+                      <span className="text-xs text-[#073B3A] font-bold">
                         Dual-Pass Engine Mismatch
                       </span>
-                      <span className="font-mono text-[11px] text-[#5B6B82] mt-0.5">
+                      <span className="font-mono text-[11px] text-[#687674] mt-0.5">
                         Read A: ₹1,84,250 • Read B: ₹1,81,250
                       </span>
                     </div>
                   </div>
 
-                  <div className="px-2.5 py-1 rounded-control bg-[#EFF4FF] text-right shrink-0 border border-[#CBD5E1]">
-                    <span className="font-mono text-[10px] text-[#5B6B82] block">
+                  <div className="px-2.5 py-1 rounded-control bg-[#E7F4EE] text-right shrink-0 border border-[#E4E9E5]">
+                    <span className="font-mono text-[10px] text-[#687674] block">
                       Variance
                     </span>
                     <span className="font-mono text-xs text-[#C0392B] font-bold">
@@ -187,11 +187,11 @@ export const Screen2ConfirmPause: React.FC = () => {
                 </div>
 
                 <div className="mt-2 p-2 rounded-control bg-white border border-[#E2E8F0] flex items-start gap-2">
-                  <span className="material-symbols-outlined text-[#2B4C9B] text-base shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-[#087F73] text-base shrink-0 mt-0.5">
                     info
                   </span>
-                  <p className="text-[11px] text-[#5B6B82] leading-tight">
-                    <strong className="text-[#0B1F3A]">Reason for Pause:</strong> A physical printhead ink-smear intersects the digit &apos;4&apos;. Confirm the correct figure to ensure your statutory reply is accurate.
+                  <p className="text-[11px] text-[#687674] leading-tight">
+                    <strong className="text-[#073B3A]">Reason for Pause:</strong> A physical printhead ink-smear intersects the digit &apos;4&apos;. Confirm the correct figure to ensure your statutory reply is accurate.
                   </p>
                 </div>
               </div>
@@ -200,13 +200,13 @@ export const Screen2ConfirmPause: React.FC = () => {
               <div className="bg-[#F8FAFC] rounded-control p-4 border border-[#E2E8F0]">
                 <label
                   htmlFor="discrepancy-input"
-                  className="block text-xs font-bold text-[#0B1F3A] mb-1.5"
+                  className="block text-xs font-bold text-[#073B3A] mb-1.5"
                 >
                   Enter the exact questioned discrepancy amount (₹):
                 </label>
 
                 <div className="relative mb-2.5">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-base font-bold text-[#5B6B82]">
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-mono text-base font-bold text-[#687674]">
                     ₹
                   </span>
                   <input
@@ -215,10 +215,10 @@ export const Screen2ConfirmPause: React.FC = () => {
                     value={inputVal}
                     onChange={handleInputChange}
                     placeholder="e.g. 184250"
-                    className="w-full pl-8 pr-24 py-2.5 bg-white rounded-control font-mono text-base font-bold text-[#0B1F3A] border border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#2B4C9B] transition-all shadow-2xs"
+                    className="w-full pl-8 pr-24 py-2.5 bg-white rounded-control font-mono text-base font-bold text-[#073B3A] border border-[#E4E9E5] focus:outline-none focus:ring-2 focus:ring-[#087F73] transition-all shadow-2xs"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <span className="font-mono text-[11px] text-[#2B4C9B] font-bold">
+                    <span className="font-mono text-[11px] text-[#087F73] font-bold">
                       INR Exact
                     </span>
                   </div>
@@ -233,7 +233,7 @@ export const Screen2ConfirmPause: React.FC = () => {
 
                 {/* Quick Pick Buttons */}
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs text-[#5B6B82] font-semibold">Quick Pick:</span>
+                  <span className="text-xs text-[#687674] font-semibold">Quick Pick:</span>
                   <Button
                     type="button"
                     variant="secondary"
@@ -267,10 +267,10 @@ export const Screen2ConfirmPause: React.FC = () => {
                 </div>
 
                 {showMathPreview && (
-                  <div className="mt-3 p-3 rounded-control bg-white border border-[#CBD5E1] text-xs font-mono text-[#0F172A] animate-in fade-in duration-150">
-                    <span className="font-bold text-[#0B1F3A]">Calculation check:</span>{' '}
+                  <div className="mt-3 p-3 rounded-control bg-white border border-[#E4E9E5] text-xs font-mono text-[#152B2A] animate-in fade-in duration-150">
+                    <span className="font-bold text-[#073B3A]">Calculation check:</span>{' '}
                     3B Claimed (₹14,92,450) − 2B Available (₹13,08,200) ={' '}
-                    <strong className="text-[#12805C] font-bold">₹1,84,250.00</strong>. This mathematically validates Read A!
+                    <strong className="text-[#119B72] font-bold">₹1,84,250.00</strong>. This mathematically validates Read A!
                   </div>
                 )}
               </div>
@@ -310,10 +310,10 @@ export const Screen2ConfirmPause: React.FC = () => {
 
           {/* VALIDATED PARAMETERS CARD */}
           <Card variant="default" padding="md">
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#E3E8F0]">
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#E4E9E5]">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#0B1F3A] text-xl">fact_check</span>
-                <h3 className="font-headline text-sm sm:text-base font-bold text-[#0B1F3A]">
+                <span className="material-symbols-outlined text-[#073B3A] text-xl">fact_check</span>
+                <h3 className="font-headline text-sm sm:text-base font-bold text-[#073B3A]">
                   Validated Notice Parameters
                 </h3>
               </div>
@@ -326,17 +326,17 @@ export const Screen2ConfirmPause: React.FC = () => {
               {/* Field 1 */}
               <div className="p-3 rounded-control bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] text-[#5B6B82] uppercase font-semibold">
+                  <span className="text-[10px] text-[#687674] uppercase font-semibold">
                     Statutory Notice Type
                   </span>
                   <Badge variant="success" size="sm">
                     Verified
                   </Badge>
                 </div>
-                <span className="font-headline text-sm text-[#0B1F3A] font-bold">
+                <span className="font-headline text-sm text-[#073B3A] font-bold">
                   {CANONICAL_DEMO_CASE.formType}
                 </span>
-                <span className="text-[11px] text-[#5B6B82] mt-0.5">
+                <span className="text-[11px] text-[#687674] mt-0.5">
                   Rule 99(1) of CGST Rules
                 </span>
               </div>
@@ -344,17 +344,17 @@ export const Screen2ConfirmPause: React.FC = () => {
               {/* Field 2 */}
               <div className="p-3 rounded-control bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] text-[#5B6B82] uppercase font-semibold">
+                  <span className="text-[10px] text-[#687674] uppercase font-semibold">
                     Scrutiny Period
                   </span>
                   <Badge variant="success" size="sm">
                     Verified
                   </Badge>
                 </div>
-                <span className="font-headline text-sm text-[#0B1F3A] font-bold">
+                <span className="font-headline text-sm text-[#073B3A] font-bold">
                   {CANONICAL_DEMO_CASE.taxPeriod}
                 </span>
-                <span className="text-[11px] text-[#5B6B82] mt-0.5">
+                <span className="text-[11px] text-[#687674] mt-0.5">
                   First Quarter (Apr–Jun 2024)
                 </span>
               </div>
@@ -362,17 +362,17 @@ export const Screen2ConfirmPause: React.FC = () => {
               {/* Field 3 */}
               <div className="p-3 rounded-control bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] text-[#5B6B82] uppercase font-semibold">
+                  <span className="text-[10px] text-[#687674] uppercase font-semibold">
                     Legal Ground Cited
                   </span>
                   <Badge variant="success" size="sm">
                     Verified
                   </Badge>
                 </div>
-                <span className="font-headline text-sm text-[#0B1F3A] font-bold">
+                <span className="font-headline text-sm text-[#073B3A] font-bold">
                   Section 61 (Scrutiny)
                 </span>
-                <span className="text-[11px] text-[#5B6B82] mt-0.5">
+                <span className="text-[11px] text-[#687674] mt-0.5">
                   Pre-adjudication scrutiny notice
                 </span>
               </div>
@@ -380,17 +380,17 @@ export const Screen2ConfirmPause: React.FC = () => {
               {/* Field 4 */}
               <div className="p-3 rounded-control bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] text-[#5B6B82] uppercase font-semibold">
+                  <span className="text-[10px] text-[#687674] uppercase font-semibold">
                     Taxpayer Identity
                   </span>
                   <Badge variant="success" size="sm">
                     Verified
                   </Badge>
                 </div>
-                <span className="font-headline text-sm text-[#0B1F3A] font-bold truncate">
+                <span className="font-headline text-sm text-[#073B3A] font-bold truncate">
                   {CANONICAL_DEMO_CASE.businessName}
                 </span>
-                <span className="font-mono text-[11px] text-[#5B6B82] mt-0.5">
+                <span className="font-mono text-[11px] text-[#687674] mt-0.5">
                   GSTIN: {CANONICAL_DEMO_CASE.gstin}
                 </span>
               </div>
@@ -406,7 +406,7 @@ export const Screen2ConfirmPause: React.FC = () => {
                   <span className="text-[10px] text-[#B45309] uppercase font-bold">
                     Amount Questioned in Notice
                   </span>
-                  <span className="font-mono text-base sm:text-lg text-[#0B1F3A] font-bold">
+                  <span className="font-mono text-base sm:text-lg text-[#073B3A] font-bold">
                     {currentFormattedDisplay()}
                   </span>
                 </div>

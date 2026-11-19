@@ -10,10 +10,10 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const baseStyles = 'rounded-card border transition-all duration-150';
 
     const variantStyles = {
-      default: 'bg-white border-[#E3E8F0] shadow-xs',
-      muted: 'bg-[#F6F8FB] border-[#E3E8F0]',
+      default: 'bg-white border-[#E4E9E5] shadow-xs',
+      muted: 'bg-[#FAF9F5] border-[#E4E9E5]',
       interactive:
-        'bg-white border-[#E3E8F0] shadow-xs hover:border-[#CBD5E1] hover:shadow-sm cursor-pointer',
+        'bg-white border-[#E4E9E5] shadow-xs hover:border-[#087F73]/40 hover:shadow-sm cursor-pointer',
     };
 
     const paddingStyles = {

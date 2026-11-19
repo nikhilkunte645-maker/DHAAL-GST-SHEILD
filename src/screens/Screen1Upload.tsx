@@ -160,9 +160,9 @@ export const Screen1Upload: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-10 sm:mb-14">
         {/* Left Hero: Headline, Concise Subcopy (max 2 lines), Actions */}
         <div className="lg:col-span-7 flex flex-col gap-4 sm:gap-5">
-          <h1 className="font-headline text-3xl sm:text-4xl lg:text-[40px] font-bold text-[#0B1F3A] tracking-tight leading-[1.15]">
+          <h1 className="font-headline text-3xl sm:text-4xl lg:text-[40px] font-bold text-[#073B3A] tracking-tight leading-[1.15]">
             {t.heroHeadline}
-            <span className="text-[#2B4C9B] underline decoration-[#F59E0B] decoration-4 underline-offset-4">
+            <span className="text-[#087F73] underline decoration-[#F59E0B] decoration-4 underline-offset-4">
               {t.heroHeadlineHighlight}
             </span>
             {t.heroHeadlineEnd}
@@ -207,15 +207,15 @@ export const Screen1Upload: React.FC = () => {
           <Card
             variant="default"
             padding="none"
-            className="relative overflow-hidden shadow-tier1 border-[#CBD5E1]"
+            className="relative overflow-hidden shadow-tier1 border-[#E4E9E5]"
           >
             {/* Document Header Bar */}
             <div className="flex items-center justify-between bg-[#F8FAFC] px-4 py-2.5 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#CBD5E1]"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-[#CBD5E1]"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-[#CBD5E1]"></span>
-                <span className="font-mono text-xs text-[#0B1F3A] font-bold ml-1.5 truncate">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E4E9E5]"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E4E9E5]"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E4E9E5]"></span>
+                <span className="font-mono text-xs text-[#073B3A] font-bold ml-1.5 truncate">
                   FORM_GST_ASMT-10.pdf
                 </span>
               </div>
@@ -230,7 +230,7 @@ export const Screen1Upload: React.FC = () => {
                 <span className="text-[10px] text-[#64748B] uppercase tracking-wider font-semibold">
                   GST Scrutiny Directorate
                 </span>
-                <span className="font-headline text-sm font-bold text-[#0B1F3A]">
+                <span className="font-headline text-sm font-bold text-[#073B3A]">
                   NOTICE UNDER SECTION 61
                 </span>
                 <span className="font-mono text-[11px] text-[#64748B]">
@@ -268,7 +268,7 @@ export const Screen1Upload: React.FC = () => {
                     <span className="text-[11px] text-[#B45309] truncate">
                       Statutory Response Window
                     </span>
-                    <span className="font-headline text-sm sm:text-base text-[#0B1F3A] font-bold">
+                    <span className="font-headline text-sm sm:text-base text-[#073B3A] font-bold">
                       12 Days Remaining
                     </span>
                   </div>
@@ -281,14 +281,14 @@ export const Screen1Upload: React.FC = () => {
               {/* Data Row 3: Tax Period Extracted */}
               <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="material-symbols-outlined text-[#2B4C9B] text-lg shrink-0">
+                  <span className="material-symbols-outlined text-[#087F73] text-lg shrink-0">
                     calendar_month
                   </span>
                   <div className="flex flex-col min-w-0">
                     <span className="text-[11px] text-[#64748B] truncate">
                       Tax Period Under Review
                     </span>
-                    <span className="font-mono text-xs text-[#0B1F3A] font-bold">
+                    <span className="font-mono text-xs text-[#073B3A] font-bold">
                       {CANONICAL_DEMO_CASE.taxPeriod}
                     </span>
                   </div>
@@ -305,62 +305,62 @@ export const Screen1Upload: React.FC = () => {
       {/* 3-Step Pipeline Strip */}
       <div className="mb-10 sm:mb-12">
         <div className="text-center max-w-xl mx-auto mb-6">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-[#2B4C9B] font-bold">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-[#087F73] font-bold">
             The Dhaal Shield Pipeline
           </span>
-          <h2 className="font-headline text-xl sm:text-2xl font-bold text-[#0B1F3A] mt-1">
+          <h2 className="font-headline text-xl sm:text-2xl font-bold text-[#073B3A] mt-1">
             From notice anxiety to audit-ready reply in three steps
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {/* Pipeline Step 1 */}
-          <Card variant="default" padding="md" className="flex flex-col gap-2.5 hover:border-[#CBD5E1]">
+          <Card variant="default" padding="md" className="flex flex-col gap-2.5 hover:border-[#E4E9E5]">
             <div className="flex items-center justify-between">
-              <div className="w-8 h-8 rounded-control bg-[#EFF4FF] text-[#0B1F3A] flex items-center justify-center font-headline text-sm font-bold">
+              <div className="w-8 h-8 rounded-control bg-[#E7F4EE] text-[#073B3A] flex items-center justify-center font-headline text-sm font-bold">
                 1
               </div>
-              <span className="material-symbols-outlined text-[#2B4C9B] text-xl">upload_file</span>
+              <span className="material-symbols-outlined text-[#087F73] text-xl">upload_file</span>
             </div>
-            <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">Upload Document</h3>
-            <p className="text-xs text-[#5B6B82] leading-relaxed">
+            <h3 className="font-headline text-sm font-bold text-[#073B3A]">Upload Document</h3>
+            <p className="text-xs text-[#687674] leading-relaxed">
               Drop any ASMT-10 notice. Dhaal strips personal tokens, extracts discrepancy tables, and parses statutory sections.
             </p>
-            <span className="font-mono text-[11px] text-[#2B4C9B] font-semibold mt-auto pt-2 border-t border-[#F1F5F9]">
+            <span className="font-mono text-[11px] text-[#087F73] font-semibold mt-auto pt-2 border-t border-[#F1F5F9]">
               Form ASMT-10 Support
             </span>
           </Card>
 
           {/* Pipeline Step 2 */}
-          <Card variant="default" padding="md" className="flex flex-col gap-2.5 hover:border-[#CBD5E1]">
+          <Card variant="default" padding="md" className="flex flex-col gap-2.5 hover:border-[#E4E9E5]">
             <div className="flex items-center justify-between">
-              <div className="w-8 h-8 rounded-control bg-[#EFF4FF] text-[#0B1F3A] flex items-center justify-center font-headline text-sm font-bold">
+              <div className="w-8 h-8 rounded-control bg-[#E7F4EE] text-[#073B3A] flex items-center justify-center font-headline text-sm font-bold">
                 2
               </div>
-              <span className="material-symbols-outlined text-[#2B4C9B] text-xl">fact_check</span>
+              <span className="material-symbols-outlined text-[#087F73] text-xl">fact_check</span>
             </div>
-            <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">Deterministic Check</h3>
-            <p className="text-xs text-[#5B6B82] leading-relaxed">
+            <h3 className="font-headline text-sm font-bold text-[#073B3A]">Deterministic Check</h3>
+            <p className="text-xs text-[#687674] leading-relaxed">
               Numbers are mathematically verified against GSTR-3B vs 2B data. Ambiguous scans trigger an interactive confirmation checkpoint.
             </p>
-            <span className="font-mono text-[11px] text-[#2B4C9B] font-semibold mt-auto pt-2 border-t border-[#F1F5F9]">
+            <span className="font-mono text-[11px] text-[#087F73] font-semibold mt-auto pt-2 border-t border-[#F1F5F9]">
               Checked by Code
             </span>
           </Card>
 
           {/* Pipeline Step 3 */}
-          <Card variant="default" padding="md" className="flex flex-col gap-2.5 hover:border-[#CBD5E1]">
+          <Card variant="default" padding="md" className="flex flex-col gap-2.5 hover:border-[#E4E9E5]">
             <div className="flex items-center justify-between">
-              <div className="w-8 h-8 rounded-control bg-[#EFF4FF] text-[#0B1F3A] flex items-center justify-center font-headline text-sm font-bold">
+              <div className="w-8 h-8 rounded-control bg-[#E7F4EE] text-[#073B3A] flex items-center justify-center font-headline text-sm font-bold">
                 3
               </div>
-              <span className="material-symbols-outlined text-[#2B4C9B] text-xl">verified</span>
+              <span className="material-symbols-outlined text-[#087F73] text-xl">verified</span>
             </div>
-            <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">CA-Ready Brief</h3>
-            <p className="text-xs text-[#5B6B82] leading-relaxed">
+            <h3 className="font-headline text-sm font-bold text-[#073B3A]">CA-Ready Brief</h3>
+            <p className="text-xs text-[#687674] leading-relaxed">
               Receive a synthesized legal brief with vernacular audio explanations, statutory deadlines, evidence tracker, and ASMT-11 draft.
             </p>
-            <span className="font-mono text-[11px] text-[#2B4C9B] font-semibold mt-auto pt-2 border-t border-[#F1F5F9]">
+            <span className="font-mono text-[11px] text-[#087F73] font-semibold mt-auto pt-2 border-t border-[#F1F5F9]">
               Exportable Dossier
             </span>
           </Card>
@@ -378,14 +378,14 @@ export const Screen1Upload: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#0B1F3A] text-2xl">
+              <span className="material-symbols-outlined text-[#073B3A] text-2xl">
                 security_update_good
               </span>
-              <h2 className="font-headline text-xl sm:text-2xl font-bold text-[#0B1F3A]">
+              <h2 className="font-headline text-xl sm:text-2xl font-bold text-[#073B3A]">
                 Ingest GST Notice
               </h2>
             </div>
-            <p className="text-xs text-[#5B6B82] mt-0.5">
+            <p className="text-xs text-[#687674] mt-0.5">
               Upload scanned documents, digital notice PDFs, or photos from your device.
             </p>
           </div>
@@ -397,6 +397,7 @@ export const Screen1Upload: React.FC = () => {
             icon="bolt"
             onClick={handleLoadSample}
             aria-label="Load demo notice file"
+            className="w-full sm:w-auto shrink-0 min-h-[44px] min-w-[160px]"
           >
             Try with sample notice
           </Button>
@@ -409,20 +410,20 @@ export const Screen1Upload: React.FC = () => {
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
           className={`relative group cursor-pointer rounded-card border-2 border-dashed transition-all p-8 sm:p-12 text-center flex flex-col items-center justify-center gap-3.5 ${isDragOver
-            ? 'border-[#2B4C9B] bg-[#EFF4FF]'
-            : 'border-[#CBD5E1] bg-[#F8FAFC] hover:bg-[#EFF4FF] hover:border-[#2B4C9B]'
+            ? 'border-[#087F73] bg-[#E7F4EE]'
+            : 'border-[#E4E9E5] bg-[#F8FAFC] hover:bg-[#E7F4EE] hover:border-[#087F73]'
             } ${upload.status === 'parsing' ? 'opacity-40 pointer-events-none' : ''}`}
         >
-          <div className="w-14 h-14 rounded-2xl bg-white text-[#2B4C9B] flex items-center justify-center shadow-xs border border-[#E3E8F0] group-hover:scale-105 transition-transform">
+          <div className="w-14 h-14 rounded-2xl bg-white text-[#087F73] flex items-center justify-center shadow-xs border border-[#E4E9E5] group-hover:scale-105 transition-transform">
             <span className="material-symbols-outlined text-3xl">cloud_upload</span>
           </div>
 
           <div className="flex flex-col gap-1 max-w-md">
-            <span className="font-headline text-sm sm:text-base font-bold text-[#0B1F3A]">
+            <span className="font-headline text-sm sm:text-base font-bold text-[#073B3A]">
               Drag & drop your GST Notice here, or{' '}
-              <span className="text-[#2B4C9B] underline underline-offset-2">Browse Files</span>
+              <span className="text-[#087F73] underline underline-offset-2">Browse Files</span>
             </span>
-            <span className="text-xs text-[#5B6B82]">
+            <span className="text-xs text-[#687674]">
               PDF, JPG, PNG • Max single file size 25MB
             </span>
           </div>
@@ -459,39 +460,39 @@ export const Screen1Upload: React.FC = () => {
 
         {/* STATE 2: Parsing Progress Panel */}
         {upload.status === 'parsing' && (
-          <div className="mt-6 p-5 rounded-card bg-[#EFF4FF] border border-[#CBD5E1] flex flex-col gap-4 animate-in fade-in duration-150">
+          <div className="mt-6 p-5 rounded-card bg-[#E7F4EE] border border-[#E4E9E5] flex flex-col gap-4 animate-in fade-in duration-150">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#2B4C9B] text-white flex items-center justify-center animate-spin">
+                <div className="w-8 h-8 rounded-full bg-[#087F73] text-white flex items-center justify-center animate-spin">
                   <span className="material-symbols-outlined text-base">autorenew</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-headline text-sm font-bold text-[#0B1F3A]">
+                  <span className="font-headline text-sm font-bold text-[#073B3A]">
                     Parsing ASMT-10 Notice...
                   </span>
-                  <span className="text-xs text-[#5B6B82]">{upload.fileName}</span>
+                  <span className="text-xs text-[#687674]">{upload.fileName}</span>
                 </div>
               </div>
-              <span className="font-mono text-sm font-bold text-[#2B4C9B]">
+              <span className="font-mono text-sm font-bold text-[#087F73]">
                 {upload.progress}%
               </span>
             </div>
 
             {/* Linear Progress Bar */}
-            <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#CBD5E1]">
+            <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#E4E9E5]">
               <div
-                className="h-full bg-[#2B4C9B] rounded-full transition-all duration-300"
+                className="h-full bg-[#087F73] rounded-full transition-all duration-300"
                 style={{ width: `${upload.progress}%` }}
               />
             </div>
 
             {/* Checklist Steps */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono pt-1">
-              <div className="flex items-center gap-2 text-[#12805C] font-semibold">
+              <div className="flex items-center gap-2 text-[#119B72] font-semibold">
                 <span className="material-symbols-outlined text-base">check_circle</span>
                 <span>1. Extracted</span>
               </div>
-              <div className="flex items-center gap-2 text-[#12805C] font-semibold">
+              <div className="flex items-center gap-2 text-[#119B72] font-semibold">
                 <span className="material-symbols-outlined text-base">check_circle</span>
                 <span>2. Fields Detected</span>
               </div>
@@ -525,7 +526,7 @@ export const Screen1Upload: React.FC = () => {
                 <span className="font-headline text-sm sm:text-base font-bold text-[#C0392B]">
                   Unreadable Document Scan
                 </span>
-                <span className="text-xs text-[#0F172A] mt-0.5">
+                <span className="text-xs text-[#152B2A] mt-0.5">
                   The tax discrepancy numbers are partially blurred or cropped. Dhaal will not guess tax figures.
                 </span>
                 <span className="font-mono text-[11px] mt-1 text-[#C0392B] font-semibold">
@@ -556,7 +557,7 @@ export const Screen1Upload: React.FC = () => {
                 <span className="font-headline text-sm sm:text-base font-bold text-[#B45309]">
                   Unsupported Notice Detected: GSTR-3A / Return Default
                 </span>
-                <span className="text-xs text-[#0F172A] mt-0.5">
+                <span className="text-xs text-[#152B2A] mt-0.5">
                   This appears to be an automated Form GSTR-3A reminder, not a scrutiny notice under Section 61 (ASMT-10).
                 </span>
                 <span className="font-mono text-[11px] mt-1 text-[#B45309] font-semibold">
@@ -587,19 +588,19 @@ export const Screen1Upload: React.FC = () => {
             <Card
               variant="default"
               padding="sm"
-              className="mb-2 shadow-tier3 border-[#CBD5E1] w-64 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-150"
+              className="mb-2 shadow-tier3 border-[#E4E9E5] w-64 flex flex-col gap-2.5 animate-in fade-in zoom-in-95 duration-150"
             >
-              <div className="flex items-center justify-between pb-1.5 border-b border-[#E3E8F0]">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#E4E9E5]">
                 <div className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-sm text-[#2B4C9B]">tune</span>
-                  <span className="font-mono text-[11px] text-[#0B1F3A] uppercase font-bold tracking-wider">
+                  <span className="material-symbols-outlined text-sm text-[#087F73]">tune</span>
+                  <span className="font-mono text-[11px] text-[#073B3A] uppercase font-bold tracking-wider">
                     Demo Controls
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsDemoControlsOpen(false)}
-                  className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9] min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
+                  className="p-1 rounded text-[#94A3B8] hover:text-[#152B2A] hover:bg-[#F1F5F9] min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087F73]"
                   aria-label="Close demo controls"
                 >
                   <span className="material-symbols-outlined text-sm">close</span>
@@ -616,8 +617,8 @@ export const Screen1Upload: React.FC = () => {
                     }));
                   }}
                   className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.status === 'idle' && upload.errorType === 'none'
-                    ? 'bg-[#0B1F3A] text-white'
-                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    ? 'bg-[#073B3A] text-white'
+                    : 'bg-[#F8FAFC] text-[#152B2A] hover:bg-[#E7F4EE]'
                     }`}
                 >
                   1. Default
@@ -627,8 +628,8 @@ export const Screen1Upload: React.FC = () => {
                   type="button"
                   onClick={() => startUpload('FORM_GST_ASMT-10.pdf')}
                   className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.status === 'parsing'
-                    ? 'bg-[#0B1F3A] text-white'
-                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    ? 'bg-[#073B3A] text-white'
+                    : 'bg-[#F8FAFC] text-[#152B2A] hover:bg-[#E7F4EE]'
                     }`}
                 >
                   2. Processing
@@ -639,7 +640,7 @@ export const Screen1Upload: React.FC = () => {
                   onClick={() => setUploadError('unreadable')}
                   className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.errorType === 'unreadable'
                     ? 'bg-[#C0392B] text-white'
-                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    : 'bg-[#F8FAFC] text-[#152B2A] hover:bg-[#E7F4EE]'
                     }`}
                 >
                   3. Blurry Photo
@@ -650,14 +651,14 @@ export const Screen1Upload: React.FC = () => {
                   onClick={() => setUploadError('unsupported')}
                   className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.errorType === 'unsupported'
                     ? 'bg-[#B45309] text-white'
-                    : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
+                    : 'bg-[#F8FAFC] text-[#152B2A] hover:bg-[#E7F4EE]'
                     }`}
                 >
                   4. Wrong Form
                 </button>
               </div>
 
-              <div className="pt-1.5 border-t border-[#E3E8F0] flex items-center justify-between">
+              <div className="pt-1.5 border-t border-[#E4E9E5] flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => {
@@ -682,11 +683,11 @@ export const Screen1Upload: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsDemoControlsOpen(!isDemoControlsOpen)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/95 backdrop-blur-md shadow-tier2 border border-[#E3E8F0] text-xs font-semibold text-[#0B1F3A] hover:border-[#2B4C9B] hover:shadow-tier3 transition-all ml-auto min-h-[44px] sm:min-h-[38px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white/95 backdrop-blur-md shadow-tier2 border border-[#E4E9E5] text-xs font-semibold text-[#073B3A] hover:border-[#087F73] hover:shadow-tier3 transition-all ml-auto min-h-[44px] sm:min-h-[38px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087F73]"
             aria-expanded={isDemoControlsOpen}
             aria-label="Toggle demo state controls"
           >
-            <span className="material-symbols-outlined text-sm text-[#2B4C9B]">tune</span>
+            <span className="material-symbols-outlined text-sm text-[#087F73]">tune</span>
             <span>Demo controls</span>
           </button>
         </div>
