@@ -52,8 +52,7 @@ async function runVerification() {
     });
 
     console.log(
-      `Viewport ${vp.name}: innerWidth=${overflowCheck.innerWidth}, scrollWidth=${overflowCheck.scrollWidth} -> ${
-        overflowCheck.hasOverflow ? '❌ OVERFLOW' : '✅ ZERO OVERFLOW'
+      `Viewport ${vp.name}: innerWidth=${overflowCheck.innerWidth}, scrollWidth=${overflowCheck.scrollWidth} -> ${overflowCheck.hasOverflow ? '❌ OVERFLOW' : '✅ ZERO OVERFLOW'
       }`
     );
 

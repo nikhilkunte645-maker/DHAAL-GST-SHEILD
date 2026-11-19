@@ -599,7 +599,7 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsDemoControlsOpen(false)}
-                  className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
+                  className="p-1 rounded text-[#94A3B8] hover:text-[#0F172A] hover:bg-[#F1F5F9] min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
                   aria-label="Close demo controls"
                 >
                   <span className="material-symbols-outlined text-sm">close</span>
@@ -615,7 +615,7 @@ export const Screen1Upload: React.FC = () => {
                       upload: { ...s.upload, status: 'idle', progress: 0 },
                     }));
                   }}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.status === 'idle' && upload.errorType === 'none'
+                  className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.status === 'idle' && upload.errorType === 'none'
                     ? 'bg-[#0B1F3A] text-white'
                     : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
                     }`}
@@ -626,7 +626,7 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => startUpload('FORM_GST_ASMT-10.pdf')}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.status === 'parsing'
+                  className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.status === 'parsing'
                     ? 'bg-[#0B1F3A] text-white'
                     : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
                     }`}
@@ -637,7 +637,7 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setUploadError('unreadable')}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.errorType === 'unreadable'
+                  className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.errorType === 'unreadable'
                     ? 'bg-[#C0392B] text-white'
                     : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
                     }`}
@@ -648,7 +648,7 @@ export const Screen1Upload: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setUploadError('unsupported')}
-                  className={`px-2 py-1.5 rounded-control text-xs text-left font-medium transition-colors ${upload.errorType === 'unsupported'
+                  className={`px-2.5 py-2 rounded-control text-xs text-left font-medium transition-colors min-h-[44px] sm:min-h-[36px] flex items-center ${upload.errorType === 'unsupported'
                     ? 'bg-[#B45309] text-white'
                     : 'bg-[#F8FAFC] text-[#0F172A] hover:bg-[#EFF4FF]'
                     }`}

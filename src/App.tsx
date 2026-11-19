@@ -18,6 +18,7 @@ export const App: React.FC = () => {
     step,
     maxStep,
     setStep,
+    language,
     isRawScanModalOpen,
     setRawScanModalOpen,
   } = useDhaalStore();
@@ -25,6 +26,13 @@ export const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isBannerDismissed, setIsBannerDismissed] = useState(false);
+
+  // Sync document language attribute with active store language for Indic font rendering & accessibility
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language;
+    }
+  }, [language]);
 
   // Synchronize hash routing with store step
   const stepHashMap: Record<string, number> = {

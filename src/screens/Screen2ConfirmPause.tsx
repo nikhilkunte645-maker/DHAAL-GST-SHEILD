@@ -191,7 +191,7 @@ export const Screen2ConfirmPause: React.FC = () => {
                     info
                   </span>
                   <p className="text-[11px] text-[#5B6B82] leading-tight">
-                    <strong className="text-[#0B1F3A]">Reason for Pause:</strong> A physical printhead ink-smear intersects the digit &apos;4&apos;. Confirm the correct figure to ensure your statutory response under Section 61 is accurate.
+                    <strong className="text-[#0B1F3A]">Reason for Pause:</strong> A physical printhead ink-smear intersects the digit &apos;4&apos;. Confirm the correct figure to ensure your statutory reply is accurate.
                   </p>
                 </div>
               </div>

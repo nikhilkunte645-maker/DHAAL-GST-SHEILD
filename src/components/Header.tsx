@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onDismissBanner}
-              className="p-1 rounded text-[#94A3B8] hover:text-white hover:bg-white/10 transition-colors shrink-0"
+              className="p-1 rounded text-[#94A3B8] hover:text-white hover:bg-white/10 transition-colors shrink-0 min-h-[44px] min-w-[44px] sm:min-h-[28px] sm:min-w-[28px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               title="Dismiss banner"
               aria-label="Dismiss statutory disclaimer banner"
             >
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
               e.preventDefault();
               setStep(1);
             }}
-            className="flex items-center gap-2.5 group select-none"
+            className="flex items-center gap-2.5 group select-none min-h-[44px] py-1"
             aria-label="Dhaal home"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0B1F3A] text-white flex items-center justify-center shadow-xs group-hover:bg-[#2B4C9B] transition-colors shrink-0">
@@ -113,9 +113,9 @@ export const Header: React.FC<HeaderProps> = ({
                 shield
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="font-headline text-base sm:text-lg font-bold text-[#0B1F3A] tracking-tight leading-none">
-                Dhaal <span className="font-devanagari text-xs sm:text-sm font-normal text-[#5B6B82]">(ढाल)</span>
+            <div className="flex flex-col justify-center">
+              <span className="font-headline text-base sm:text-lg font-bold text-[#0B1F3A] tracking-tight leading-[1.75]">
+                Dhaal <span className="font-devanagari text-xs sm:text-sm font-normal text-[#5B6B82] leading-[1.75]">(ढाल)</span>
               </span>
               <span className="text-[10px] sm:text-[11px] font-semibold text-[#5B6B82] tracking-wider uppercase leading-tight mt-0.5">
                 Notice Shield
@@ -205,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={lang}
                 type="button"
                 onClick={() => setLanguage(lang)}
-                className={`px-2 py-1 text-xs rounded transition-all min-h-[36px] sm:min-h-[28px] ${language === lang
+                className={`px-2.5 py-1 text-xs rounded transition-all min-h-[44px] min-w-[44px] sm:min-h-[28px] sm:min-w-[32px] flex items-center justify-center font-medium ${language === lang
                   ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
                   : 'text-[#5B6B82] hover:text-[#0B1F3A]'
                   }`}
@@ -233,7 +233,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#0B1F3A] text-white font-bold text-xs ring-2 ring-white hover:ring-[#2B4C9B] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
+              className="flex items-center justify-center w-9 h-9 sm:w-9 sm:h-9 min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] rounded-full bg-[#0B1F3A] text-white font-bold text-xs ring-2 ring-white hover:ring-[#2B4C9B] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
               aria-expanded={isProfileOpen}
               aria-haspopup="true"
               aria-label="User profile and taxpayer details"

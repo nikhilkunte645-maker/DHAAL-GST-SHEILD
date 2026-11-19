@@ -448,7 +448,7 @@ export const Screen4EvidenceChecklist: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedInvoicesModal(false)}
-                className="p-1 rounded text-[#5B6B82] hover:bg-white transition-colors"
+                className="p-1.5 rounded-control text-[#5B6B82] hover:bg-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
                 aria-label="Close"
               >
                 <span className="material-symbols-outlined">close</span>

@@ -45,7 +45,7 @@ export const HelpFaqModal: React.FC<HelpFaqModalProps> = ({ isOpen, onClose }) =
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded text-[#5B6B82] hover:bg-[#F1F5F9] transition-colors"
+            className="p-1.5 rounded-control text-[#5B6B82] hover:bg-[#F1F5F9] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
             aria-label="Close"
           >
             <span className="material-symbols-outlined">close</span>

@@ -113,7 +113,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
             Explain & Statutory Deadlines
           </h1>
           <p className="text-xs sm:text-sm text-[#5B6B82] mt-0.5">
-            {CANONICAL_DEMO_CASE.office.ward} ({CANONICAL_DEMO_CASE.office.division}) • Ground: Section 61 (Scrutiny)
+            {CANONICAL_DEMO_CASE.office.ward} ({CANONICAL_DEMO_CASE.office.division}) • Scrutiny Notice Response
           </p>
         </div>
 
@@ -254,15 +254,18 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     {daysLeftOverride} days
                   </span>
                 </div>
-                <input
-                  id="urgency-slider"
-                  type="range"
-                  min="1"
-                  max="30"
-                  value={daysLeftOverride}
-                  onChange={(e) => setDaysLeftOverride(parseInt(e.target.value, 10))}
-                  className="w-full accent-[#2B4C9B] cursor-pointer"
-                />
+                <div className="py-1.5 flex items-center">
+                  <input
+                    id="urgency-slider"
+                    type="range"
+                    min="1"
+                    max="30"
+                    value={daysLeftOverride}
+                    onChange={(e) => setDaysLeftOverride(parseInt(e.target.value, 10))}
+                    className="w-full accent-[#2B4C9B] cursor-pointer min-h-[36px]"
+                    aria-label="Urgency slider"
+                  />
+                </div>
               </div>
             </div>
 
@@ -309,7 +312,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setRawScanModalOpen(true)}
-                    className="text-xs font-semibold text-[#2B4C9B] hover:underline flex items-center gap-1"
+                    className="text-xs font-semibold text-[#2B4C9B] hover:underline flex items-center gap-1 min-h-[44px] py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] rounded-control"
                   >
                     <span className="material-symbols-outlined text-sm">visibility</span>
                     <span>View Raw Scan</span>
@@ -347,7 +350,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     key={lang}
                     type="button"
                     onClick={() => setLanguage(lang)}
-                    className={`px-3 py-1 rounded text-xs transition-all min-h-[32px] font-medium ${
+                    className={`px-3 py-1.5 sm:py-1 rounded text-xs transition-all min-h-[44px] sm:min-h-[34px] font-medium flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${
                       language === lang
                         ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
                         : 'text-[#5B6B82] hover:text-[#0B1F3A]'
@@ -494,7 +497,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setRawScanModalOpen(true)}
-                  className="text-[#2B4C9B] font-bold hover:underline flex items-center gap-1"
+                  className="text-[#2B4C9B] font-bold hover:underline flex items-center gap-1 min-h-[44px] py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] rounded-control"
                 >
                   <span className="material-symbols-outlined text-sm">open_in_new</span>
                   <span>View Raw Scan</span>

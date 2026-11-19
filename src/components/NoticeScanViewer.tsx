@@ -30,11 +30,11 @@ export const NoticeScanViewer: React.FC<NoticeScanViewerProps> = ({ className = 
         </div>
 
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-[#CBD5E1] shadow-2xs">
+        <div className="flex items-center gap-1 bg-white p-0.5 rounded-control border border-[#CBD5E1] shadow-2xs">
           <button
             type="button"
             onClick={handleZoomOut}
-            className="p-1 rounded hover:bg-[#EFF4FF] text-[#5B6B82] transition-colors"
+            className="p-1.5 rounded hover:bg-[#EFF4FF] text-[#5B6B82] transition-colors min-h-[44px] min-w-[44px] sm:min-h-[32px] sm:min-w-[32px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
             title="Zoom Out"
             aria-label="Zoom out"
           >
@@ -46,7 +46,7 @@ export const NoticeScanViewer: React.FC<NoticeScanViewerProps> = ({ className = 
           <button
             type="button"
             onClick={handleZoomIn}
-            className="p-1 rounded hover:bg-[#EFF4FF] text-[#5B6B82] transition-colors"
+            className="p-1.5 rounded hover:bg-[#EFF4FF] text-[#5B6B82] transition-colors min-h-[44px] min-w-[44px] sm:min-h-[32px] sm:min-w-[32px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
             title="Zoom In"
             aria-label="Zoom in"
           >
@@ -55,7 +55,7 @@ export const NoticeScanViewer: React.FC<NoticeScanViewerProps> = ({ className = 
           <button
             type="button"
             onClick={handleResetZoom}
-            className="p-1 rounded hover:bg-[#EFF4FF] text-[#5B6B82] transition-colors border-l border-[#E3E8F0] ml-0.5"
+            className="p-1.5 rounded hover:bg-[#EFF4FF] text-[#5B6B82] transition-colors border-l border-[#E3E8F0] ml-0.5 min-h-[44px] min-w-[44px] sm:min-h-[32px] sm:min-w-[32px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
             title="Fit to width"
             aria-label="Reset zoom"
           >

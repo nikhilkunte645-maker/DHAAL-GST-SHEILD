@@ -143,7 +143,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
             <button
               type="button"
               onClick={() => setVerifierMode('pass')}
-              className={`px-3 py-1 rounded text-xs font-semibold transition-all min-h-[30px] ${
+              className={`px-3 py-1.5 rounded text-xs font-semibold transition-all min-h-[44px] sm:min-h-[32px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${
                 verifierMode === 'pass'
                   ? 'bg-[#12805C] text-white shadow-2xs'
                   : 'text-[#44474D] hover:text-[#0B1F3A]'
@@ -154,7 +154,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
             <button
               type="button"
               onClick={() => setVerifierMode('fail')}
-              className={`px-3 py-1 rounded text-xs font-semibold transition-all min-h-[30px] ${
+              className={`px-3 py-1.5 rounded text-xs font-semibold transition-all min-h-[44px] sm:min-h-[32px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${
                 verifierMode === 'fail'
                   ? 'bg-[#C0392B] text-white shadow-2xs'
                   : 'text-[#44474D] hover:text-[#0B1F3A]'
@@ -238,7 +238,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                   <button
                     type="button"
                     onClick={() => setEditorTab('editor')}
-                    className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-all ${
+                    className={`px-3 py-1.5 rounded text-xs font-semibold flex items-center justify-center gap-1 transition-all min-h-[44px] sm:min-h-[32px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${
                       editorTab === 'editor'
                         ? 'bg-[#0B1F3A] text-white'
                         : 'text-[#5B6B82] hover:text-[#0B1F3A]'
@@ -250,7 +250,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                   <button
                     type="button"
                     onClick={() => setEditorTab('preview')}
-                    className={`px-2.5 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-all ${
+                    className={`px-3 py-1.5 rounded text-xs font-semibold flex items-center justify-center gap-1 transition-all min-h-[44px] sm:min-h-[32px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${
                       editorTab === 'preview'
                         ? 'bg-[#0B1F3A] text-white'
                         : 'text-[#5B6B82] hover:text-[#0B1F3A]'
@@ -291,7 +291,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                   <button
                     type="button"
                     onClick={() => setDraftContent(defaultDraftText)}
-                    className="text-[#2B4C9B] hover:underline font-mono text-[11px]"
+                    className="text-[#2B4C9B] hover:underline font-mono text-[11px] min-h-[44px] py-2 px-1 inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] rounded-control"
                   >
                     Reset Text
                   </button>

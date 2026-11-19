@@ -528,7 +528,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     navigator.clipboard.writeText(CANONICAL_DEMO_CASE.caCounsel.passcode);
                     showToast('CA Access Passkey copied!');
                   }}
-                  className="text-xs font-semibold text-[#2B4C9B] hover:underline"
+                  className="text-xs font-semibold text-[#2B4C9B] hover:underline min-h-[44px] px-2 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] rounded-control"
                 >
                   Copy Passkey
                 </button>
@@ -545,20 +545,20 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <span className="material-symbols-outlined text-[#2B4C9B]">checklist_rtl</span>
               <span>Pre-Filing Checklist</span>
             </h4>
-            <div className="space-y-2 text-xs text-[#0F172A]">
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" defaultChecked className="mt-0.5 rounded text-[#0B1F3A] focus:ring-[#2B4C9B]" />
+            <div className="space-y-1 text-xs text-[#0F172A]">
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
                 <span>Invoice &amp; E-Way bill values re-computed to 2 decimal places</span>
               </label>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" defaultChecked className="mt-0.5 rounded text-[#0B1F3A] focus:ring-[#2B4C9B]" />
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
                 <span>Supplier filed GSTR-1 in subsequent month verified on GST portal</span>
               </label>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" defaultChecked className="mt-0.5 rounded text-[#0B1F3A] focus:ring-[#2B4C9B]" />
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
+                <input type="checkbox" defaultChecked className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0" />
                 <span>Bank payment confirmed against Tax Invoice date (Sec 16(2)(b))</span>
               </label>
-              <label className="flex items-start gap-2 cursor-pointer">
+              <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1">
                 <input
                   type="checkbox"
                   onChange={(e) => {
@@ -566,7 +566,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                       showToast('Status updated: Brief signed and ready for GST Portal submission!');
                     }
                   }}
-                  className="mt-0.5 rounded text-[#0B1F3A] focus:ring-[#2B4C9B]"
+                  className="w-4 h-4 rounded text-[#0B1F3A] focus:ring-[#2B4C9B] shrink-0"
                 />
                 <span className="font-semibold text-[#0B1F3A]">Chartered Accountant review &amp; UDIN generated</span>
               </label>
@@ -623,7 +623,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsShareModalOpen(false)}
-                className="text-[#5B6B82] hover:text-[#0B1F3A] p-1 rounded"
+                className="text-[#5B6B82] hover:text-[#0B1F3A] hover:bg-[#F1F5F9] p-1.5 rounded-control transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B]"
                 aria-label="Close"
               >
                 <span className="material-symbols-outlined">close</span>
