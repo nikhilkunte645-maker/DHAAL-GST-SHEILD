@@ -4,10 +4,11 @@ import { Badge } from './ui/Badge';
 
 export interface GraphNodeData {
   id: string;
-  type: 'ALLEGATION' | 'INVOICE' | 'BANKING_PROOF' | 'EWAY_BILL' | 'SUPPLIER_PROOF' | 'STATUTORY_GROUND' | 'DRAFT_ASSERTION' | 'REVIEW_DECISION';
+  type: string;
   label: string;
   shortLabel: string;
-  status: 'CONFIRMED' | 'VERIFIED' | 'HYPOTHESIS' | 'MISSING_ACTION_REQUIRED' | 'PENDING_REVIEW';
+  status: 'CONFIRMED' | 'VERIFIED' | 'MISSING_ACTION_REQUIRED' | 'PENDING_REVIEW' | 'SYNTHETIC' | 'PARTIAL' | 'UNVERIFIED' | 'NOT_APPLICABLE';
+  provenance: 'SYNTHETIC' | 'UPLOADED' | 'PARSED' | 'UNVERIFIED' | 'VERIFIED' | 'MISSING' | 'STATUTORY_RULE' | 'SYSTEM_GENERATED';
   statutoryRef: string;
   x: number;
   y: number;
@@ -29,121 +30,147 @@ const DEFAULT_NODES: GraphNodeData[] = [
     label: 'ASMT-10 Row 02: Table 4(A)(5) Discrepancy',
     shortLabel: 'Notice Allegation (₹1,84,250)',
     status: 'CONFIRMED',
-    statutoryRef: 'CGST Sec 61 / Rule 99(1)',
+    provenance: 'PARSED',
+    statutoryRef: 'CGST Sec 61(1) / Rule 99(1)',
     x: 60,
     y: 190,
     properties: {
       'Notice Reference': 'ZA270525008912M',
       'Questioned ITC': '₹1,84,250',
-      'Tax Period': 'Apr-Jun 2024',
-      'Issuing Office': 'Assistant Commissioner, Ward 102'
+      'Tax Period': 'Q1 (Apr-Jun 2024)',
+      'Statutory Authority': 'CGST Section 61(1) & Rule 99(1)',
+      'Allegation Nature': 'Pre-adjudication observation (Not a demand order)'
     }
   },
   {
     id: 'node_invoices',
     type: 'INVOICE',
-    label: '24 Tax Invoices (M/s Apex Textiles)',
-    shortLabel: '24 Invoices (₹10,23,611)',
-    status: 'VERIFIED',
+    label: '24 Tax Invoices [DEMO LEDGER] (M/s Apex Textiles)',
+    shortLabel: '24 Invoices (₹10,23,611) [DEMO]',
+    status: 'SYNTHETIC',
+    provenance: 'SYNTHETIC',
     statutoryRef: 'CGST Sec 16(2)(a)',
     x: 290,
-    y: 80,
+    y: 70,
     properties: {
       'Invoice Count': 24,
       'Taxable Value': '₹10,23,611',
       'Tax Amount': '₹1,84,250',
       'Supplier GSTIN': '27XXXXX5678X1ZX',
-      'Statutory Rule': 'Possession of Tax Invoice'
+      'Data Provenance': 'SYNTHETIC (Onboard Demo Fixture)',
+      'Statutory Rule': 'Possession of Tax Invoice under Section 16(2)(a)'
     }
   },
   {
     id: 'node_bank_utr',
     type: 'BANKING_PROOF',
-    label: 'Bank RTGS Payment (HDFC Bank)',
-    shortLabel: 'Bank UTR: SAMPLEUTR0001',
-    status: 'VERIFIED',
-    statutoryRef: 'CGST Sec 16(2) Proviso 2',
+    label: 'Bank Payment Voucher [SYNTHETIC DEMO]',
+    shortLabel: 'Bank UTR: SAMPLEUTR0001 [DEMO]',
+    status: 'SYNTHETIC',
+    provenance: 'SYNTHETIC',
+    statutoryRef: 'CGST Sec 16(2) 2nd Proviso',
     x: 290,
-    y: 200,
+    y: 190,
     properties: {
-      'Bank Name': 'HDFC Bank Ltd',
+      'Bank Name': 'HDFC Bank Ltd (Demonstration)',
       'UTR Number': 'SAMPLEUTR0001',
-      'Statutory Window': 'Paid within 21 days (Statutory limit: 180 days)',
-      'Consideration Paid': '100% Cleared via Account Payee'
+      'Record Status': 'SYNTHETIC DEMO (Unverified Demo Data)',
+      'Statutory Condition': 'Payment to supplier within 180 days',
+      'Verification Caveat': 'Demonstration data only. Real clearance requires uploaded bank statement / MT940 / certified payment ledger.'
     }
   },
   {
     id: 'node_eway_bills',
     type: 'EWAY_BILL',
-    label: 'E-Way Bills & Consignment Challans',
-    shortLabel: 'E-Way Bills (18 attached)',
-    status: 'VERIFIED',
+    label: 'E-Way Bills: 18 of 24 attached [PARTIAL]',
+    shortLabel: 'E-Way Bills: 18/24 [PARTIAL]',
+    status: 'PARTIAL',
+    provenance: 'SYNTHETIC',
     statutoryRef: 'CGST Sec 16(2)(b)',
     x: 290,
-    y: 320,
+    y: 310,
     properties: {
-      'Attached Bills': '18 of 24',
-      'Consignment Status': 'Physical receipt confirmed at registered godown',
-      'Coverage': '75% E-Way Bill + 25% Local Transporter Bilty'
+      'Attached Documents': '18 of 24 invoices',
+      'Missing Consignments': '6 invoices lack transport documents',
+      'Coverage': '75.0% partial documentation',
+      'Delivery Verification': 'Partial — Physical receipt not independently verified for 25% of shipments.'
     }
   },
   {
     id: 'node_supplier_proof',
     type: 'SUPPLIER_PROOF',
-    label: 'Supplier Tax Deposit / DRC-03 Proof',
-    shortLabel: 'Supplier Proof (Action Required)',
+    label: 'Supplier GSTR-3B Tax Payment Certificate',
+    shortLabel: 'Supplier Proof (ACTION REQUIRED)',
     status: 'MISSING_ACTION_REQUIRED',
-    statutoryRef: 'CGST Sec 16(2)(c) / Cir 183',
+    provenance: 'MISSING',
+    statutoryRef: 'CGST Sec 16(2)(c)',
     x: 540,
-    y: 80,
+    y: 70,
     properties: {
-      'Status': 'Missing in initial GSTR-2B',
-      'Action Required': 'Request GSTR-3B DRC-03 receipt or CA Declaration',
-      'Legal Shield': 'CBIC Circular No. 183/15/2022-GST protects bona fide recipient',
-      'Precedent': 'Madras HC in D.Y. Beathel Enterprises'
+      'Status': 'MISSING — Action Required',
+      'Statutory Condition': 'Tax paid to Government by supplier under Section 16(2)(c)',
+      'Action Required': 'Request GSTR-3B tax payment confirmation or CA Certificate with UDIN',
+      'Legal Caveat': 'A supplier certificate is an administrative document, NOT conclusive proof of government treasury deposit.'
+    }
+  },
+  {
+    id: 'node_statute_16_2_aa',
+    type: 'STATUTORY_GROUND',
+    label: 'CGST Sec 16(2)(aa): GSTR-2B Mandatory Reflection',
+    shortLabel: 'Sec 16(2)(aa) [Post-2022]',
+    status: 'MISSING_ACTION_REQUIRED',
+    provenance: 'STATUTORY_RULE',
+    statutoryRef: 'CGST Sec 16(2)(aa) w.e.f. 01.01.2022',
+    x: 540,
+    y: 190,
+    properties: {
+      'Statutory Rule': 'Invoice must be communicated in GSTR-2B under Section 38',
+      'Effective Date': '01.01.2022 (Finance Act, 2021)',
+      'Circular 183 Applicability': 'NOT APPLICABLE to FY 2024-25 GSTR-2B differences'
     }
   },
   {
     id: 'node_draft_assertion',
     type: 'DRAFT_ASSERTION',
-    label: 'Form ASMT-11 Substantive Defense',
-    shortLabel: 'Legal Reply Assertion',
+    label: 'Form ASMT-11 Formal Response Draft',
+    shortLabel: 'Legal Reply (ASMT-11)',
     status: 'CONFIRMED',
+    provenance: 'SYSTEM_GENERATED',
     statutoryRef: 'CGST Rule 99(2)',
     x: 540,
-    y: 240,
+    y: 310,
     properties: {
-      'Prayer': 'Drop scrutiny proceedings under Section 61(2)',
-      'Substantive Entitlement': 'All conditions of Sec 16(2) fulfilled by buyer',
-      'Precedent Ground': 'Supreme Court in UOI v. Bharti Airtel Ltd'
+      'Statutory Form': 'Form GST ASMT-11 under Rule 99(2)',
+      'Prayer': 'Drop scrutiny proceedings under Section 61(2) upon reconciliation',
+      'Factual Defense': 'Invoice possession, bank consideration, and subsequent supplier filing'
     }
   },
   {
     id: 'node_ca_review',
     type: 'REVIEW_DECISION',
-    label: 'Chartered Accountant Certification',
+    label: 'Chartered Accountant Review & UDIN Sign-Off',
     shortLabel: 'CA Review & UDIN Sign-Off',
     status: 'PENDING_REVIEW',
-    statutoryRef: 'ICAI UDIN Standard',
+    provenance: 'UNVERIFIED',
+    statutoryRef: 'ICAI Standards & Section 61',
     x: 770,
     y: 190,
     properties: {
-      'Assigned Role': 'Chartered Accountant / Fellow CA',
-      'Review Status': 'Unlocked upon Step 6 review completion',
-      'UDIN Requirement': 'Mandatory for official submission'
+      'Review Role': 'Chartered Accountant / Tax Practitioner',
+      'Status': 'Pending Step 6 sign-off',
+      'Legal Principle': 'CA sign-off provides professional certification but CANNOT convert missing source evidence into verified evidence.'
     }
   }
 ];
 
 const DEFAULT_EDGES: GraphEdgeData[] = [
-  { id: 'e1', source: 'node_allegation', target: 'node_invoices', relationship: 'ITEMIZED_UNDER' },
-  { id: 'e2', source: 'node_invoices', target: 'node_bank_utr', relationship: 'DISCHARGED_BY' },
-  { id: 'e3', source: 'node_invoices', target: 'node_eway_bills', relationship: 'DELIVERED_VIA' },
-  { id: 'e4', source: 'node_invoices', target: 'node_supplier_proof', relationship: 'SUBSTANTIATED_BY', isMissing: true },
-  { id: 'e5', source: 'node_bank_utr', target: 'node_draft_assertion', relationship: 'CITED_AS_EVIDENCE' },
-  { id: 'e6', source: 'node_eway_bills', target: 'node_draft_assertion', relationship: 'CITED_AS_EVIDENCE' },
-  { id: 'e7', source: 'node_supplier_proof', target: 'node_draft_assertion', relationship: 'REMEDIED_UNDER_CIR183', isMissing: true },
-  { id: 'e8', source: 'node_draft_assertion', target: 'node_ca_review', relationship: 'CERTIFIED_BY' }
+  { id: 'edge_allegation_invoices', source: 'node_allegation', target: 'node_invoices', relationship: 'ITEMIZED_UNDER' },
+  { id: 'edge_invoices_bank', source: 'node_invoices', target: 'node_bank_utr', relationship: 'DISCHARGED_BY' },
+  { id: 'edge_invoices_eway', source: 'node_invoices', target: 'node_eway_bills', relationship: 'DELIVERED_VIA' },
+  { id: 'edge_invoices_supplier_proof', source: 'node_invoices', target: 'node_supplier_proof', relationship: 'SUBSTANTIATED_BY', isMissing: true },
+  { id: 'edge_invoices_sec16_2_aa', source: 'node_invoices', target: 'node_statute_16_2_aa', relationship: 'GOVERNED_BY', isMissing: true },
+  { id: 'edge_allegation_draft', source: 'node_allegation', target: 'node_draft_assertion', relationship: 'CITED_IN' },
+  { id: 'edge_draft_ca_review', source: 'node_draft_assertion', target: 'node_ca_review', relationship: 'CERTIFIED_BY' }
 ];
 
 export const EvidenceGraphViewer: React.FC = () => {
@@ -160,13 +187,29 @@ export const EvidenceGraphViewer: React.FC = () => {
           icon: 'check_circle',
           badgeVariant: 'success' as const
         };
-      case 'MISSING_ACTION_REQUIRED':
+      case 'SYNTHETIC':
+        return {
+          bg: '#EFF6FF',
+          border: '#3B82F6',
+          text: '#1E40AF',
+          icon: 'science',
+          badgeVariant: 'neutral' as const
+        };
+      case 'PARTIAL':
         return {
           bg: '#FEF3C7',
-          border: '#B45309',
+          border: '#D97706',
           text: '#92400E',
-          icon: 'warning',
+          icon: 'incomplete_circle',
           badgeVariant: 'warning' as const
+        };
+      case 'MISSING_ACTION_REQUIRED':
+        return {
+          bg: '#FEF2F2',
+          border: '#B91C1C',
+          text: '#991B1B',
+          icon: 'warning',
+          badgeVariant: 'danger' as const
         };
       case 'PENDING_REVIEW':
         return {
@@ -178,11 +221,11 @@ export const EvidenceGraphViewer: React.FC = () => {
         };
       default:
         return {
-          bg: '#E0F2FE',
-          border: '#0284C7',
-          text: '#075985',
-          icon: 'info',
-          badgeVariant: 'brand' as const
+          bg: '#F8FAFC',
+          border: '#94A3B8',
+          text: '#475569',
+          icon: 'help',
+          badgeVariant: 'neutral' as const
         };
     }
   };
@@ -199,15 +242,18 @@ export const EvidenceGraphViewer: React.FC = () => {
             </h3>
           </div>
           <p className="text-xs text-[#687674] mt-0.5">
-            Cryptographic bipartite graph linking Notice Allegation $\to$ Invoices $\to$ Bank Proof $\to$ Section 16(2) Legs $\to$ Legal Reply.
+            Strict bipartite DAG mapping Notice Allegations $\to$ Invoices $\to$ Banking Vouchers $\to$ Section 16(2) Legs $\to$ Response Draft.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="brand" size="md">
-            88% Evidentiary Strength Score
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="neutral" size="md" className="font-mono bg-blue-50 text-blue-700 border-blue-200">
+            ECI: 70% (Demo Completeness)
           </Badge>
           <Badge variant="warning" size="md">
-            1 Missing Statutory Link (Sec 16(2)(c))
+            1 Action Required (Sec 16(2)(c))
+          </Badge>
+          <Badge variant="neutral" size="md">
+            Demo UTR: SYNTHETIC
           </Badge>
         </div>
       </div>
@@ -219,10 +265,10 @@ export const EvidenceGraphViewer: React.FC = () => {
           <div className="p-3 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between">
             <span className="text-xs font-semibold text-[#073B3A] flex items-center gap-1.5">
               <span className="material-symbols-outlined text-sm text-[#087F73]">gesture</span>
-              Click any node to inspect evidence provenance &amp; statutory ground
+              Click any node to inspect evidence provenance &amp; statutory grounding
             </span>
             <span className="text-[11px] font-mono text-[#687674]">
-              DAG Version: 2.0.1
+              DAG Schema v2.1.0 • Unique IDs Validated
             </span>
           </div>
 
@@ -249,13 +295,23 @@ export const EvidenceGraphViewer: React.FC = () => {
                 >
                   <polygon points="0 0, 8 3, 0 6" fill="#B45309" />
                 </marker>
+                <marker
+                  id="arrowhead-blue"
+                  markerWidth="8"
+                  markerHeight="6"
+                  refX="8"
+                  refY="3"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 8 3, 0 6" fill="#3B82F6" />
+                </marker>
               </defs>
 
-              {/* Render Edges */}
+              {/* Render Directed Edges */}
               {DEFAULT_EDGES.map((edge) => {
-                const srcNode = DEFAULT_NODES.find((n) => n.id === edge.source);
-                const tgtNode = DEFAULT_NODES.find((n) => n.id === edge.target);
-                if (!srcNode || !tgtNode) return null;
+                const sourceNode = DEFAULT_NODES.find((n) => n.id === edge.source);
+                const targetNode = DEFAULT_NODES.find((n) => n.id === edge.target);
+                if (!sourceNode || !targetNode) return null;
 
                 const isMissing = edge.isMissing;
                 const strokeColor = isMissing ? '#B45309' : '#087F73';
@@ -264,23 +320,23 @@ export const EvidenceGraphViewer: React.FC = () => {
                 return (
                   <g key={edge.id}>
                     <line
-                      x1={srcNode.x + 60}
-                      y1={srcNode.y + 24}
-                      x2={tgtNode.x - 10}
-                      y2={tgtNode.y + 24}
+                      x1={sourceNode.x + 85}
+                      y1={sourceNode.y + 25}
+                      x2={targetNode.x - 5}
+                      y2={targetNode.y + 25}
                       stroke={strokeColor}
-                      strokeWidth={isMissing ? 2 : 2.5}
-                      strokeDasharray={isMissing ? '5,5' : 'none'}
+                      strokeWidth={isMissing ? 1.5 : 2}
+                      strokeDasharray={isMissing ? '4 3' : undefined}
                       markerEnd={markerId}
                     />
                     <text
-                      x={(srcNode.x + tgtNode.x) / 2 + 25}
-                      y={(srcNode.y + tgtNode.y) / 2 + 18}
+                      x={(sourceNode.x + targetNode.x) / 2 + 35}
+                      y={(sourceNode.y + targetNode.y) / 2 + 18}
+                      fill={isMissing ? '#92400E' : '#687674'}
                       fontSize="9"
-                      fill={isMissing ? '#B45309' : '#687674'}
-                      fontFamily="JetBrains Mono, monospace"
+                      fontWeight="bold"
                       textAnchor="middle"
-                      className="font-semibold"
+                      className="font-mono tracking-tight"
                     >
                       {edge.relationship}
                     </text>
@@ -288,55 +344,60 @@ export const EvidenceGraphViewer: React.FC = () => {
                 );
               })}
 
-              {/* Render Nodes */}
+              {/* Render Distinct Graph Nodes */}
               {DEFAULT_NODES.map((node) => {
                 const isSelected = selectedNode.id === node.id;
-                const colors = getNodeColor(node);
+                const { bg, border, text, icon } = getNodeColor(node);
 
                 return (
                   <g
                     key={node.id}
                     onClick={() => setSelectedNode(node)}
-                    className="cursor-pointer transition-transform hover:scale-105"
+                    className="cursor-pointer transition-transform hover:opacity-95"
+                    transform={`translate(${node.x}, ${node.y})`}
                   >
-                    {/* Node Box */}
+                    {/* Node Card Box */}
                     <rect
-                      x={node.x - 10}
-                      y={node.y}
-                      width={140}
-                      height={50}
-                      rx={8}
-                      fill={colors.bg}
-                      stroke={isSelected ? '#073B3A' : colors.border}
-                      strokeWidth={isSelected ? 3 : 1.5}
-                      filter="drop-shadow(0 2px 4px rgba(0,0,0,0.06))"
+                      x="0"
+                      y="0"
+                      width="170"
+                      height="58"
+                      rx="8"
+                      fill={bg}
+                      stroke={isSelected ? '#073B3A' : border}
+                      strokeWidth={isSelected ? 2.5 : 1.5}
+                      filter={isSelected ? 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' : undefined}
                     />
 
-                    {/* Node Icon & Status Indicator */}
-                    <circle
-                      cx={node.x + 6}
-                      cy={node.y + 16}
-                      r={6}
-                      fill={colors.border}
-                    />
-
-                    {/* Node Text */}
+                    {/* Node Icon */}
                     <text
-                      x={node.x + 18}
-                      y={node.y + 20}
-                      fontSize="10.5"
-                      fontWeight="bold"
-                      fill={colors.text}
-                      fontFamily="Plus Jakarta Sans, sans-serif"
+                      x="12"
+                      y="26"
+                      fontFamily="Material Symbols Outlined"
+                      fontSize="16"
+                      fill={text}
                     >
-                      {node.shortLabel}
+                      {icon}
                     </text>
 
+                    {/* Node Short Label */}
                     <text
-                      x={node.x + 18}
-                      y={node.y + 36}
-                      fontSize="9"
+                      x="34"
+                      y="24"
+                      fill={text}
+                      fontSize="10"
+                      fontWeight="bold"
+                      fontFamily="Inter, sans-serif"
+                    >
+                      {node.shortLabel.length > 20 ? node.shortLabel.slice(0, 19) + '…' : node.shortLabel}
+                    </text>
+
+                    {/* Provenance Tag / Statutory Subtext */}
+                    <text
+                      x="12"
+                      y="44"
                       fill="#687674"
+                      fontSize="9"
                       fontFamily="Inter, sans-serif"
                     >
                       {node.statutoryRef}
@@ -355,16 +416,23 @@ export const EvidenceGraphViewer: React.FC = () => {
               <span className="text-[11px] font-semibold uppercase tracking-wider text-[#087F73]">
                 Node Inspector
               </span>
-              <Badge variant={getNodeColor(selectedNode).badgeVariant} size="sm">
-                {selectedNode.status.replace(/_/g, ' ')}
-              </Badge>
+              <div className="flex items-center gap-1.5">
+                {selectedNode.provenance === 'SYNTHETIC' && (
+                  <Badge variant="neutral" size="sm" className="bg-blue-50 text-blue-700 font-mono text-[9px]">
+                    SYNTHETIC
+                  </Badge>
+                )}
+                <Badge variant={getNodeColor(selectedNode).badgeVariant} size="sm">
+                  {selectedNode.status.replace(/_/g, ' ')}
+                </Badge>
+              </div>
             </div>
 
             <h4 className="font-headline text-base font-bold text-[#073B3A]">
               {selectedNode.label}
             </h4>
             <p className="text-xs text-[#087F73] font-semibold mt-0.5">
-              Statutory Basis: {selectedNode.statutoryRef}
+              Statutory Ground: {selectedNode.statutoryRef}
             </p>
 
             <div className="mt-4 space-y-2.5">
@@ -381,18 +449,35 @@ export const EvidenceGraphViewer: React.FC = () => {
             </div>
           </div>
 
-          {selectedNode.status === 'MISSING_ACTION_REQUIRED' && (
-            <div className="mt-4 p-3 bg-[#FEF3C7] border border-[#FDE68A] rounded-card">
-              <span className="block text-xs font-bold text-[#92400E] flex items-center gap-1">
-                <span className="material-symbols-outlined text-sm">priority_high</span>
-                Evidentiary Remedy Available
+          {selectedNode.status === 'SYNTHETIC' && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-card">
+              <span className="block text-xs font-bold text-blue-900 flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">science</span>
+                Demonstration Record
               </span>
-              <p className="text-[11px] text-[#92400E] mt-1">
-                Under CBIC Circular 183/15/2022-GST, this discrepancy is non-fatal if supplier furnishes subsequent DRC-03 or CA Certificate.
+              <p className="text-[11px] text-blue-800 mt-1">
+                This record is populated for sandbox evaluation. Real-world statutory defense requires uploaded bank statements or GSTN returns.
+              </p>
+            </div>
+          )}
+
+          {selectedNode.status === 'MISSING_ACTION_REQUIRED' && (
+            <div className="mt-4 p-3 bg-[#FEF2F2] border border-[#FCA5A5] rounded-card">
+              <span className="block text-xs font-bold text-[#991B1B] flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">priority_high</span>
+                Statutory Action Required
+              </span>
+              <p className="text-[11px] text-[#991B1B] mt-1">
+                Section 16(2)(c) condition is unsatisfied. For FY 2024-25, request supplier amendment in subsequent GSTR-1 or DRC-03 tax-deposit receipt.
               </p>
             </div>
           )}
         </Card>
+      </div>
+
+      {/* Statutory ECI Disclaimer Footer */}
+      <div className="p-3 bg-[#FAF9F5] border border-[#E4E9E5] rounded-card text-[11px] text-[#687674] leading-relaxed">
+        <strong>Statutory Notice on Evidence Completeness Indicator (ECI):</strong> The ECI score measures whether required document categories and data fields exist in the case dossier. It DOES NOT represent a guarantee of GST compliance, legal entitlement to ITC, or prediction of a favorable adjudication by the proper officer under Section 61 or Section 74A.
       </div>
     </div>
   );

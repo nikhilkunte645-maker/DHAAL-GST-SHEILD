@@ -508,23 +508,23 @@ export const Screen6CaReadyBrief: React.FC = () => {
                         <td className="p-2 font-mono text-[#687674]">INV #{CANONICAL_DEMO_CASE.supplier.invoiceNo}</td>
                         <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
                       </tr>
-                      <tr>
+                      <tr className="bg-blue-50/30">
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-B</td>
-                        <td className="p-2">Sample Bank Payment Advice &amp; UTR</td>
-                        <td className="p-2 font-mono text-[#687674]">{CANONICAL_DEMO_CASE.banking.utr}</td>
-                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
+                        <td className="p-2">Bank Payment Voucher [SYNTHETIC DEMO]</td>
+                        <td className="p-2 font-mono text-blue-700">{CANONICAL_DEMO_CASE.banking.utr} (Demo)</td>
+                        <td className="p-2 text-right text-blue-700 font-bold">SYNTHETIC (Demo)</td>
                       </tr>
-                      <tr>
+                      <tr className="bg-amber-50/30">
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-C</td>
-                        <td className="p-2">Consignment Note &amp; E-Way Bill</td>
+                        <td className="p-2">Consignment Notes &amp; E-Way Bills (18 attached)</td>
                         <td className="p-2 font-mono text-[#687674]">{CANONICAL_DEMO_CASE.transport.ewayBillNo}</td>
-                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
+                        <td className="p-2 text-right text-amber-700 font-bold">Partial (18/24)</td>
                       </tr>
-                      <tr>
+                      <tr className="bg-red-50/30">
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-D</td>
-                        <td className="p-2">Supplier 16(2)(c) Tax Clearance Cert.</td>
-                        <td className="p-2 font-mono text-[#687674]">Apex / CA Declaration</td>
-                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
+                        <td className="p-2">Supplier 16(2)(c) Tax Clearance Proof</td>
+                        <td className="p-2 font-mono text-red-700">Missing Supplier Proof</td>
+                        <td className="p-2 text-right text-red-700 font-bold">Action Required</td>
                       </tr>
                       <tr>
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-E</td>

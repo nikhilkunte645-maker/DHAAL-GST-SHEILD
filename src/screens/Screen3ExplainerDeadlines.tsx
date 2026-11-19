@@ -246,7 +246,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               24 Invoices
             </div>
             <span className="text-[11px] text-[#087F73] mt-1 block font-medium">
-              Substantiated via Circular 183
+              Reconciled via Invoices &amp; Banking
             </span>
           </div>
           <div className="mt-3 pt-2.5 border-t border-[#119B72]/30 flex items-center justify-between text-xs">
@@ -675,7 +675,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     in Input Tax Credit (ITC) on GSTR-3B than what your suppliers reported in GSTR-2B for Q1 (Apr–Jun 2024).&quot;
                   </p>
                   <p className="text-xs text-[#687674] mt-1 leading-relaxed">
-                    Under Section 16(2)(aa) read with Section 61, the department questions this difference. However, CBIC Circular 183 allows you to reconcile supplies with valid tax invoices, bank remittances, and vendor declarations.
+                    Under Section 16(2)(aa) read with Section 61, the department questions this difference. You can substantiate legitimate purchases with valid tax invoices, bank remittances (180-day rule), and subsequent vendor outward amendments.
                   </p>
                 </div>
               )}
@@ -698,7 +698,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     किया है।&quot;
                   </p>
                   <p className="text-xs text-[#687674] mt-1 leading-[1.75]">
-                    इसका सीधा मतलब है कि वेंडर ने अपनी आउटवर्ड रिटर्न देर से भरी है। सर्कुलर 183 के तहत वैध इनवॉइस और बैंक स्टेटमेंट से इसे पूरी तरह साबित किया जा सकता है।
+                    इसका सीधा मतलब है कि वेंडर ने अपनी आउटवर्ड रिटर्न देर से भरी है। वैध इनवॉइस, 180 दिनों के बैंक भुगतान और वेंडर संशोधन से इसका समाधान किया जा सकता है।
                   </p>
                 </div>
               )}
@@ -721,7 +721,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     <strong className="text-[#073B3A] font-bold font-mono">GSTR-3B</strong> मध्ये दाखवले आहे।&quot;
                   </p>
                   <p className="text-xs text-[#687674] mt-1 leading-[1.75]">
-                    याचा अर्थ असा की पुरवठादाराने वेळेत रिटर्न दाखल केले नाही. सर्कुलर 183 नुसार खरेदी पावती व बँक पुराव्यानिशी समाधानकारक उत्तर देता येते.
+                    याचा अर्थ असा की पुरवठादाराने रिटर्न वेळेत भरले नाही. खरेदी पावती, १८० दिवसांतील बँक व्यवहार आणि पुरवठादाराच्या दुरुस्तीद्वारे समाधानकारक उत्तर देता येते.
                   </p>
                 </div>
               )}

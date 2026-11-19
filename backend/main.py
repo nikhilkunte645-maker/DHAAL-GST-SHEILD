@@ -54,6 +54,7 @@ try:
     from verifier import verify_draft as verify_draft_detailed, format_inr
     from reconciler import run_deterministic_reconciliation
     from evidence_graph import build_evidence_graph_for_case
+    from circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
 except ImportError:
     from backend.schemas import (
         NoticeMetadata,
@@ -81,6 +82,7 @@ except ImportError:
     from backend.verifier import verify_draft as verify_draft_detailed, format_inr
     from backend.reconciler import run_deterministic_reconciliation
     from backend.evidence_graph import build_evidence_graph_for_case
+    from backend.circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("dhaal_backend")
@@ -738,10 +740,34 @@ def get_evidence_scorecard(case_id: str):
     return {
         "case_id": case_id,
         "evidentiary_strength_score": graph.evidentiary_strength_score,
+        "evidence_completeness_indicator": graph.evidence_completeness_indicator,
+        "eci_breakdown": graph.eci_breakdown.model_dump() if hasattr(graph.eci_breakdown, "model_dump") else graph.eci_breakdown.dict(),
         "missing_evidence_count": graph.missing_evidence_count,
         "unverified_hypotheses_count": graph.unverified_hypotheses_count,
-        "section_16_compliance": graph.section_16_compliance
+        "section_16_compliance": graph.section_16_compliance,
+        "circular_183_assessment": graph.circular_183_assessment
     }
+
+@app.post("/api/circular-183/assess")
+@app.get("/api/circular-183/assess")
+def assess_circular_183_endpoint(
+    financial_year: Optional[str] = "2024-25",
+    mismatch_type: Optional[str] = "GSTR_3B_VS_GSTR_2B",
+    tax_difference: Optional[float] = 184250.0,
+    has_supplier_certificate: bool = False,
+    has_ca_certificate: bool = False,
+    has_udin: bool = False
+):
+    inp = Circular183AssessmentInput(
+        financial_year=financial_year,
+        mismatch_type=mismatch_type,
+        tax_difference_amount=tax_difference,
+        supplier_certificate_obtained=has_supplier_certificate,
+        ca_cma_certificate_obtained=has_ca_certificate,
+        udin_verified=has_udin
+    )
+    result = assess_circular_183_applicability(inp)
+    return result.model_dump() if hasattr(result, "model_dump") else result.dict()
 
 if __name__ == "__main__":
     import uvicorn

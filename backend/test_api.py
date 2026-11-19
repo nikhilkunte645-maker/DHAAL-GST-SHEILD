@@ -121,6 +121,24 @@ def test_evidence_scorecard_endpoint():
     data = res.json()
     assert "section_16_compliance" in data
     assert data["section_16_compliance"]["16_2_a"]["status"] == "COMPLIANT"
+    assert "evidence_completeness_indicator" in data
+    assert "eci_breakdown" in data
+    assert data["eci_breakdown"]["total_possible_score"] == 100
+
+def test_circular_183_assessment_endpoint():
+    # Test FY 2024-25 not applicable
+    res = client.post("/api/circular-183/assess?financial_year=2024-25&mismatch_type=GSTR_3B_VS_GSTR_2B")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["is_applicable"] is False
+    assert data["verdict"] == "NOT APPLICABLE"
+
+    # Test FY 2017-18 under 5L applicable
+    res_17 = client.post("/api/circular-183/assess?financial_year=2017-18&mismatch_type=GSTR_3B_VS_GSTR_2A&tax_difference=150000&has_supplier_certificate=true")
+    assert res_17.status_code == 200
+    data_17 = res_17.json()
+    assert data_17["is_applicable"] is True
+    assert "APPLICABLE" in data_17["verdict"]
 
 if __name__ == "__main__":
     test_health_check()

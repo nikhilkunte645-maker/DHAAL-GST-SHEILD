@@ -47,7 +47,7 @@ export const Screen4EvidenceChecklist: React.FC = () => {
 
   const handleWhatsAppSupplierPrompt = () => {
     const text = encodeURIComponent(
-      `Dear M/s Apex Textiles, regarding Invoice AT/24-25/1102 (Tax: ₹1,84,250), we received GST Notice ${CANONICAL_DEMO_CASE.caseId}. Under CBIC Circular 183, kindly share your GSTR-3B tax payment confirmation/CA declaration for reconciliation. - Sharma Garments`
+      `Dear M/s Apex Textiles, regarding Invoice AT/24-25/1102 (Tax: ₹1,84,250), we received GST Notice ${CANONICAL_DEMO_CASE.caseId}. For Section 16(2) reconciliation, kindly share your GSTR-3B tax payment confirmation / outward amendment. - Sharma Garments`
     );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
@@ -380,8 +380,8 @@ export const Screen4EvidenceChecklist: React.FC = () => {
                 Don&apos;t have the supplier confirmation yet?
               </h4>
               <p className="text-xs text-[#152B2A] mt-1 leading-relaxed">
-                Dhaal can generate a legally-phrased request template citing CBIC Circular 183 to prompt{' '}
-                <strong className="text-[#073B3A]">{CANONICAL_DEMO_CASE.supplier.name}</strong> to provide GSTR-3B tax payment confirmation.
+                Dhaal can generate a formal statutory inquiry to prompt{' '}
+                <strong className="text-[#073B3A]">{CANONICAL_DEMO_CASE.supplier.name}</strong> to provide GSTR-3B tax payment confirmation or amend Table 9 in their subsequent outward returns.
               </p>
             </div>
           </div>

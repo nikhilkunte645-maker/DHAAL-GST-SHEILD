@@ -71,6 +71,8 @@ To maintain truth-in-claims transparency during hackathon evaluation, the table 
 | **Sensitive PII Masking in Server Logs**| ✅ **Implemented & Verified** | `backend/main.py:426` log redactor |
 | **Sanitized RFC 7807 Error Responses** | ✅ **Implemented & Verified** | `test_upload.py` (Zero tracebacks) |
 | **Section 170 CGST Act Rounding** | ✅ **Implemented & Verified** | `test_section_170_statutory_rounding` |
+| **Evidence Graph SHA-256 State Integrity** | ✅ **Implemented & Verified** | `test_evidence_graph.py` (In-memory tamper-check only; not proof of legal admissibility) |
+| **Synthetic Provenance Flagging** | ✅ **Implemented & Verified** | Demo UTR `SAMPLEUTR0001` visibly marked `SYNTHETIC` throughout API & UI |
 | **Multi-Tenant Database Row-Level Security**| ⚠️ **Prototype Boundary** | Currently uses in-memory single-session state; multi-tenancy is documented in `DHAAL_2_DATA_MODEL.md` for production roadmap. |
 | **Role-Based Access Control (RBAC)** | ⚠️ **Prototype Boundary** | UI displays CA Sign-Off modal; formal OAuth/JWT session gating is scheduled for enterprise phase. |
 | **SOC-2 Type II / ISO 27001 Certification**| ❌ **Not Certified** | DHAAL is an advanced working prototype, not yet submitted for third-party compliance audits. |

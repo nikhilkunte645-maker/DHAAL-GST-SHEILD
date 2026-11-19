@@ -83,7 +83,7 @@ When an Indian small business receives a Form GST ASMT-10 scrutiny notice:
 2. **Stream-Based In-Memory Notice Parsing:** PDF parsing using `pypdf` streams that extracts Document Identification Numbers (DIN), Reference IDs, taxable periods, and discrepancy amounts without disk persistence.
 3. **Itemized 24-Invoice Reconciliation Engine:** Granular invoice audit categorizing differences into *Unreported in 2B*, *Delayed Filing*, *Rate Mismatches*, and *Matched* with one-click CSV export for Excel and Tally.
 4. **Statutory Defense Clock (Rule 99(1)):** Animated countdown dial tracking the mandatory 30-day defense window with recommended CA sign-off dates (5 days prior to statutory deadline).
-5. **Section 16(2) Evidentiary Binder:** 6-point statutory evidence checklist (Tax Invoices, GSTR-2B JSON, Bank Payment Vouchers, Vendor CA Certificate under Circular 183, Vendor Ledger Confirmations, and GSTR-3B Challans) with a one-click WhatsApp supplier prompt generator.
+5. **Section 16(2) Evidentiary Binder:** Period-aware statutory evidence checklist (Tax Invoices, GSTR-2B status, Bank Payment Vouchers, Supplier Confirmation, E-Way bills, and CA Certification with UDIN) with an automated supplier inquiry generator.
 6. **Deterministic Factual Verifier:** Real-time draft analysis checking that every cited rupee amount, tax period, invoice number, and legal circular in the draft matches confirmed notice parameters.
 7. **Multi-Page A4 PDF Dossier:** Client-side vector-accurate PDF export engine generating 2-page A4 dossiers in English, Hindi, and Marathi with zero right-edge clipping.
 8. **Trilingual Support (EN / HI / MR):** Full vernacular UI and Web Speech audio synthesizers in English, Hindi, and Marathi, with strict Devanagari line-height formatting ($\ge 1.75$).
@@ -246,13 +246,13 @@ DHAAL maintains automated test suites covering TypeScript compilation, frontend 
 # 1. TypeScript Static Typecheck (0 errors)
 npx tsc --noEmit
 
-# 2. Frontend Unit Tests (43/43 passing across 3 test suites)
+# 2. Frontend Unit Tests (51/51 passing across 4 test suites)
 npm test
 
 # 3. Production Bundle Build (0 errors, ~327 kB gzip JS)
 npm run build
 
-# 4. Backend Integration & Unit Tests (28/28 passing)
+# 4. Backend Integration & Unit Tests (41/41 passing across 6 test modules)
 python -m pytest backend/
 
 # 5. End-to-End Multi-Page PDF & Touch Target Verification
@@ -273,6 +273,9 @@ node scripts/test_pdf_and_verification.js
 | `GET` | `/api/notices/{case_id}` | Retrieves canonical case parameters |
 | `POST` | `/api/notices/{case_id}/confirm` | Confirms or edits disputed tax discrepancy amounts |
 | `POST` | `/api/reconciliation/run` | Two-tier exact & fuzzy reconciliation engine (Section 170 rounding) |
+| `GET` | `/api/evidence/{case_id}/graph` | Directed Acyclic Graph (DAG) of evidence and Section 16(2) compliance |
+| `GET` | `/api/evidence/{case_id}/scorecard` | Evidence Completeness Indicator (ECI) scorecard breakdown |
+| `POST` | `/api/circular-183/assess` | Assesses CBIC Circular 183 & 193 statutory applicability and conditions |
 | `GET` | `/api/evidence/{case_id}/graph` | Retrieves bipartite Evidence Graph topology and node links |
 | `GET` | `/api/evidence/{case_id}/scorecard` | Section 16(2) compliance matrix and evidentiary strength score |
 

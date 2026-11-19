@@ -258,7 +258,7 @@ def run_deterministic_reconciliation(
         else:
             unreported_2b += 1
             status_desc = "UNREPORTED_IN_2B"
-            reason_desc = "Invoice completely unreported by supplier in Form GSTR-1; subject to Section 16(2)(c) Circular 183 relief."
+            reason_desc = "Invoice present in books but omitted by supplier in outward return; requires vendor confirmation, subsequent GSTR-1 amendment, or Section 16(2)(c) proof."
 
         matches.append(MatchResult(
             match_id=f"mat_mismatch_{p.row_id}",

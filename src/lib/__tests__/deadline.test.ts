@@ -6,6 +6,8 @@ import {
   calculateDaysRemaining,
   isLeapYear,
   getDaysInMonth,
+  getApplicableDeterminationSection,
+  calculateStatutoryDueDate,
 } from '../deadline';
 
 describe('GST Deadline & Urgency Engine', () => {
@@ -156,6 +158,51 @@ describe('GST Deadline & Urgency Engine', () => {
     it('returns proportional offset for intermediate days', () => {
       // 15 days out of 30 is 50% -> offset is half of 427.26 = 213.63
       expect(getRingDashOffset(15)).toBeCloseTo(213.63, 1);
+    });
+  });
+
+  describe('Period-Aware Statutory Determination & Deadlines', () => {
+    it('classifies FY 2024-25 onwards under Section 74A (Finance No. 2 Act, 2024)', () => {
+      const ctx = getApplicableDeterminationSection('2024-25');
+      expect(ctx.isUnified74A).toBe(true);
+      expect(ctx.adjudicationSection).toBe('Section 74A');
+      expect(ctx.authoritySection).toBe('Section 61(1)');
+      expect(ctx.noticeRule).toBe('Rule 99(1)');
+      expect(ctx.subsequentActionSection).toBe('Section 61(3)');
+    });
+
+    it('classifies periods up to FY 2023-24 under Section 73 or 74', () => {
+      const ctx = getApplicableDeterminationSection('2023-24');
+      expect(ctx.isUnified74A).toBe(false);
+      expect(ctx.adjudicationSection).toBe('Section 73 or Section 74');
+    });
+
+    it('handles null financial year safely without making final legal opinion', () => {
+      const ctx = getApplicableDeterminationSection(null);
+      expect(ctx.isUnified74A).toBe(false);
+      expect(ctx.limitationDescription).toContain('unverified');
+    });
+
+    it('calculates due date using specified notice date or respects extensions', () => {
+      // Explicit due date respected
+      const explicit = calculateStatutoryDueDate('14-May-2025', '20-Jun-2025');
+      expect(explicit.dueDateStr).toBe('20-Jun-2025');
+      expect(explicit.isExplicitlySpecified).toBe(true);
+
+      // Default 30 days from notice date
+      const def = calculateStatutoryDueDate('14-May-2025');
+      expect(def.dueDateStr).toBe('13-Jun-2025');
+      expect(def.isExplicitlySpecified).toBe(false);
+
+      // Extension granted (+15 days)
+      const ext = calculateStatutoryDueDate('14-May-2025', null, 15);
+      expect(ext.dueDateStr).toBe('28-Jun-2025');
+      expect(ext.hasExtension).toBe(true);
+      expect(ext.extensionDays).toBe(15);
+
+      // Missing notice date does NOT invent date
+      const missing = calculateStatutoryDueDate(null);
+      expect(missing.dueDateStr).toBeNull();
     });
   });
 });

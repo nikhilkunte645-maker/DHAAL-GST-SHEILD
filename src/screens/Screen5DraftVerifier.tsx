@@ -50,7 +50,7 @@ The registered person has independently audited their purchase register, balance
 All goods represented in the invoices were physically received at the registered premises under cover of legitimate tax invoices and verified E-way bills, satisfying all four constituent conditions laid down under Section 16(2)(a), (b), (c), and (d) of the Central Goods and Services Tax Act, 2017. Furthermore, payments for invoice amounts along with tax have been cleared via Account Payee banking channels within the 180-day limitation period prescribed under Section 16(2).
 
 4. PROBABLE CAUSE & TAX DISCHARGE
-The apparent variance occurred solely because the supplier, M/s Apex Textiles (fictional) (GSTIN: 27XXXXX5678X1ZX), erroneously classified the supply in their outward return. The tax has duly been deposited into the Government treasury, and the vendor has since reconciled their subsequent Form GSTR-3B. Annexed hereto as Exhibit 3 is the Supplier Verification Certificate as recognized under CBIC Circular No. 183/15/2022-GST.
+The apparent variance occurred solely because the supplier, M/s Apex Textiles (fictional) (GSTIN: 27XXXXX5678X1ZX), omitted the supply in their initial outward return. The tax has duly been deposited into the Government treasury, and the vendor has since reconciled their subsequent Form GSTR-3B / outward return. Annexed hereto as Exhibit 3 is the Supplier Verification Declaration & Reconciliation Statement.
 
 In light of statutory precedents and verified exhibits, it is prayed that the proceedings initiated under Section 61 be respectfully dropped in terms of Rule 99(2) and Form GST ASMT-12 (Order of Acceptance) be issued.
 
@@ -437,7 +437,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                     </Badge>
                   </div>
                   <p>
-                    The apparent variance occurred solely because the supplier, <strong>{CANONICAL_DEMO_CASE.supplier.name} ({CANONICAL_DEMO_CASE.supplier.gstin})</strong>, erroneously classified the supply in their outward return. The tax has duly been deposited into the Government treasury, and the vendor has since reconciled their subsequent Form GSTR-3B. Annexed hereto as Exhibit 3 is the Supplier Verification Certificate as recognized under CBIC Circular No. 183/15/2022-GST.
+                    The apparent variance occurred solely because the supplier, <strong>{CANONICAL_DEMO_CASE.supplier.name} ({CANONICAL_DEMO_CASE.supplier.gstin})</strong>, omitted the supply in their initial outward return. The tax has duly been deposited into the Government treasury, and the vendor has since reconciled their subsequent Form GSTR-3B / outward return. Annexed hereto as Exhibit 3 is the Supplier Verification Declaration &amp; Reconciliation Statement.
                   </p>
                 </div>
 

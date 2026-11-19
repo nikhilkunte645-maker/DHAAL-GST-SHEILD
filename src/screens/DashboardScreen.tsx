@@ -391,11 +391,11 @@ export const DashboardScreen: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-xl text-[#119B72]">verified_user</span>
               <h3 className="font-headline text-sm font-bold text-[#073B3A]">
-                Circular 183 Defense Protection
+                Period-Aware Statutory Defense
               </h3>
             </div>
             <p className="text-xs text-[#687674] leading-relaxed">
-              Under CBIC Circular No. 183/15/2022-GST, if your vendor omitted or delayed uploading invoices into GSTR-1, you can still claim legitimate Input Tax Credit by providing vendor declarations and bank payment vouchers.
+              DHAAL applies period-aware legal rules: Circular 183/15/2022-GST for FY 2017-18 &amp; 2018-19, and Section 16(2)(aa) for FY 2024-25 onwards with vendor subsequent reconciliation and banking proof.
             </p>
           </div>
           <div className="mt-3 pt-2 border-t border-[#E4E9E5] text-[11px] text-[#119B72] font-semibold">
