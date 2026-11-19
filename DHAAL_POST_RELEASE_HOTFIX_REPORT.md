@@ -14,7 +14,7 @@ Following the initial DHAAL 2.0.0 release (`1681858`), an independent audit iden
 
 All 8 defects have been comprehensively resolved on the hotfix branch `hotfix/production-integrity`, validated by **51 Vitest unit tests**, **41 Pytest tests**, **0 TypeScript errors**, **zero-defect Vite production build**, and verified multi-page A4 PDF export across 7 viewports.
 
-**Final Verdict**: **HOTFIX IMPLEMENTED & VERIFIED — READY FOR PRODUCTION INTEGRATION**
+**Final Verdict**: **HOTFIX DEPLOYED AND LIVE VERIFIED — PRODUCTION INTEGRITY FULLY RESTORED**
 
 ---
 
@@ -85,3 +85,17 @@ All 8 defects have been comprehensively resolved on the hotfix branch `hotfix/pr
   - Multi-page A4 PDFs generated: **3 successful (EN, HI, MR)**
   - Undersized touch targets (< 44x44px): **0**
   - Horizontal overflows across 7 viewports (1920x1080 down to 390x844): **0**
+
+---
+
+## 5. Live Production Deployment & Verification
+
+- **Commit Deployed**: `444928e`
+- **Branches Synchronized**: `main`, `hotfix/production-integrity`, `ui/declutter`
+- **GitHub Actions CI Status**: `SUCCESS` (Run 44609206374 on `main`, Run 44609238987 on `ui/declutter`)
+- **Vercel Production Status**: Active & Deployed at [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)
+- **Live Verifications**:
+  1. `GET /api/evidence/DH-2025-ASMT10-8912/graph`: Returns 13 nodes, 12 edges. Confirmed node `node_statute_16_2_proviso_2` and `node_guidance_circular_183` are distinct. Confirmed `node_bank_DH-2025-ASMT10-8912` has status `SYNTHETIC`. Confirmed `node_eway_DH-2025-ASMT10-8912` has status `UNVERIFIED` with partial note (18 of 24 attached).
+  2. `GET /api/evidence/DH-2025-ASMT10-8912/scorecard`: Returns `evidence_completeness_indicator: 70`, `real_verified_score: 5`, `synthetic_demo_score: 70`, and Circular 183 assessment verdict `NOT APPLICABLE` for FY 2024-25.
+  3. `POST /api/circular-183/assess`: Tested via query parameters. Returns `NOT APPLICABLE` for FY 2024-25 GSTR-2B mismatches; returns `APPLICABLE` for FY 2017-18 GSTR-2A mismatches with > ₹5L requiring CA UDIN.
+  4. Frontend SPA: Serves updated asset bundle `index-ByvPmvBw.js` containing `SAMPLEUTR0001`, `Evidence Completeness Indicator`, `SYNTHETIC`, and Section 74A statutory references.

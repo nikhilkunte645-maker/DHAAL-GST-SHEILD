@@ -1,8 +1,8 @@
 # DHAAL (ढाल) — LIVE PRODUCTION VERIFICATION AUDIT
 **Environment**: Production (Vercel Serverless + Edge CDN)  
-**Verification Date**: November 20, 2026, 01:28 IST  
+**Verification Date**: November 20, 2026, 02:02 IST  
 **Live URL**: [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)  
-**Git Commit**: `5cd4116`  
+**Git Commit**: `444928e` (Integrity Hotfix Release)  
 
 ---
 
@@ -15,6 +15,7 @@
 | 3 | `https://dhaal-gst-sheild.vercel.app/api/reconciliation/run` | `POST` | 200 OK | **200 OK** | ~240ms | **PASS** |
 | 4 | `https://dhaal-gst-sheild.vercel.app/api/evidence/DH-2025-ASMT10-8912/graph` | `GET` | 200 OK | **200 OK** | ~140ms | **PASS** |
 | 5 | `https://dhaal-gst-sheild.vercel.app/api/evidence/DH-2025-ASMT10-8912/scorecard` | `GET` | 200 OK | **200 OK** | ~110ms | **PASS** |
+| 6 | `https://dhaal-gst-sheild.vercel.app/api/circular-183/assess` | `POST` | 200 OK | **200 OK** | ~130ms | **PASS** |
 
 ---
 
@@ -57,17 +58,40 @@
 ```json
 {
   "case_id": "DH-2025-ASMT10-8912",
-  "nodes_count": 12,
-  "edges_count": 10,
-  "evidentiary_strength_score": 78,
+  "nodes_count": 13,
+  "edges_count": 12,
+  "evidentiary_strength_score": 70,
+  "evidence_completeness_indicator": 70,
   "missing_evidence_count": 2,
   "unverified_hypotheses_count": 1,
-  "section_16_compliance": {
-    "16_2_a": {"clause": "Possession of Tax Invoice", "status": "COMPLIANT", "score": 100},
-    "16_2_b": {"clause": "Physical Receipt of Goods", "status": "COMPLIANT", "score": 95},
-    "16_2_c": {"clause": "Tax Paid by Supplier", "status": "ACTION_REQUIRED", "score": 40},
-    "16_2_d": {"clause": "Return Furnished by Recipient", "status": "COMPLIANT", "score": 100},
-    "16_2_proviso_2": {"clause": "Payment within 180 Days", "status": "COMPLIANT", "score": 100}
+  "nodes": [
+    {"id": "node_statute_16_2_proviso_2", "label": "CGST Sec 16(2) 2nd Proviso: Payment within 180 Days", "status": "CONFIRMED"},
+    {"id": "node_guidance_circular_183", "label": "CBIC Circular No. 183/15/2022-GST", "status": "NOT_APPLICABLE"},
+    {"id": "node_bank_DH-2025-ASMT10-8912", "label": "Bank Payment Voucher [SYNTHETIC DEMO] (UTR: SAMPLEUTR0001 - Unverified)", "status": "SYNTHETIC"},
+    {"id": "node_eway_DH-2025-ASMT10-8912", "label": "E-Way Bills: 18 of 24 attached [PARTIAL] (6 missing delivery proof)", "status": "UNVERIFIED"}
+  ]
+}
+```
+
+### 2.4 Evidence Completeness & Circular 183 (`GET /api/evidence/DH-2025-ASMT10-8912/scorecard`)
+```json
+{
+  "case_id": "DH-2025-ASMT10-8912",
+  "evidence_completeness_indicator": 70,
+  "eci_breakdown": {
+    "total_possible_score": 100,
+    "real_verified_score": 5,
+    "synthetic_demo_score": 70,
+    "evidence_completeness_percentage": 70
+  },
+  "circular_183_assessment": {
+    "verdict": "NOT APPLICABLE",
+    "financial_year": "2024-25",
+    "reasons": [
+      "Financial Year 2024-25 is outside the statutory scope of Circular 183/15/2022-GST (FY 2017-18 & 2018-19) and Circular 193/05/2023-GST (FY 2019-20 & 2020-21).",
+      "For periods w.e.f. 01.01.2022, Section 16(2)(aa) strictly requires invoices to be reflected in Form GSTR-2B."
+    ],
+    "is_applicable": false
   }
 }
 ```
