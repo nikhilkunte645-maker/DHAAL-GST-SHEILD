@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({
       )}
 
       {/* A.1: Compact Single Header Bar (56–64px height) */}
-      <div className="h-14 sm:h-16 px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 max-w-[1440px] mx-auto">
+      <div className="h-14 sm:h-16 px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 max-w-[1200px] mx-auto">
         {/* Left: Mobile Drawer Trigger + Brand Logo & Name */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
