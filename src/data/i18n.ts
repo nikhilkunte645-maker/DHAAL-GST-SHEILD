@@ -17,6 +17,14 @@ export interface I18nDictionary {
     step5: string;
     step6: string;
   };
+  stepperFull: {
+    step1: string;
+    step2: string;
+    step3: string;
+    step4: string;
+    step5: string;
+    step6: string;
+  };
   explainer: {
     officerHeading: string;
     officerText: string;
@@ -31,16 +39,24 @@ export const I18N: Record<Language, I18nDictionary> = {
     heroHeadline: 'Understand your GST notice in ',
     heroHeadlineHighlight: 'minutes',
     heroHeadlineEnd: ', not days.',
-    heroSubcopy: 'Dhaal reads your statutory notice, isolates every questioned mismatch, tells you exactly what the officer is asking and by when, and drafts an audit-ready brief for your Chartered Accountant.',
+    heroSubcopy: 'Dhaal reads your statutory notice, isolates every questioned mismatch, tells you what the officer is asking, and drafts an audit-ready brief for your CA.',
     uploadCta: 'Upload Notice',
-    trySampleCta: 'Try a sample notice (ASMT-10)',
+    trySampleCta: 'Try with sample notice',
     stepper: {
       step1: 'Upload',
-      step2: 'Confirm & Pause',
-      step3: 'Explain & Deadlines',
-      step4: 'Evidence Checklist',
-      step5: 'Draft & Verifier',
+      step2: 'Confirm',
+      step3: 'Explain',
+      step4: 'Evidence',
+      step5: 'Draft',
       step6: 'CA Brief',
+    },
+    stepperFull: {
+      step1: 'Step 1: Upload Notice (Form ASMT-10)',
+      step2: 'Step 2: Confirm Scanned Mismatch Amount',
+      step3: 'Step 3: Understand Statutory Deadlines & Explainer',
+      step4: 'Step 4: Prepare Evidence Checklist',
+      step5: 'Step 5: Verify Legal Reply Draft',
+      step6: 'Step 6: Review Audit-Ready CA Brief',
     },
     explainer: {
       officerHeading: 'What the Officer Is Saying (English)',
@@ -54,16 +70,24 @@ export const I18N: Record<Language, I18nDictionary> = {
     heroHeadline: 'अपने जीएसटी नोटिस को ',
     heroHeadlineHighlight: 'मिनटों में',
     heroHeadlineEnd: ' समझें, दिनों में नहीं।',
-    heroSubcopy: 'ढाल आपके वैधानिक नोटिस को पढ़ता है, हर विसंगति को अलग करता है, स्पष्ट रूप से बताता है कि अधिकारी क्या और कब तक मांग रहा है, और आपके सीए के लिए एक ऑडिट-तैयार ब्रीफ तैयार करता है।',
+    heroSubcopy: 'ढाल आपके वैधानिक नोटिस को पढ़ता है, हर विसंगति को अलग करता है, अधिकारी की मांग स्पष्ट करता है और आपके सीए के लिए ऑडिट-तैयार ब्रीफ तैयार करता है।',
     uploadCta: 'नोटिस अपलोड करें',
-    trySampleCta: 'नमूना नोटिस देखें (ASMT-10)',
+    trySampleCta: 'नमूना नोटिस देखें',
     stepper: {
       step1: 'अपलोड',
-      step2: 'पुष्टि व ठहराव',
-      step3: 'व्याख्या व समय-सीमा',
-      step4: 'साक्ष्य चेकलिस्ट',
-      step5: 'ड्राफ्ट व सत्यापन',
+      step2: 'पुष्टि',
+      step3: 'व्याख्या',
+      step4: 'साक्ष्य',
+      step5: 'ड्राफ्ट',
       step6: 'सीए ब्रीफ',
+    },
+    stepperFull: {
+      step1: 'चरण 1: नोटिस अपलोड (फॉर्म ASMT-10)',
+      step2: 'चरण 2: विसंगति राशि की पुष्टि व ठहराव',
+      step3: 'चरण 3: वैधानिक समय-सीमा व सरल व्याख्या',
+      step4: 'चरण 4: साक्ष्य दस्तावेज चेकलिस्ट',
+      step5: 'चरण 5: कानूनी जवाब ड्राफ्ट व सत्यापन',
+      step6: 'चरण 6: सीए के लिए संपूर्ण ब्रीफ',
     },
     explainer: {
       officerHeading: 'अधिकारी का क्या कहना है (सरल हिन्दी में)',
@@ -77,16 +101,24 @@ export const I18N: Record<Language, I18nDictionary> = {
     heroHeadline: 'आपली जीएसटी नोटीस ',
     heroHeadlineHighlight: 'काही मिनिटांत',
     heroHeadlineEnd: ' समजून घ्या, दिवसांत नाही.',
-    heroSubcopy: 'ढाल आपली कायदेशीर नोटीस वाचते, प्रत्येक तफावत अचूक शोधते, अधिकारी नक्की काय व कधीपर्यंत विचारत आहेत हे सांगते आणि आपल्या सीएसाठी ऑडिट-तयार ब्रीफ तयार करते.',
+    heroSubcopy: 'ढाल आपली कायदेशीर नोटीस वाचते, प्रत्येक तफावत शोधते, अधिकारी काय विचारत आहेत हे स्पष्ट करते आणि सीएसाठी ऑडिट-तयार ब्रीफ तयार करते.',
     uploadCta: 'नोटीस अपलोड करा',
-    trySampleCta: 'नमुना नोटीस पहा (ASMT-10)',
+    trySampleCta: 'नमुना नोटीस पहा',
     stepper: {
       step1: 'अपलोड',
-      step2: 'पडताळणी व थांबा',
-      step3: 'स्पष्टीकरण व मुदत',
-      step4: 'पुरावा यादी',
-      step5: 'मसुदा पडताळणी',
+      step2: 'पडताळणी',
+      step3: 'स्पष्टीकरण',
+      step4: 'पुरावा',
+      step5: 'मसुदा',
       step6: 'सीए ब्रीफ',
+    },
+    stepperFull: {
+      step1: 'टप्पा १: नोटीस अपलोड (फॉर्म ASMT-10)',
+      step2: 'टप्पा २: तफावत रक्कमेची पडताळणी',
+      step3: 'टप्पा ३: कायदेशीर मुदत व स्पष्टीकरण',
+      step4: 'टप्पा ४: पुरावा कागदपत्रे यादी',
+      step5: 'टप्पा ५: मसुदा कायदेशीर पडताळणी',
+      step6: 'टप्पा ६: सीए ऑडिट ब्रीफ',
     },
     explainer: {
       officerHeading: 'जीएसटी अधिकाऱ्यांचे म्हणणे काय आहे (मराठीत)',

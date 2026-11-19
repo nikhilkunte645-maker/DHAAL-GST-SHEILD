@@ -24,6 +24,7 @@ export const App: React.FC = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
 
   // Synchronize hash routing with store step
   const stepHashMap: Record<string, number> = {
@@ -64,22 +65,29 @@ export const App: React.FC = () => {
   }, [maxStep, setStep]);
 
   return (
-    <div className="min-h-screen bg-[#F6F8FB] text-[#0F172A] flex flex-col font-sans selection:bg-[#2B4C9B] selection:text-white">
-      {/* Top Fixed Header */}
+    <div className="min-h-screen bg-[#F6F8FB] text-[#0F172A] flex flex-col font-sans selection:bg-[#2B4C9B] selection:text-white overflow-x-hidden">
+      {/* Top Fixed Header with Integrated Single-line Disclaimer */}
       <Header
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
         onOpenHelp={() => setIsHelpOpen(true)}
+        isBannerDismissed={isBannerDismissed}
+        onDismissBanner={() => setIsBannerDismissed(true)}
       />
 
-      {/* Left Sidebar */}
+      {/* Left Sidebar (Desktop Rail on 1024-1279px, 240px on >=1280px, Off-canvas on <1024px) */}
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        isBannerDismissed={isBannerDismissed}
       />
 
-      {/* Main Content Area */}
-      <div className="lg:pl-64 flex-1 flex flex-col">
-        <main className="pt-[88px] min-h-screen px-4 sm:px-6 lg:px-8 py-6 max-w-[1440px] w-full mx-auto">
+      {/* Main Content Area: Responsive offsets and centered 1200px container */}
+      <div className="lg:pl-16 xl:pl-[240px] flex-1 flex flex-col transition-all duration-200 min-w-0">
+        <main
+          className={`${
+            isBannerDismissed ? 'pt-16 sm:pt-20' : 'pt-[88px] sm:pt-[96px]'
+          } pb-16 sm:pb-24 min-h-screen px-4 sm:px-6 max-w-[1200px] w-full mx-auto flex flex-col`}
+        >
           {step === 1 && <Screen1Upload />}
           {step === 2 && <Screen2ConfirmPause />}
           {step === 3 && <Screen3ExplainerDeadlines />}
@@ -89,20 +97,20 @@ export const App: React.FC = () => {
         </main>
 
         {/* Statutory Footer & In-Memory Privacy Notice */}
-        <footer className="mt-auto py-5 px-4 sm:px-6 lg:px-8 border-t border-[#E3E8F0] bg-white text-center text-xs text-[#5B6B82] no-print">
-          <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        <footer className="mt-auto py-4 px-4 sm:px-6 border-t border-[#E3E8F0] bg-white text-center text-xs text-[#5B6B82] no-print">
+          <div className="max-w-[1200px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
             <span className="font-medium text-[#0B1F3A]">
               Drafting aid. Final review and submission by a Chartered Accountant required.
             </span>
             <span className="text-[11px] text-[#5B6B82]">
-              Privacy Notice: All notices are processed entirely in-memory. No documents, logs, or taxpayer records are saved or retained.
+              In-Memory Processing: Notice files are processed purely in memory and never stored.
             </span>
           </div>
         </footer>
       </div>
 
-      {/* Mobile Sticky Bottom Action Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E3E8F0] p-3 flex items-center justify-between gap-3 shadow-lg no-print">
+      {/* Mobile Sticky Bottom Action Bar (< 768px) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E3E8F0] px-4 py-2.5 flex items-center justify-between gap-3 shadow-lg no-print">
         <div className="flex flex-col">
           <span className="font-mono text-[10px] text-[#5B6B82]">Step {step} of 6</span>
           <span className="font-bold text-xs text-[#0B1F3A]">
@@ -124,7 +132,8 @@ export const App: React.FC = () => {
               }
             }}
             disabled={step >= maxStep}
-            className="px-4 py-2 rounded-control bg-[#0B1F3A] text-white text-xs font-bold disabled:opacity-40 flex items-center gap-1 shadow-sm"
+            className="px-4 py-2 rounded-control bg-[#0B1F3A] text-white text-xs font-bold disabled:opacity-40 flex items-center gap-1 shadow-2xs min-h-[44px]"
+            aria-label="Proceed to next step"
           >
             <span>Next</span>
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
