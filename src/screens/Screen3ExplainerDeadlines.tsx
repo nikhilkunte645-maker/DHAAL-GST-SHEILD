@@ -5,6 +5,9 @@ import { Language } from '../data/i18n';
 import { getUrgencyInfo, getRingDashOffset } from '../lib/deadline';
 import { formatINR } from '../lib/format';
 import { dhaalApi, ExplanationResponse } from '../mockApi';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
+import { Card } from '../components/ui/Card';
 
 export const Screen3ExplainerDeadlines: React.FC = () => {
   const {
@@ -73,7 +76,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
       textToSpeak = `जीएसटी अधिकारी ने पाया कि आपने पहली तिमाही अप्रैल से जून 2024 के लिए GSTR-3B में आपके सप्लायर्स द्वारा GSTR-2B में दिखाए गए इनपुट टैक्स क्रेडिट से 1 लाख 84 हजार 250 रुपये अधिक क्लेम किया है।`;
       voiceLang = 'hi-IN';
     } else if (language === 'mr') {
-      textToSpeak = `जीएसटी अधिकाऱ्यांच्या निदर्शनास आले आहे की तुम्ही एप्रिल ते जून 2024 या तिमाहीत GSTR-2B मधील रकमेपेक्षा 1 लाख 84 हजार 250 रुपये जास्त इनपुट टॅक्स क्रेडिट GSTR-3B मध्ये दाखवले आहे.`;
+      textToSpeak = `जीएसटी अधिकाऱ्यांच्या निदर्शनास आले आहे की तुम्ही एप्रिल ते जून 2024 या तिमाहीत GSTR-2B मधील रकमेपेक्षा 1 लाख 84 हजार 250 रुपये जास्त इनपुट टॅक्स क्रेडिट GSTR-3B मध्ये दाखवले आहे।`;
       voiceLang = 'mr-IN';
     } else {
       textToSpeak = `The GST officer noticed that you claimed 1 lakh 84 thousand 250 rupees more in Input Tax Credit on GSTR-3B than what your suppliers reported in GSTR-2B for Quarter 1, April to June 2024.`;
@@ -98,56 +101,53 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
     window.speechSynthesis.speak(utterance);
   };
 
+  const badgeVariant =
+    urgency.level === 'critical' ? 'danger' : urgency.level === 'caution' ? 'warning' : 'brand';
+
   return (
     <div className="flex flex-col w-full pb-16">
-      {/* Top Header Context */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 bg-[#EFF4FF] p-3 rounded-xl border border-[#CBD5E1]">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-mono text-xs font-bold text-[#0B1F3A] bg-white px-2.5 py-1 rounded-full border border-[#E3E8F0] shadow-2xs">
-            STAGE 03 OF 06
-          </span>
-          <span className="text-xs font-semibold text-[#0B1F3A]">
+      {/* Top Context Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[#E2E8F0]">
+        <div>
+          <h1 className="font-headline text-xl sm:text-2xl font-bold text-[#0B1F3A]">
             Explain & Statutory Deadlines
-          </span>
-          <span className="text-xs text-[#5B6B82] hidden sm:inline">•</span>
-          <span className="text-xs text-[#5B6B82] hidden sm:inline">
-            {CANONICAL_DEMO_CASE.office.ward} ({CANONICAL_DEMO_CASE.office.division})
-          </span>
+          </h1>
+          <p className="text-xs sm:text-sm text-[#5B6B82] mt-0.5">
+            {CANONICAL_DEMO_CASE.office.ward} ({CANONICAL_DEMO_CASE.office.division}) • Ground: Section 61 (Scrutiny)
+          </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-start sm:self-auto">
           <span className="text-xs text-[#5B6B82]">Amount Questioned:</span>
-          <span className="font-mono text-sm font-bold text-[#0B1F3A] bg-white px-2 py-0.5 rounded border border-[#CBD5E1]">
+          <span className="font-mono text-sm font-bold text-[#0B1F3A] bg-white px-2.5 py-1 rounded-control border border-[#CBD5E1] shadow-2xs">
             {formatINR(amount, true)}
           </span>
         </div>
       </div>
 
       {/* Main Grid: Left Column Countdown + Right Column Explainer */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* LEFT COLUMN: Statutory Countdown & Urgency (5 cols on xl) */}
         <div className="xl:col-span-5 flex flex-col gap-6">
-          <div className="bg-white rounded-modal shadow-tier2 border border-[#E3E8F0] p-6 flex flex-col relative overflow-hidden">
+          <Card variant="default" padding="lg" className="relative overflow-hidden">
             {/* Top Accent Bar */}
             <div
               className="absolute top-0 left-0 right-0 h-1.5 transition-colors"
               style={{ backgroundColor: urgency.barColor }}
-            ></div>
+            />
 
             <div className="flex items-center justify-between mb-4">
-              <span className="font-mono text-xs font-bold text-[#5B6B82] uppercase tracking-wider">
+              <span className="text-xs font-bold text-[#5B6B82] uppercase tracking-wider">
                 Statutory Defense Window
               </span>
-              <span
-                className={`px-2.5 py-0.5 rounded-full font-mono text-[11px] font-bold shadow-2xs ${urgency.badgeClass}`}
-              >
+              <Badge variant={badgeVariant} size="sm">
                 {urgency.label}
-              </span>
+              </Badge>
             </div>
 
             {/* SVG Countdown Ring */}
             <div className="flex flex-col items-center justify-center my-2">
-              <div className="relative w-52 h-52 flex items-center justify-center">
+              <div className="relative w-48 h-48 sm:w-52 sm:h-52 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 160 160">
                   {/* Track ring */}
                   <circle
@@ -174,13 +174,13 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 </svg>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-[#B45309] font-bold">
+                  <span className="text-[10px] uppercase tracking-widest text-[#B45309] font-bold">
                     T-Minus
                   </span>
                   <span className="font-headline text-4xl font-bold text-[#0B1F3A] tracking-tight">
                     {daysLeftOverride}
                   </span>
-                  <span className="font-mono text-xs text-[#0B1F3A] font-bold -mt-1">
+                  <span className="text-xs text-[#0B1F3A] font-bold -mt-1">
                     DAYS LEFT
                   </span>
                   <span className="text-[11px] text-[#5B6B82] mt-0.5">
@@ -193,45 +193,45 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 <p className="font-headline text-lg font-bold text-[#0B1F3A]">
                   {CANONICAL_DEMO_CASE.replyDeadline}
                 </p>
-                <p className="font-mono text-xs text-[#5B6B82]">
+                <p className="text-xs text-[#5B6B82]">
                   Formal Deadline u/r 99(1) CGST Rules, 2017
                 </p>
               </div>
             </div>
 
             {/* Urgency Scale Bar */}
-            <div className="flex flex-col gap-2 pt-4 mt-2 bg-[#EFF4FF] p-4 rounded-card border border-[#CBD5E1]">
+            <div className="flex flex-col gap-2 pt-4 mt-2 bg-[#F8FAFC] p-4 rounded-control border border-[#E2E8F0]">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-[#5B6B82] font-semibold">
                   Statutory Urgency Track
                 </span>
-                <span className="font-mono text-[10px] text-[#5B6B82] italic">
-                  (interface states, not legal classifications)
+                <span className="text-[10px] text-[#5B6B82] italic">
+                  (interface preview states)
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-1.5 h-3 rounded-full overflow-hidden bg-white p-0.5 border border-[#CBD5E1]">
+              <div className="grid grid-cols-3 gap-1.5 h-2.5 rounded-full overflow-hidden bg-white p-0.5 border border-[#CBD5E1]">
                 <div
                   className={`rounded-l-full transition-opacity ${
-                    urgency.level === 'normal' ? 'bg-[#3b5baa]' : 'bg-[#3b5baa]/30'
+                    urgency.level === 'normal' ? 'bg-[#2B4C9B]' : 'bg-[#2B4C9B]/30'
                   }`}
                   title="Normal: 30-15 days"
-                ></div>
+                />
                 <div
                   className={`rounded-xs transition-opacity ${
                     urgency.level === 'caution' ? 'bg-[#F59E0B]' : 'bg-[#F59E0B]/30'
                   }`}
                   title="Caution: 14-7 days"
-                ></div>
+                />
                 <div
                   className={`rounded-r-full transition-opacity ${
                     urgency.level === 'critical' ? 'bg-[#C0392B]' : 'bg-[#C0392B]/30'
                   }`}
                   title="Critical: < 7 days"
-                ></div>
+                />
               </div>
 
-              <div className="grid grid-cols-3 text-center pt-0.5 font-mono text-[10px]">
+              <div className="grid grid-cols-3 text-center pt-0.5 text-[10px]">
                 <span className={urgency.level === 'normal' ? 'font-bold text-[#2B4C9B]' : 'text-[#75777E]'}>
                   Normal (30-15d)
                 </span>
@@ -244,11 +244,11 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               </div>
 
               {/* Demo Slider for Urgency scrubbing */}
-              <div className="mt-3 pt-3 border-t border-[#CBD5E1] flex flex-col gap-1.5">
+              <div className="mt-3 pt-3 border-t border-[#E2E8F0] flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <label htmlFor="urgency-slider" className="text-[11px] font-bold text-[#0B1F3A] flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs text-[#2B4C9B]">tune</span>
-                    <span>Preview urgency (Demo-only slider):</span>
+                    <span>Preview urgency (Demo slider):</span>
                   </label>
                   <span className="font-mono text-xs font-bold text-[#2B4C9B]">
                     {daysLeftOverride} days
@@ -266,8 +266,8 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               </div>
             </div>
 
-            {/* Consequence note (Honesty rule applied) */}
-            <div className="mt-4 p-3.5 bg-[#FEE2E2]/60 rounded-card border-l-accent-danger flex items-start gap-2.5">
+            {/* Consequence note */}
+            <div className="mt-4 p-3 bg-[#FEF2F2] rounded-control border-l-4 border-l-[#C0392B] flex items-start gap-2.5">
               <span className="material-symbols-outlined text-[#C0392B] text-lg shrink-0 mt-0.5">
                 warning
               </span>
@@ -280,29 +280,29 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Attached Scrutiny Notice Card with Raw Scan Launcher */}
-          <div className="bg-white rounded-modal shadow-tier1 border border-[#E3E8F0] p-4 flex flex-col gap-3">
+          <Card variant="default" padding="md" className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#5B6B82]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#5B6B82]">
                 Attached Scrutiny Notice
               </span>
-              <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#EFF4FF] text-[#2B4C9B] border border-[#CBD5E1]">
+              <Badge variant="brand" size="sm">
                 PDF • Signed
-              </span>
+              </Badge>
             </div>
 
-            <div className="flex items-center gap-3 p-3 bg-[#EFF4FF] rounded-card border border-[#CBD5E1]">
-              <div className="w-12 h-14 bg-white rounded shadow-2xs flex flex-col items-center justify-center p-1 shrink-0 border border-[#CBD5E1]">
+            <div className="flex items-center gap-3 p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
+              <div className="w-11 h-13 bg-white rounded-control shadow-2xs flex flex-col items-center justify-center p-1 shrink-0 border border-[#E2E8F0]">
                 <span className="material-symbols-outlined text-[#2B4C9B] text-xl">description</span>
-                <span className="font-mono text-[9px] text-[#5B6B82] mt-0.5">ASMT-10</span>
+                <span className="text-[9px] font-mono text-[#5B6B82] mt-0.5">ASMT-10</span>
               </div>
               <div className="flex flex-col min-w-0 flex-1">
                 <span className="text-xs font-bold text-[#0B1F3A] truncate font-mono">
                   {CANONICAL_DEMO_CASE.noticeRef}.pdf
                 </span>
-                <span className="font-mono text-[10px] text-[#5B6B82]">
+                <span className="text-[10px] text-[#5B6B82]">
                   Proper Officer • Ward 102
                 </span>
                 <div className="flex items-center gap-2 mt-1">
@@ -319,15 +319,15 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* RIGHT COLUMN: Plain-Language Explainer & IS/IS-NOT Contrast (7 cols on xl) */}
         <div className="xl:col-span-7 flex flex-col gap-6">
           {/* Multilingual Explainer Card */}
-          <div className="bg-white rounded-modal shadow-tier2 border border-[#E3E8F0] p-6">
+          <Card variant="default" padding="lg">
             {/* Header with Language Pills */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E3E8F0]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#2B4C9B] text-2xl">translate</span>
                 <div>
@@ -335,21 +335,21 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     Plain-Language Explanation
                   </h2>
                   <p className="text-xs text-[#5B6B82]">
-                    Bureaucratic allegations explained in simple vernacular terms
+                    Allegations explained in simple vernacular terms
                   </p>
                 </div>
               </div>
 
               {/* Language Switcher Tabs */}
-              <div className="inline-flex bg-[#EFF4FF] p-1 rounded-lg border border-[#CBD5E1] self-start sm:self-auto">
+              <div className="inline-flex bg-[#F1F5F9] p-1 rounded-control border border-[#E2E8F0] self-start sm:self-auto">
                 {(['en', 'hi', 'mr'] as Language[]).map((lang) => (
                   <button
                     key={lang}
                     type="button"
                     onClick={() => setLanguage(lang)}
-                    className={`px-3 py-1 rounded text-xs transition-colors ${
+                    className={`px-3 py-1 rounded text-xs transition-all min-h-[32px] font-medium ${
                       language === lang
-                        ? 'bg-[#0B1F3A] text-white font-bold shadow-2xs'
+                        ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
                         : 'text-[#5B6B82] hover:text-[#0B1F3A]'
                     }`}
                     lang={lang}
@@ -367,24 +367,24 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               onFocus={() => setIsQuoteHighlighted(true)}
               onBlur={() => setIsQuoteHighlighted(false)}
               tabIndex={0}
-              className="p-5 bg-[#EFF4FF] rounded-card border border-[#CBD5E1] my-4 focus:ring-2 focus:ring-[#2B4C9B] transition-all"
+              className="p-4 sm:p-5 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] my-4 focus:ring-2 focus:ring-[#2B4C9B] transition-all"
             >
               {language === 'en' && (
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#2B4C9B]"></span>
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#2B4C9B] font-bold">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#2B4C9B]" />
+                    <span className="text-xs uppercase tracking-wider text-[#2B4C9B] font-bold">
                       What the Officer Is Saying (English)
                     </span>
                   </div>
-                  <p className="text-base text-[#0B1F3A] leading-relaxed font-medium">
+                  <p className="text-sm sm:text-base text-[#0B1F3A] leading-relaxed font-medium">
                     &quot;The GST officer noticed that you claimed{' '}
-                    <strong className="text-[#C0392B] bg-[#FEE2E2] px-1 py-0.5 rounded font-mono font-bold">
+                    <strong className="text-[#C0392B] bg-[#FEF2F2] px-1.5 py-0.5 rounded font-mono font-bold">
                       ₹1,84,250 more
                     </strong>{' '}
                     in Input Tax Credit (ITC) on GSTR-3B than what your suppliers reported in GSTR-2B for Q1 (Apr–Jun 2024).&quot;
                   </p>
-                  <p className="text-xs text-[#44474D] mt-1 leading-relaxed">
+                  <p className="text-xs text-[#5B6B82] mt-1 leading-relaxed">
                     Under GST provisions, every rupee of tax rebate you take must match the exact invoices uploaded by your vendors. The department is questioning this ₹1,84,250 gap before considering further action.
                   </p>
                 </div>
@@ -393,21 +393,21 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               {language === 'hi' && (
                 <div className="flex flex-col gap-2" lang="hi">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#2B4C9B]"></span>
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#2B4C9B] font-bold">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#2B4C9B]" />
+                    <span className="text-xs uppercase tracking-wider text-[#2B4C9B] font-bold">
                       अधिकारी का क्या कहना है (सरल हिन्दी में)
                     </span>
                   </div>
-                  <p className="text-base text-[#0B1F3A] leading-[1.65]">
+                  <p className="text-sm sm:text-base text-[#0B1F3A] leading-[1.7]">
                     &quot;जीएसटी अधिकारी ने पाया कि आपने पहली तिमाही (अप्रैल-जून 2024) के लिए{' '}
                     <strong className="text-[#0B1F3A] font-bold font-mono">GSTR-3B</strong> में आपके सप्लायर्स द्वारा{' '}
                     <strong className="text-[#0B1F3A] font-bold font-mono">GSTR-2B</strong> में दिखाए गए इनपुट टैक्स क्रेडिट (ITC) से{' '}
-                    <strong className="text-[#C0392B] bg-[#FEE2E2] px-1 py-0.5 rounded font-mono font-bold">
+                    <strong className="text-[#C0392B] bg-[#FEF2F2] px-1.5 py-0.5 rounded font-mono font-bold">
                       ₹1,84,250 अधिक क्लेम
                     </strong>{' '}
                     किया है।&quot;
                   </p>
-                  <p className="text-xs text-[#44474D] mt-1 leading-[1.6]">
+                  <p className="text-xs text-[#5B6B82] mt-1 leading-[1.7]">
                     इसका सीधा मतलब है कि आपके किसी वेंडर ने अपना रिटर्न दाखिल करने में देरी की है, या आपने गलती से गलत इनवॉइस जोड़ लिया है। आपको केवल इसका प्रमाण और हिसाब पेश करना है।
                   </p>
                 </div>
@@ -416,81 +416,73 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               {language === 'mr' && (
                 <div className="flex flex-col gap-2" lang="mr">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#2B4C9B]"></span>
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#2B4C9B] font-bold">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#2B4C9B]" />
+                    <span className="text-xs uppercase tracking-wider text-[#2B4C9B] font-bold">
                       जीएसटी अधिकाऱ्यांचे म्हणणे काय आहे (मराठीत)
                     </span>
                   </div>
-                  <p className="text-base text-[#0B1F3A] leading-[1.65]">
+                  <p className="text-sm sm:text-base text-[#0B1F3A] leading-[1.7]">
                     &quot;जीएसटी अधिकाऱ्यांच्या निदर्शनास आले आहे की तुम्ही एप्रिल-जून २०२४ या तिमाहीत{' '}
                     <strong className="text-[#0B1F3A] font-bold font-mono">GSTR-2B</strong> मधील रकमेपेक्षा{' '}
-                    <strong className="text-[#C0392B] bg-[#FEE2E2] px-1 py-0.5 rounded font-mono font-bold">
+                    <strong className="text-[#C0392B] bg-[#FEF2F2] px-1.5 py-0.5 rounded font-mono font-bold">
                       ₹१,८४,२५० जास्त
                     </strong>{' '}
                     इनपुट टॅक्स क्रेडिट (ITC){' '}
-                    <strong className="text-[#0B1F3A] font-bold font-mono">GSTR-3B</strong> मध्ये दाखवले आहे.&quot;
+                    <strong className="text-[#0B1F3A] font-bold font-mono">GSTR-3B</strong> मध्ये दाखवले आहे।&quot;
                   </p>
-                  <p className="text-xs text-[#44474D] mt-1 leading-[1.6]">
-                    याचा अर्थ असा की आपल्या पुरवठादाराने वेळेत बीजक (Invoice) अपलोड केलेले नाही किंवा रकमेत तफावत आहे. योग्य पुराव्यासह खुलासा सादर केल्यास हा प्रश्न निकाली निघू शकतो.
+                  <p className="text-xs text-[#5B6B82] mt-1 leading-[1.7]">
+                    याचा अर्थ असा की आपल्या पुरवठादाराने वेळेत बीजक (Invoice) अपलोड केलेले नाही किंवा रकमेत तफावत आहे। योग्य पुराव्यासह खुलासा सादर केल्यास हा प्रश्न निकाली निघू शकतो।
                   </p>
                 </div>
               )}
 
               {/* Audio Listen Assist */}
-              <div className="mt-4 pt-3 border-t border-[#CBD5E1] flex flex-wrap items-center justify-between gap-3">
-                <button
+              <div className="mt-4 pt-3 border-t border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3">
+                <Button
                   type="button"
+                  variant={isPlayingAudio ? 'primary' : 'secondary'}
+                  size="sm"
+                  icon={isPlayingAudio ? 'stop_circle' : 'volume_up'}
                   onClick={handleSpeak}
                   disabled={!voiceAvailable}
                   title={voiceAvailable ? 'Play spoken explanation' : 'Voice synthesis not supported on this device'}
-                  className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-control font-medium text-xs transition-all shadow-2xs border ${
-                    isPlayingAudio
-                      ? 'bg-[#F59E0B] text-[#0F172A] border-[#D97706] animate-pulse'
-                      : voiceAvailable
-                      ? 'bg-white text-[#0B1F3A] hover:bg-[#EFF4FF] border-[#CBD5E1] hover:border-[#2B4C9B]'
-                      : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                  }`}
+                  className={isPlayingAudio ? 'bg-[#F59E0B] text-[#0F172A] hover:bg-[#D97706]' : ''}
                 >
-                  <span className="material-symbols-outlined text-base">
-                    {isPlayingAudio ? 'stop_circle' : 'volume_up'}
-                  </span>
-                  <span className="font-bold">
-                    {isPlayingAudio ? 'Stop Listening' : 'Listen to Explanation'}
-                  </span>
-                </button>
+                  {isPlayingAudio ? 'Stop Listening' : 'Listen to Explanation'}
+                </Button>
 
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-[#5B6B82]">
+                  <span className="text-xs text-[#5B6B82]">
                     Language: <span className="font-bold text-[#0B1F3A]">{language === 'hi' ? 'Hindi (hi-IN)' : language === 'mr' ? 'Marathi (mr-IN)' : 'English (en-IN)'}</span>
                   </span>
-                  <span className="font-mono text-[10px] text-[#5B6B82] bg-white border border-[#CBD5E1] px-2 py-0.5 rounded shadow-2xs">
+                  <Badge variant="neutral" size="sm">
                     Web Speech API
-                  </span>
+                  </Badge>
                 </div>
               </div>
             </div>
 
             {/* Source-Sentence Grounding Quote Card */}
             <div
-              className={`p-4 rounded-card border transition-all ${
+              className={`p-4 rounded-control border transition-all ${
                 isQuoteHighlighted
-                  ? 'bg-[#FEF3C7] border-[#F59E0B] shadow-sm'
-                  : 'bg-[#EFF4FF] border-[#CBD5E1]'
+                  ? 'bg-[#FEF3C7] border-[#F59E0B] shadow-2xs'
+                  : 'bg-[#F8FAFC] border-[#E2E8F0]'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[#0B1F3A] text-base">format_quote</span>
-                  <span className="font-mono text-[11px] text-[#0B1F3A] uppercase font-bold tracking-wider">
+                  <span className="text-[11px] text-[#0B1F3A] uppercase font-bold tracking-wider">
                     Verbatim Quote from Scanned Notice ASMT-10
                   </span>
                 </div>
-                <span className="font-mono text-xs text-[#5B6B82] font-semibold">
+                <span className="text-xs text-[#5B6B82] font-semibold">
                   Para 2(b) • Row 02
                 </span>
               </div>
 
-              <blockquote className="p-3 bg-white rounded-lg font-mono text-xs text-[#0B1F3A] leading-relaxed border border-[#E3E8F0]">
+              <blockquote className="p-3 bg-white rounded-control font-mono text-xs text-[#0B1F3A] leading-relaxed border border-[#E2E8F0]">
                 {apiExplanation?.source_citation ||
                   `"Discrepancy in ITC claimed under Table 4(A)(5) of GSTR-3B vs ITC available in GSTR-2B, amounting to ₹1,84,250 u/s 16(2)(aa) read with Section 61 of the CGST Act, 2017."`}
               </blockquote>
@@ -509,10 +501,10 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Clarity Checklist: What This Notice IS vs IS NOT */}
-          <div className="bg-white rounded-modal shadow-tier1 border border-[#E3E8F0] p-6 flex flex-col gap-4">
+          <Card variant="default" padding="lg" className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#2B4C9B] text-2xl">balance</span>
@@ -525,15 +517,15 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-[#EFF4FF] text-[#0B1F3A] font-semibold border border-[#CBD5E1] hidden sm:inline-block">
-                Legal Position: Pre-Adjudication
-              </span>
+              <Badge variant="brand" size="sm" className="hidden sm:inline-flex">
+                Pre-Adjudication
+              </Badge>
             </div>
 
             {/* 2-Column Matrix */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* What this IS */}
-              <div className="p-4 rounded-card bg-[#EFF4FF] border border-[#CBD5E1] flex flex-col gap-2.5">
+              <div className="p-4 rounded-control bg-[#F8FAFC] border border-[#E2E8F0] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#0B1F3A] font-bold">
                   <div className="w-5 h-5 rounded-full bg-[#12805C] text-white flex items-center justify-center">
                     <span className="material-symbols-outlined text-xs font-bold">check</span>
@@ -545,7 +537,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 <ul className="flex flex-col gap-2 text-xs text-[#0F172A] pt-1">
                   <li className="flex items-start gap-2 leading-relaxed">
                     <span className="material-symbols-outlined text-[#12805C] text-base shrink-0">check_circle</span>
-                    <span><strong>An invitation to explain:</strong> The tax officer has merely observed an automated arithmetic mismatch and seeks your side of the ledger.</span>
+                    <span><strong>An invitation to explain:</strong> The tax officer has observed an automated arithmetic mismatch and seeks your ledger explanation.</span>
                   </li>
                   <li className="flex items-start gap-2 leading-relaxed">
                     <span className="material-symbols-outlined text-[#12805C] text-base shrink-0">check_circle</span>
@@ -559,7 +551,7 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
               </div>
 
               {/* What this IS NOT */}
-              <div className="p-4 rounded-card bg-[#FEE2E2]/40 border border-[#FECACA] flex flex-col gap-2.5">
+              <div className="p-4 rounded-control bg-[#FEF2F2]/50 border border-[#FECACA] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#C0392B] font-bold">
                   <div className="w-5 h-5 rounded-full bg-[#C0392B] text-white flex items-center justify-center">
                     <span className="material-symbols-outlined text-xs font-bold">close</span>
@@ -586,38 +578,41 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
             </div>
 
             {/* Strategic Action Tip */}
-            <div className="p-3 bg-[#EFF4FF] rounded-lg border border-[#CBD5E1] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#2B4C9B] text-base">lightbulb</span>
                 <span className="text-[#0B1F3A]">
                   <strong>Recommended action:</strong> Reconcile supplier invoices before consulting your CA.
                 </span>
               </div>
-              <span className="font-mono text-[11px] text-[#5B6B82] font-semibold">
+              <span className="text-[11px] text-[#5B6B82] font-semibold">
                 Estimated CA Brief Prep: 8 mins
               </span>
             </div>
-          </div>
+          </Card>
 
           {/* Bottom Action Navigation */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              icon="arrow_back"
               onClick={() => setStep(2)}
-              className="w-full sm:w-auto px-4 py-2.5 rounded-control bg-white text-[#0B1F3A] text-xs font-semibold hover:bg-[#EFF4FF] transition-colors border border-[#E3E8F0] shadow-2xs flex items-center justify-center gap-1.5"
+              className="w-full sm:w-auto"
             >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
-              <span>Back to Confirmation</span>
-            </button>
+              Back to Confirmation
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant="primary"
+              icon="arrow_forward"
+              iconPosition="right"
               onClick={() => setStep(4)}
-              className="w-full sm:w-auto px-6 py-2.5 rounded-control bg-[#0B1F3A] hover:bg-[#2B4C9B] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto"
             >
-              <span>Proceed to Evidence Checklist</span>
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </button>
+              Proceed to Evidence Checklist
+            </Button>
           </div>
         </div>
       </div>
