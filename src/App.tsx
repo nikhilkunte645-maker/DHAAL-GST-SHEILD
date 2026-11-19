@@ -6,6 +6,7 @@ import { RawScanModal } from './components/RawScanModal';
 import { HelpFaqModal } from './components/HelpFaqModal';
 
 // Screens
+import { DashboardScreen } from './screens/DashboardScreen';
 import { Screen1Upload } from './screens/Screen1Upload';
 import { Screen2ConfirmPause } from './screens/Screen2ConfirmPause';
 import { Screen3ExplainerDeadlines } from './screens/Screen3ExplainerDeadlines';
@@ -36,8 +37,10 @@ export const App: React.FC = () => {
 
   // Synchronize hash routing with store step
   const stepHashMap: Record<string, number> = {
+    '#dashboard': 0,
     '#upload': 1,
     '#confirm': 2,
+    '#reconcile': 3,
     '#explain': 3,
     '#evidence': 4,
     '#draft': 5,
@@ -45,6 +48,7 @@ export const App: React.FC = () => {
   };
 
   const stepNumberToHash: Record<number, string> = {
+    0: '#dashboard',
     1: '#upload',
     2: '#confirm',
     3: '#explain',
@@ -57,7 +61,7 @@ export const App: React.FC = () => {
     const handleHashChange = () => {
       const hash = window.location.hash;
       const targetStep = stepHashMap[hash];
-      if (targetStep) {
+      if (targetStep !== undefined) {
         setStep(targetStep);
       }
     };
@@ -97,6 +101,7 @@ export const App: React.FC = () => {
             isBannerDismissed ? 'pt-16 sm:pt-20' : 'pt-[88px] sm:pt-[96px]'
           } pb-16 sm:pb-24 min-h-screen px-4 sm:px-6 max-w-[1240px] w-full mx-auto flex flex-col`}
         >
+          {step === 0 && <DashboardScreen />}
           {step === 1 && <Screen1Upload />}
           {step === 2 && <Screen2ConfirmPause />}
           {step === 3 && <Screen3ExplainerDeadlines />}

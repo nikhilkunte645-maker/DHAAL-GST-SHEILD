@@ -33,11 +33,11 @@ async function captureScreenshots() {
   const desktopVp = { width: 1440, height: 900 };
   const mobileVp = { width: 390, height: 844 };
 
-  // 1. Dashboard Desktop (Step 3 Reconciliation & Overview)
-  await shoot('1-dashboard-desktop.png', desktopVp, '#explain');
+  // 1. Dashboard Desktop (Welcome & Case Intelligence Dashboard)
+  await shoot('1-dashboard-desktop.png', desktopVp, '#dashboard');
 
-  // 2. Dashboard Mobile (Step 3 Reconciliation & Overview)
-  await shoot('2-dashboard-mobile.png', mobileVp, '#explain');
+  // 2. Dashboard Mobile (Welcome & Case Intelligence Dashboard)
+  await shoot('2-dashboard-mobile.png', mobileVp, '#dashboard');
 
   // 3. Notice Upload Desktop
   await shoot('3-notice-upload-desktop.png', desktopVp, '#upload');

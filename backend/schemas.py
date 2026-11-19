@@ -2,12 +2,12 @@ from pydantic import BaseModel, Field
 from typing import Dict, List, Optional
 
 class NoticeMetadata(BaseModel):
-    notice_id: str = Field(..., example="ZA270525008912M")
-    section: str = Field(..., example="61")
-    tax_period: str = Field(..., example="Apr-Jun 2024")
-    discrepancy_amount: int = Field(..., example=184250)
-    notice_date: str = Field(..., example="2025-05-14")
-    reply_deadline: str = Field(..., example="2025-06-13")
+    notice_id: str = Field(..., json_schema_extra={"example": "ZA270525008912M"})
+    section: str = Field(..., json_schema_extra={"example": "61"})
+    tax_period: str = Field(..., json_schema_extra={"example": "Apr-Jun 2024"})
+    discrepancy_amount: int = Field(..., json_schema_extra={"example": 184250})
+    notice_date: str = Field(..., json_schema_extra={"example": "2025-05-14"})
+    reply_deadline: str = Field(..., json_schema_extra={"example": "2025-06-13"})
     assessee_name: str = Field(default="M/s Sharma Garments")
     gstin: str = Field(default="27XXXXX1234X1ZX")
 

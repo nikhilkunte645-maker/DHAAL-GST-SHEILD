@@ -22,6 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const urgency = getUrgencyInfo(daysLeftOverride);
 
   const navItems = [
+    { stepNum: 0, id: 'dashboard', label: 'Dashboard', hash: '#dashboard', icon: 'dashboard' },
     { stepNum: 1, id: 'upload', label: 'Notice Upload', hash: '#upload', icon: 'upload_file' },
     { stepNum: 2, id: 'review', label: 'Notice Review', hash: '#confirm', icon: 'fact_check' },
     { stepNum: 3, id: 'reconciliation', label: 'Reconciliation', hash: '#explain', icon: 'account_balance' },
@@ -31,7 +32,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const handleNavClick = (targetStep: number) => {
-    if (targetStep <= maxStep) {
+    if (targetStep === 0 || targetStep <= maxStep) {
       setStep(targetStep);
       onClose();
     }

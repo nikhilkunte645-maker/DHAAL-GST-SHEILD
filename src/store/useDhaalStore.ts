@@ -192,14 +192,20 @@ export const useDhaalStore = create<DhaalState>((set, get) => ({
 
   setStep: (step: number) => {
     const { maxStep } = get();
-    if (step >= 1 && step <= 6) {
-      const nextMax = Math.max(maxStep, step);
+    if (step >= 0 && step <= 6) {
+      const nextMax = Math.max(maxStep, step === 0 ? 1 : step);
       set({ step, maxStep: nextMax });
       saveState({ ...get(), step, maxStep: nextMax });
       // Update hash in URL
-      const stepHashes = ['#upload', '#confirm', '#explain', '#evidence', '#draft', '#brief'];
-      if (window.location.hash !== stepHashes[step - 1]) {
-        window.location.hash = stepHashes[step - 1];
+      if (step === 0) {
+        if (window.location.hash !== '#dashboard') {
+          window.location.hash = '#dashboard';
+        }
+      } else {
+        const stepHashes = ['#upload', '#confirm', '#explain', '#evidence', '#draft', '#brief'];
+        if (window.location.hash !== stepHashes[step - 1]) {
+          window.location.hash = stepHashes[step - 1];
+        }
       }
     }
   },

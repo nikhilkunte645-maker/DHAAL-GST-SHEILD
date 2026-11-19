@@ -356,7 +356,7 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
 
         if len(file_bytes) > MAX_FILE_SIZE:
             return JSONResponse(
-                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                status_code=getattr(status, "HTTP_413_CONTENT_TOO_LARGE", 413),
                 content={
                     "error": "FILE_TOO_LARGE",
                     "message": "File size exceeds the 4 MB limit for serverless upload. Please upload a smaller PDF."
@@ -404,7 +404,7 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
         # If pypdf failed AND no text could be recovered from stream
         if pypdf_failed and len(extracted_text.strip()) < 10:
             return JSONResponse(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=getattr(status, "HTTP_422_UNPROCESSABLE_CONTENT", 422),
                 content={
                     "error": "CORRUPT_PDF",
                     "message": "Unable to read PDF structure. The file may be corrupt or encrypted."
@@ -414,7 +414,7 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
         # 4. Image-only PDF check (no extractable text layer)
         if len(extracted_text.strip()) < 10:
             return JSONResponse(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=getattr(status, "HTTP_422_UNPROCESSABLE_CONTENT", 422),
                 content={
                     "error": "NO_TEXT_LAYER",
                     "message": "The uploaded PDF appears to be an image-only scan with no text layer. Please upload a text-searchable PDF notice."
