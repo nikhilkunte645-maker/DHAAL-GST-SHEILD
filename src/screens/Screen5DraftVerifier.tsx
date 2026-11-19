@@ -3,6 +3,9 @@ import { useDhaalStore } from '../store/useDhaalStore';
 import { CANONICAL_DEMO_CASE } from '../data/demoCase';
 import { verifyDraft, ConfirmedFields } from '../lib/verifier';
 import { dhaalApi, DraftVerifyResponse } from '../mockApi';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
+import { Card } from '../components/ui/Card';
 
 export const Screen5DraftVerifier: React.FC = () => {
   const {
@@ -123,39 +126,35 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
   return (
     <div className="flex flex-col w-full pb-16">
       {/* Top Header Context & Audit Mode Segmented Toggle */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-[#EFF4FF] p-4 rounded-xl border border-[#CBD5E1]">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-mono text-xs font-bold text-[#0B1F3A] bg-white px-2.5 py-1 rounded-full border border-[#E3E8F0] shadow-2xs">
-            STAGE 05 OF 06
-          </span>
-          <span className="text-xs font-semibold text-[#0B1F3A]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-[#E2E8F0]">
+        <div>
+          <h1 className="font-headline text-xl sm:text-2xl font-bold text-[#0B1F3A]">
             Draft &amp; Statutory Verifier
-          </span>
-          <span className="text-xs text-[#5B6B82] hidden sm:inline">•</span>
-          <span className="font-mono text-xs text-[#5B6B82]">
-            DRAFT for CA review
-          </span>
+          </h1>
+          <p className="text-xs sm:text-sm text-[#5B6B82] mt-0.5">
+            Form GST ASMT-11 Draft • Deterministic AST &amp; Statutory Assertion Safety Guard
+          </p>
         </div>
 
         {/* Audit Mode Toggle (Segmented Control) */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-[#0B1F3A]">Verification Audit Mode:</span>
-          <div className="inline-flex bg-white p-1 rounded-lg border border-[#CBD5E1] shadow-2xs">
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <span className="text-xs font-semibold text-[#0B1F3A]">Audit Mode:</span>
+          <div className="inline-flex bg-[#F1F5F9] p-0.5 rounded-control border border-[#E2E8F0]">
             <button
               type="button"
               onClick={() => setVerifierMode('pass')}
-              className={`px-3 py-1 rounded text-xs font-semibold transition-all ${
+              className={`px-3 py-1 rounded text-xs font-semibold transition-all min-h-[30px] ${
                 verifierMode === 'pass'
                   ? 'bg-[#12805C] text-white shadow-2xs'
                   : 'text-[#44474D] hover:text-[#0B1F3A]'
               }`}
             >
-              Pass (Verified ₹1,84,250)
+              Pass (₹1,84,250)
             </button>
             <button
               type="button"
               onClick={() => setVerifierMode('fail')}
-              className={`px-3 py-1 rounded text-xs font-semibold transition-all ${
+              className={`px-3 py-1 rounded text-xs font-semibold transition-all min-h-[30px] ${
                 verifierMode === 'fail'
                   ? 'bg-[#C0392B] text-white shadow-2xs'
                   : 'text-[#44474D] hover:text-[#0B1F3A]'
@@ -171,19 +170,21 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
       {!isVerifiedPass && (
         <div
           role="alert"
-          className="p-4 mb-6 rounded-card border-l-4 border-l-[#C0392B] bg-[#FEE2E2] border border-[#FECACA] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm animate-shake"
+          className="p-4 mb-6 rounded-control border-l-4 border-l-[#C0392B] bg-[#FEF2F2] border border-[#FECACA] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm animate-shake"
         >
           <div className="flex items-start gap-3">
             <span className="material-symbols-outlined text-[#C0392B] text-2xl shrink-0 mt-0.5">
               gavel
             </span>
             <div>
-              <h4 className="font-headline text-sm font-bold text-[#C0392B] flex items-center gap-2">
-                <span>Deterministic Verification Failed: Statutory Mismatch Detected</span>
-                <span className="px-2 py-0.5 rounded bg-[#C0392B] text-white text-[10px] font-mono">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-headline text-sm font-bold text-[#C0392B]">
+                  Deterministic Verification Failed: Statutory Mismatch Detected
+                </h4>
+                <Badge variant="danger" size="sm">
                   EXPORT BLOCKED
-                </span>
-              </h4>
+                </Badge>
+              </div>
               <p className="text-xs text-[#0B1F3A] mt-1 leading-relaxed">
                 The draft assertions diverge from confirmed case records. Exporting Form GST ASMT-11 with inconsistent figures or missing sections violates GST Audit Safety Policy DP-61.
               </p>
@@ -191,7 +192,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                 <ul className="mt-2 space-y-1 text-xs font-mono text-[#C0392B]">
                   {apiVerification.mismatches.map((m, idx) => (
                     <li key={idx} className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#C0392B]"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C0392B]" />
                       <strong>{m.field}:</strong> Expected {m.expected}, found &quot;{m.found_in_draft}&quot; ({m.severity})
                     </li>
                   ))}
@@ -200,27 +201,27 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
             </div>
           </div>
 
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="sm"
+            icon={isAutoFixing ? 'autorenew' : 'auto_fix_high'}
             onClick={handleAutoFix}
             disabled={isAutoFixing}
-            className="px-4 py-2.5 rounded-control bg-[#0B1F3A] hover:bg-[#2B4C9B] text-white text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-md active:scale-98"
+            className="shrink-0"
           >
-            <span className={`material-symbols-outlined text-sm ${isAutoFixing ? 'animate-spin' : ''}`}>
-              auto_fix_high
-            </span>
-            <span>{isAutoFixing ? 'Re-aligning...' : 'Re-align Figures (Auto-fix)'}</span>
-          </button>
+            {isAutoFixing ? 'Re-aligning...' : 'Re-align Figures (Auto-fix)'}
+          </Button>
         </div>
       )}
 
       {/* Main Split View: Left Form ASMT-11 Draft / Right Dual-Layer Verifier */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* LEFT COLUMN: Form GST ASMT-11 Interactive Draft Editor (6 cols on lg) */}
         <div className="lg:col-span-6 flex flex-col gap-4">
-          <div className="bg-white rounded-modal shadow-tier2 border border-[#E3E8F0] overflow-hidden">
+          <Card variant="default" padding="none" className="overflow-hidden">
             {/* Document Card Header */}
-            <div className="p-4 bg-[#EFF4FF] border-b border-[#CBD5E1] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#2B4C9B]">description</span>
                 <div>
@@ -233,7 +234,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
 
               {/* View/Edit Mode Toggle */}
               <div className="flex items-center gap-2">
-                <div className="inline-flex bg-white p-0.5 rounded border border-[#CBD5E1] shadow-2xs">
+                <div className="inline-flex bg-white p-0.5 rounded-control border border-[#CBD5E1] shadow-2xs">
                   <button
                     type="button"
                     onClick={() => setEditorTab('editor')}
@@ -263,18 +264,18 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
             </div>
 
             {/* Recipient & Metadata Strip */}
-            <div className="p-3 bg-[#F6F8FB] border-b border-[#E3E8F0] text-xs font-mono flex flex-wrap items-center justify-between gap-2">
+            <div className="p-3 bg-[#F8FAFC] border-b border-[#E2E8F0] text-xs font-mono flex flex-wrap items-center justify-between gap-2">
               <div>
                 <strong>To:</strong> The Proper Officer, {CANONICAL_DEMO_CASE.office.ward}, Mumbai | <strong>Tax Period:</strong> {CANONICAL_DEMO_CASE.taxPeriod}
               </div>
               <div className="flex items-center gap-2">
                 {isVerifyingLive && (
-                  <span className="font-mono text-[10px] text-[#2B4C9B] animate-pulse flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2B4C9B] animate-ping"></span>
+                  <span className="text-[10px] text-[#2B4C9B] animate-pulse flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2B4C9B] animate-ping" />
                     Evaluating live...
                   </span>
                 )}
-                <span className="font-mono text-[10px] text-[#5B6B82]">
+                <span className="text-[10px] text-[#5B6B82]">
                   {draftContent.length} chars
                 </span>
               </div>
@@ -285,7 +286,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
               <div className="p-4 flex flex-col gap-3">
                 <div className="flex items-center justify-between text-xs text-[#5B6B82]">
                   <span className="font-medium">
-                    Edit draft legal text. Real-time verification runs automatically upon typing:
+                    Edit draft legal text. Real-time verification runs automatically:
                   </span>
                   <button
                     type="button"
@@ -300,14 +301,14 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                   value={draftContent}
                   onChange={(e) => setDraftContent(e.target.value)}
                   rows={20}
-                  className="w-full p-4 font-mono text-xs leading-relaxed text-[#0B1F3A] bg-[#F8F9FF] border border-[#CBD5E1] rounded-card focus:outline-none focus:ring-2 focus:ring-[#2B4C9B] transition-all resize-y selection:bg-[#2B4C9B] selection:text-white"
+                  className="w-full p-4 font-mono text-xs leading-relaxed text-[#0B1F3A] bg-[#F8FAFC] border border-[#CBD5E1] rounded-control focus:outline-none focus:ring-2 focus:ring-[#2B4C9B] transition-all resize-y selection:bg-[#2B4C9B] selection:text-white"
                   placeholder="Enter or paste Form GST ASMT-11 statutory legal reply..."
                 />
               </div>
             ) : (
               /* Structured Paragraph Preview View */
-              <div className="p-6 flex flex-col gap-5 text-xs text-[#0F172A] leading-relaxed">
-                <div className="p-3 bg-[#EFF4FF] rounded-lg border border-[#CBD5E1] font-medium text-[#0B1F3A]">
+              <div className="p-5 sm:p-6 flex flex-col gap-4 text-xs text-[#0F172A] leading-relaxed">
+                <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] font-medium text-[#0B1F3A]">
                   <strong>SUBJECT:</strong> Written explanation and reconciliation of discrepancy in Form GST ASMT-10 issued under Section 61 of the CGST / MGST Act, 2017 regarding Input Tax Credit claim.
                 </div>
 
@@ -315,23 +316,25 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
 
                 {/* Section 1 */}
                 <div
-                  className={`p-3 rounded-lg border transition-colors ${
+                  className={`p-3 rounded-control border transition-colors ${
                     activeAnchorHighlight === 'sec1'
                       ? 'bg-[#FEF3C7] border-[#F59E0B]'
-                      : 'bg-[#F6F8FB] border-[#E3E8F0]'
+                      : 'bg-[#F8FAFC] border-[#E2E8F0]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-[#0B1F3A]">
                       1. BASIS OF SCRUTINY &amp; RECONCILIATION
                     </span>
-                    <span
+                    <Badge
+                      variant="brand"
+                      size="sm"
                       onMouseEnter={() => setActiveAnchorHighlight('sec1')}
                       onMouseLeave={() => setActiveAnchorHighlight(null)}
-                      className="px-2 py-0.2 rounded font-mono text-[10px] bg-[#EFF4FF] text-[#2B4C9B] border border-[#CBD5E1] cursor-pointer hover:bg-[#DCE9FF]"
+                      className="cursor-pointer"
                     >
                       Notice Field (Verified)
-                    </span>
+                    </Badge>
                   </div>
                   <p>
                     In response to the statutory notice in Form GST ASMT-10 reference number{' '}
@@ -342,7 +345,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                     <span
                       className={`font-mono font-bold px-1.5 py-0.5 rounded ${
                         verifierMode === 'fail'
-                          ? 'bg-[#FEE2E2] text-[#C0392B] border border-[#FECACA] animate-pulse'
+                          ? 'bg-[#FEF2F2] text-[#C0392B] border border-[#FECACA] animate-pulse'
                           : 'bg-[#E6F4EA] text-[#12805C] border border-[#A8DAB5]'
                       }`}
                     >
@@ -355,25 +358,25 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
 
                 {/* Section 2 */}
                 <div
-                  className={`p-3 rounded-lg border transition-colors ${
+                  className={`p-3 rounded-control border transition-colors ${
                     activeAnchorHighlight === 'sec2'
                       ? 'bg-[#FEF3C7] border-[#F59E0B]'
-                      : 'bg-[#F6F8FB] border-[#E3E8F0]'
+                      : 'bg-[#F8FAFC] border-[#E2E8F0]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-[#0B1F3A]">
                       2. AFFIRMATION OF PHYSICAL VERIFICATION
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        onMouseEnter={() => setActiveAnchorHighlight('sec2')}
-                        onMouseLeave={() => setActiveAnchorHighlight(null)}
-                        className="px-2 py-0.2 rounded font-mono text-[10px] bg-[#EFF4FF] text-[#2B4C9B] border border-[#CBD5E1] cursor-pointer hover:bg-[#DCE9FF]"
-                      >
-                        Confirmed by Taxpayer (Step 2)
-                      </span>
-                    </div>
+                    <Badge
+                      variant="brand"
+                      size="sm"
+                      onMouseEnter={() => setActiveAnchorHighlight('sec2')}
+                      onMouseLeave={() => setActiveAnchorHighlight(null)}
+                      className="cursor-pointer"
+                    >
+                      Confirmed (Step 2)
+                    </Badge>
                   </div>
                   <p>
                     The registered person has independently audited their purchase register, balance sheet, and bank remittance ledgers. It is confirmed that the said sum of{' '}
@@ -386,23 +389,25 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
 
                 {/* Section 3 */}
                 <div
-                  className={`p-3 rounded-lg border transition-colors ${
+                  className={`p-3 rounded-control border transition-colors ${
                     activeAnchorHighlight === 'sec3'
                       ? 'bg-[#FEF3C7] border-[#F59E0B]'
-                      : 'bg-[#F6F8FB] border-[#E3E8F0]'
+                      : 'bg-[#F8FAFC] border-[#E2E8F0]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-[#0B1F3A]">
                       3. STATUTORY COMPLIANCE BENCHMARK
                     </span>
-                    <span
+                    <Badge
+                      variant="brand"
+                      size="sm"
                       onMouseEnter={() => setActiveAnchorHighlight('sec3')}
                       onMouseLeave={() => setActiveAnchorHighlight(null)}
-                      className="px-2 py-0.2 rounded font-mono text-[10px] bg-[#EFF4FF] text-[#2B4C9B] border border-[#CBD5E1] cursor-pointer hover:bg-[#DCE9FF]"
+                      className="cursor-pointer"
                     >
-                      Statutory Mandate: Sec 16(2)
-                    </span>
+                      Sec 16(2)
+                    </Badge>
                   </div>
                   <p>
                     All goods represented in the invoices were physically received at the registered premises under cover of legitimate tax invoices and verified E-way bills, satisfying all four constituent conditions laid down under <strong>Section 16(2)(a), (b), (c), and (d)</strong> of the Central Goods and Services Tax Act, 2017. Furthermore, payments for invoice amounts along with tax have been cleared via Account Payee banking channels within the 180-day limitation period prescribed under the second proviso to Section 16(2).
@@ -411,23 +416,25 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
 
                 {/* Section 4 */}
                 <div
-                  className={`p-3 rounded-lg border transition-colors ${
+                  className={`p-3 rounded-control border transition-colors ${
                     activeAnchorHighlight === 'sec4'
                       ? 'bg-[#FEF3C7] border-[#F59E0B]'
-                      : 'bg-[#F6F8FB] border-[#E3E8F0]'
+                      : 'bg-[#F8FAFC] border-[#E2E8F0]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-[#0B1F3A]">
                       4. PROBABLE CAUSE &amp; TAX DISCHARGE
                     </span>
-                    <span
+                    <Badge
+                      variant="brand"
+                      size="sm"
                       onMouseEnter={() => setActiveAnchorHighlight('sec4')}
                       onMouseLeave={() => setActiveAnchorHighlight(null)}
-                      className="px-2 py-0.2 rounded font-mono text-[10px] bg-[#EFF4FF] text-[#2B4C9B] border border-[#CBD5E1] cursor-pointer hover:bg-[#DCE9FF]"
+                      className="cursor-pointer"
                     >
                       Evidence Attached
-                    </span>
+                    </Badge>
                   </div>
                   <p>
                     The apparent variance occurred solely because the supplier, <strong>{CANONICAL_DEMO_CASE.supplier.name} ({CANONICAL_DEMO_CASE.supplier.gstin})</strong>, erroneously classified the supply in their outward return. The tax has duly been deposited into the Government treasury, and the vendor has since reconciled their subsequent Form GSTR-3B. Annexed hereto as Exhibit 3 is the Supplier Verification Certificate as recognized under CBIC Circular No. 183/15/2022-GST.
@@ -439,9 +446,9 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                 </p>
 
                 {/* Verification Preview */}
-                <div className="p-3 bg-[#EFF4FF] rounded-card border border-[#CBD5E1] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mt-2">
+                <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 mt-2">
                   <div>
-                    <span className="font-mono text-[10px] text-[#5B6B82] uppercase font-bold block">
+                    <span className="text-[10px] text-[#5B6B82] uppercase font-bold block">
                       Solemn Verification
                     </span>
                     <span className="font-semibold text-[#0B1F3A]">
@@ -449,21 +456,21 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="font-mono text-[10px] text-[#5B6B82] block">
+                    <span className="text-[10px] text-[#5B6B82] block">
                       Mumbai • Target: {CANONICAL_DEMO_CASE.replyDeadline}
                     </span>
                   </div>
                 </div>
               </div>
             )}
-          </div>
+          </Card>
         </div>
 
         {/* RIGHT COLUMN: Dual-Layer Verification Card (6 cols on lg) */}
         <div className="lg:col-span-6 flex flex-col gap-6">
           {/* Main Inspection Banner */}
           <div
-            className={`p-6 rounded-modal border transition-all ${
+            className={`p-5 sm:p-6 rounded-card border transition-all ${
               isVerifiedPass
                 ? 'bg-[#0B1F3A] text-white border-[#12805C] shadow-tier2'
                 : 'bg-[#0B1F3A] text-white border-[#C0392B] shadow-tier2'
@@ -491,7 +498,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
               {/* Status Pill */}
               <div className="flex items-center gap-2">
                 <span
-                  className={`font-mono text-xs px-3 py-1 rounded-full font-bold border flex items-center gap-1.5 ${
+                  className={`text-xs px-3 py-1 rounded-full font-bold border flex items-center gap-1.5 ${
                     isVerifiedPass
                       ? 'bg-[#12805C]/20 text-[#12805C] border-[#12805C]'
                       : 'bg-[#C0392B]/20 text-[#C0392B] border-[#C0392B]'
@@ -501,18 +508,18 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                     className={`w-2 h-2 rounded-full ${
                       isVerifiedPass ? 'bg-[#12805C]' : 'bg-[#C0392B] animate-ping'
                     }`}
-                  ></span>
+                  />
                   <span>{isVerifiedPass ? 'VERIFIED: PASS' : 'VERIFIED: FAIL'}</span>
                 </span>
               </div>
             </div>
 
             {/* Check Progress Indicators */}
-            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10 bg-white/5 p-3 rounded-card">
+            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/10 bg-white/5 p-3 rounded-control">
               <div>
-                <div className="flex justify-between items-center mb-1 text-xs font-mono">
+                <div className="flex justify-between items-center mb-1 text-xs">
                   <span className="text-[#CBD5E1] uppercase text-[10px]">Layer 1: Code Checks</span>
-                  <span className="font-bold text-white">
+                  <span className="font-bold text-white font-mono">
                     {localReport.passedCount} / {localReport.totalChecks} Checks
                   </span>
                 </div>
@@ -522,25 +529,25 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                       localReport.passed ? 'bg-[#12805C]' : 'bg-[#C0392B]'
                     }`}
                     style={{ width: `${(localReport.passedCount / localReport.totalChecks) * 100}%` }}
-                  ></div>
+                  />
                 </div>
               </div>
 
               <div>
-                <div className="flex justify-between items-center mb-1 text-xs font-mono">
+                <div className="flex justify-between items-center mb-1 text-xs">
                   <span className="text-[#CBD5E1] uppercase text-[10px]">Layer 2: AI Claim Check</span>
-                  <span className="font-bold text-white">4 / 4 Grounded</span>
+                  <span className="font-bold text-white font-mono">4 / 4 Grounded</span>
                 </div>
                 <div className="w-full h-1.5 bg-black/40 rounded-full overflow-hidden">
-                  <div className="h-full bg-[#F59E0B]" style={{ width: '100%' }}></div>
+                  <div className="h-full bg-[#F59E0B]" style={{ width: '100%' }} />
                 </div>
               </div>
             </div>
           </div>
 
           {/* LAYER 1: Deterministic Code Checks */}
-          <div className="bg-white p-5 rounded-modal shadow-tier1 border border-[#E3E8F0] flex flex-col gap-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E3E8F0]">
+          <Card variant="default" padding="md" className="flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#2B4C9B]">memory</span>
                 <h4 className="font-headline text-sm font-bold text-[#0B1F3A]">
@@ -549,17 +556,11 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
               </div>
               <div className="flex items-center gap-2">
                 {apiVerification && (
-                  <span
-                    className={`font-mono text-[10px] px-2 py-0.5 rounded font-bold border ${
-                      apiVerification.status === 'PASS'
-                        ? 'bg-[#E6F4EA] text-[#12805C] border-[#A8DAB5]'
-                        : 'bg-[#FEE2E2] text-[#C0392B] border-[#FECACA]'
-                    }`}
-                  >
+                  <Badge variant={apiVerification.status === 'PASS' ? 'success' : 'danger'} size="sm">
                     API: {apiVerification.status}
-                  </span>
+                  </Badge>
                 )}
-                <span className="font-mono text-xs text-[#5B6B82]">Strict Rule Engine</span>
+                <span className="text-xs text-[#5B6B82]">Strict Rule Engine</span>
               </div>
             </div>
 
@@ -568,10 +569,10 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
               {localReport.checks.map((c) => (
                 <div
                   key={c.id}
-                  className={`p-3.5 rounded-card border transition-all ${
+                  className={`p-3.5 rounded-control border transition-all ${
                     c.passed
-                      ? 'bg-[#EFF4FF] border-[#CBD5E1]'
-                      : 'bg-[#FEE2E2] border-[#C0392B]'
+                      ? 'bg-[#F8FAFC] border-[#E2E8F0]'
+                      : 'bg-[#FEF2F2] border-[#C0392B]'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -593,23 +594,17 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                       </div>
                     </div>
 
-                    <span
-                      className={`font-mono text-[10px] px-2 py-0.5 rounded font-bold shrink-0 border ${
-                        c.passed
-                          ? 'bg-[#E6F4EA] text-[#12805C] border-[#A8DAB5]'
-                          : 'bg-[#C0392B] text-white border-[#C0392B]'
-                      }`}
-                    >
+                    <Badge variant={c.passed ? 'success' : 'danger'} size="sm">
                       {c.passed ? 'PASSED' : 'CRITICAL FAIL'}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
 
           {/* Proceed to CA Brief Dossier Button */}
-          <div className="p-4 bg-white rounded-modal border border-[#E3E8F0] shadow-tier1 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Card variant="default" padding="md" className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h4 className="font-headline text-sm font-bold text-[#0B1F3A]">
                 {isVerifiedPass ? 'All Checks Verified' : 'Export Action Blocked'}
@@ -621,20 +616,18 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
               </p>
             </div>
 
-            <button
+            <Button
               type="button"
+              variant="primary"
+              icon="arrow_forward"
+              iconPosition="right"
               disabled={!isVerifiedPass}
               onClick={() => setStep(6)}
-              className={`px-6 py-3 rounded-control font-headline text-sm font-bold flex items-center gap-2 transition-all shadow-md ${
-                isVerifiedPass
-                  ? 'bg-[#F59E0B] hover:bg-[#D97706] text-[#0F172A] active:scale-98 cursor-pointer'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
-              }`}
+              className={isVerifiedPass ? 'bg-[#F59E0B] text-[#0F172A] hover:bg-[#D97706] shrink-0' : 'shrink-0'}
             >
-              <span>Compile CA-Ready Brief</span>
-              <span className="material-symbols-outlined text-lg">arrow_forward</span>
-            </button>
-          </div>
+              Compile CA-Ready Brief
+            </Button>
+          </Card>
         </div>
       </div>
     </div>
