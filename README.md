@@ -37,6 +37,19 @@ Unlike generic document parsers or basic AI wrappers, Dhaal provides a productio
 
 ---
 
+## Why DHAAL? — How Are We Different?
+
+| Existing Solution | What DHAAL Does Differently |
+|---|---|
+| ClearTax — GST compliance and tax workflows | Focuses on connecting individual scrutiny allegations with supporting evidence and evidence gaps. |
+| Tally — Accounting and financial records | Goes beyond accounting records to organize scrutiny allegations, reconciliation findings, and supporting evidence. |
+| Zoho Books — Business accounting and financial management | Focuses specifically on the GST scrutiny-response workflow rather than general business accounting. |
+| Excel / Manual Workflows | Brings notice analysis, deterministic reconciliation, Evidence Graph, and AI-assisted response preparation into one connected workflow. |
+
+**DHAAL's difference is its evidence-first approach: it connects GST scrutiny allegations to verifiable records, identifies missing evidence, and helps professionals prepare structured responses with deterministic analysis and human review.**
+
+---
+
 ## ⚠️ The Problem: GST Scrutiny Anxiety in India
 
 When an Indian small business receives a Form GST ASMT-10 scrutiny notice:
@@ -94,29 +107,26 @@ When an Indian small business receives a Form GST ASMT-10 scrutiny notice:
 
 ```mermaid
 flowchart TD
-    User([Taxpayer / CA]) -->|Visits App or Uploads ASMT-10 PDF| Frontend[React 18 + Vite SPA]
+    User(["Taxpayer / CA"]) -->|"Visits App or Uploads ASMT-10 PDF"| Frontend["React 18 + Vite SPA"]
     
     subgraph Client ["Client Browser Layer (Edge)"]
-        Frontend --> Store[Zustand Store with Local Persistence]
+        Frontend --> Store["Zustand Store with Local Persistence"]
         Store --> Screens["Workflow Screens 0 - 6"]
-        Store --> AudioEngine[Web Speech Vernacular Audio]
+        Store --> AudioEngine["Web Speech Vernacular Audio"]
         Screens --> PDFEngine["Multi-Page A4 PDF Exporter (jsPDF + html2canvas)"]
     end
     
     subgraph Vercel ["Unified Vercel Serverless Architecture"]
-        Frontend -->|REST API /api/*| VercelRewrites[Vercel Serverless Gateway]
+        Frontend -->|"REST API (/api)"| VercelRewrites["Vercel Serverless Gateway"]
         VercelRewrites --> ServerlessBridge["api/index.py (ASGI Bridge)"]
-        ServerlessBridge --> BackendApp[FastAPI Application]
-        
-        subgraph BackendProcessing ["In-Memory Backend Services"]
-            BackendApp --> PDFParser[pypdf Stream Parser]
-            BackendApp --> Verifier[Deterministic Verifier backend/verifier.py]
-            BackendApp --> Schemas[Pydantic v2 Models backend/schemas.py]
-        end
+        ServerlessBridge --> BackendApp["FastAPI Application"]
+        BackendApp --> PDFParser["pypdf Stream Parser"]
+        BackendApp --> Verifier["Deterministic Verifier (backend/verifier.py)"]
+        BackendApp --> Schemas["Pydantic v2 Models (backend/schemas.py)"]
     end
 
-    Verifier -->|Validation & Verification JSON| Frontend
-    PDFParser -->|Extracted Notice Parameters| Frontend
+    Verifier -->|"Validation and Verification JSON"| Frontend
+    PDFParser -->|"Extracted Notice Parameters"| Frontend
 ```
 
 ---
