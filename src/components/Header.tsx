@@ -265,7 +265,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className="flex items-center justify-between text-[#5B6B82]">
                     <span>Jurisdiction</span>
                     <span className="font-semibold text-[#0F172A] text-right">
-                      {CANONICAL_DEMO_CASE.jurisdiction}
+                      {CANONICAL_DEMO_CASE.office.division}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-[#5B6B82]">

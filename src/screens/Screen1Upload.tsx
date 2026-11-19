@@ -30,9 +30,10 @@ export const Screen1Upload: React.FC = () => {
   const demoControlsRef = useRef<HTMLDivElement>(null);
 
   // Check if demo controls should be visible: DEV mode, demo mode active, or ?demo=1 query param
+  const isDev = Boolean((import.meta as unknown as { env?: { DEV?: boolean } })?.env?.DEV);
   const isDemoUrl =
     typeof window !== 'undefined' &&
-    (window.location.search.includes('demo=1') || isDemoMode || import.meta.env.DEV);
+    (window.location.search.includes('demo=1') || isDemoMode || isDev);
 
   // Close demo controls popover on click outside or escape
   useEffect(() => {
@@ -675,7 +676,7 @@ export const Screen1Upload: React.FC = () => {
                   <span className="material-symbols-outlined text-xs">restart_alt</span>
                   <span>Reset Demo</span>
                 </button>
-                {import.meta.env.DEV && (
+                {isDev && (
                   <span className="font-mono text-[10px] text-[#94A3B8]">DEV</span>
                 )}
               </div>
