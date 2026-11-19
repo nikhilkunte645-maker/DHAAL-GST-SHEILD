@@ -6,6 +6,9 @@ import { computeSha256 } from '../lib/hash';
 import { dhaalApi } from '../mockApi';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
+import { Card } from '../components/ui/Card';
 
 export const Screen6CaReadyBrief: React.FC = () => {
   const { confirmedAmount, resetDemo } = useDhaalStore();
@@ -140,68 +143,70 @@ export const Screen6CaReadyBrief: React.FC = () => {
       `}</style>
 
       {/* Success Header */}
-      <div className="print:hidden flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-[#EFF4FF] p-4 rounded-xl border border-[#CBD5E1]">
+      <Card variant="default" padding="md" className="print:hidden flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#12805C] text-white flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-full bg-[#12805C] text-white flex items-center justify-center shadow-xs shrink-0">
             <span className="material-symbols-outlined text-2xl">task_alt</span>
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <h2 className="font-headline text-lg font-bold text-[#0B1F3A]">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="font-headline text-lg sm:text-xl font-bold text-[#0B1F3A]">
                 Brief Ready. Your CA can take it from here.
-              </h2>
-              <span className="px-2 py-0.5 rounded bg-[#E6F4EA] text-[#12805C] font-mono text-[10px] font-bold border border-[#A8DAB5]">
+              </h1>
+              <Badge variant="success" size="sm">
                 AUDIT READY
-              </span>
+              </Badge>
             </div>
-            <span className="text-xs text-[#5B6B82]">
-              Case #{CANONICAL_DEMO_CASE.caseId} • Content Hash: {contentHash.shortHash}
+            <span className="text-xs text-[#5B6B82] mt-0.5">
+              Case #{CANONICAL_DEMO_CASE.caseId} • Content Hash: <span className="font-mono font-semibold">{contentHash.shortHash}</span>
             </span>
           </div>
         </div>
 
         {/* Primary Dossier Actions */}
         <div className="flex items-center gap-2 flex-wrap">
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="sm"
+            icon="share"
             onClick={() => setIsShareModalOpen(true)}
-            className="px-4 py-2 rounded-control bg-[#12805C] hover:bg-[#0E9FA8] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+            className="bg-[#12805C] hover:bg-[#0E9FA8] text-white"
           >
-            <span className="material-symbols-outlined text-base">share</span>
-            <span>Send CA Pack</span>
-          </button>
+            Send CA Pack
+          </Button>
 
-          <button
+          <Button
             type="button"
+            variant="primary"
+            size="sm"
+            icon={isExportingPdf ? 'hourglass_top' : 'picture_as_pdf'}
             onClick={handleExportPdf}
             disabled={isExportingPdf}
-            className="px-4 py-2 rounded-control bg-[#0B1F3A] hover:bg-[#2B4C9B] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-50"
           >
-            <span className="material-symbols-outlined text-base">
-              {isExportingPdf ? 'hourglass_top' : 'picture_as_pdf'}
-            </span>
-            <span>{isExportingPdf ? 'Generating PDF...' : 'Download Audit Dossier (PDF)'}</span>
-          </button>
+            {isExportingPdf ? 'Generating PDF...' : 'Download Audit Dossier (PDF)'}
+          </Button>
 
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
+            icon="print"
             onClick={handlePrint}
-            className="px-3 py-2 rounded-control bg-white hover:bg-[#EFF4FF] text-[#0B1F3A] text-xs font-semibold transition-colors border border-[#CBD5E1] shadow-2xs flex items-center gap-1"
           >
-            <span className="material-symbols-outlined text-base">print</span>
-            <span>Print</span>
-          </button>
+            Print
+          </Button>
         </div>
-      </div>
+      </Card>
 
       {/* Main Grid: A4 Dossier Preview + Right Action Rail */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* A4 DOCUMENT PREVIEW (8 cols on xl) */}
         <div className="xl:col-span-8 flex justify-center">
           <div
             id="printable-dossier"
             ref={printableRef}
-            className="relative bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] p-8 sm:p-10 w-full max-w-[794px] min-h-[1050px] flex flex-col justify-between text-[#0F172A] font-sans overflow-hidden"
+            className="relative bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] p-6 sm:p-10 w-full max-w-[794px] min-h-[1050px] flex flex-col justify-between text-[#0F172A] font-sans overflow-hidden"
           >
             {/* Watermark */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center -rotate-45 opacity-5">
@@ -225,9 +230,9 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     <span className="material-symbols-outlined text-xl text-[#F59E0B]">shield</span>
                   </div>
                   <div>
-                    <h1 className="font-headline text-lg font-bold text-[#0B1F3A] tracking-tight">
+                    <h2 className="font-headline text-lg font-bold text-[#0B1F3A] tracking-tight">
                       DHAAL LEGAL SHIELD • CA BRIEF
-                    </h1>
+                    </h2>
                     <p className="font-mono text-xs text-[#5B6B82]">
                       Case Reference: #{CANONICAL_DEMO_CASE.caseId}
                     </p>
@@ -243,7 +248,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
               </div>
 
               {/* Assessee Metadata Ribbon */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-[#EFF4FF] rounded-card border border-[#CBD5E1] text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] text-xs">
                 <div>
                   <span className="text-[#5B6B82] block">Assessee Legal Trade Name:</span>
                   <span className="font-bold text-[#0B1F3A] block">{CANONICAL_DEMO_CASE.businessName}</span>
@@ -264,11 +269,11 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                     1
                   </span>
-                  <h2 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                  <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
                     Executive Summary &amp; Allegation Mapping
-                  </h2>
+                  </h3>
                 </div>
-                <div className="p-4 bg-[#F6F8FB] rounded-card border border-[#E3E8F0] space-y-2 text-xs">
+                <div className="p-4 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] space-y-2 text-xs">
                   <div className="flex justify-between items-center">
                     <span className="font-mono font-bold text-[#2B4C9B]">
                       Scrutiny Ground: Table 4(A)(5) GSTR-3B Discrepancy
@@ -281,7 +286,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     Form ASMT-10 scrutiny notice received alleging an apparent excess Input Tax Credit (ITC) claim of{' '}
                     <strong>₹{amount.toLocaleString('en-IN')}</strong> in monthly return GSTR-3B compared with system-generated GSTR-2B for {CANONICAL_DEMO_CASE.taxPeriod}.
                   </p>
-                  <div className="p-3 bg-white rounded border border-[#E3E8F0]">
+                  <div className="p-3 bg-white rounded-control border border-[#E2E8F0]">
                     <span className="font-mono text-[10px] text-[#B45309] block uppercase font-bold">
                       Probable cause (to be confirmed with supplier):
                     </span>
@@ -298,26 +303,26 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                     2
                   </span>
-                  <h2 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                  <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
                     Statutory Countdown &amp; Safe Filing Windows
-                  </h2>
+                  </h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div className="p-3 bg-[#EFF4FF] rounded-card border border-[#CBD5E1]">
+                  <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
                     <span className="text-[#5B6B82] block text-[11px]">Statutory Deadline</span>
                     <span className="font-mono text-sm font-bold text-[#0B1F3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.replyDeadline}
                     </span>
                     <span className="text-[10px] text-[#B45309] font-bold">12 Days strictly remaining</span>
                   </div>
-                  <div className="p-3 bg-[#FEF3C7]/40 rounded-card border border-[#FDE68A]">
+                  <div className="p-3 bg-[#FFFBEB] rounded-control border border-[#FDE68A]">
                     <span className="text-[#B45309] block text-[11px] font-semibold">Recommended CA Sign</span>
                     <span className="font-mono text-sm font-bold text-[#0B1F3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.recommendedCaSign}
                     </span>
                     <span className="text-[10px] text-[#B45309]">5-day contingency buffer</span>
                   </div>
-                  <div className="p-3 bg-[#EFF4FF] rounded-card border border-[#CBD5E1]">
+                  <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
                     <span className="text-[#5B6B82] block text-[11px]">Assigned Counsel / CA</span>
                     <span className="font-bold text-[#0B1F3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.caCounsel.name}
@@ -334,18 +339,18 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                       3
                     </span>
-                    <h2 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                    <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
                       Assembled Evidentiary Annexures
-                    </h2>
+                    </h3>
                   </div>
-                  <span className="px-2 py-0.5 rounded font-mono text-[10px] bg-[#E6F4EA] text-[#12805C] font-bold border border-[#A8DAB5]">
+                  <Badge variant="success" size="sm">
                     5 of 6 Sealed
-                  </span>
+                  </Badge>
                 </div>
 
-                <div className="rounded-card border border-[#E3E8F0] overflow-hidden text-xs">
+                <div className="rounded-control border border-[#E2E8F0] overflow-hidden text-xs">
                   <table className="w-full text-left">
-                    <thead className="bg-[#EFF4FF] text-[#0B1F3A] font-bold text-[11px] border-b border-[#CBD5E1]">
+                    <thead className="bg-[#F8FAFC] text-[#0B1F3A] font-bold text-[11px] border-b border-[#E2E8F0]">
                       <tr>
                         <th className="p-2 font-mono">Annexure</th>
                         <th className="p-2">Document Description</th>
@@ -353,7 +358,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                         <th className="p-2 text-right">Audit Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E3E8F0]">
+                    <tbody className="divide-y divide-[#E2E8F0]">
                       <tr>
                         <td className="p-2 font-mono font-bold text-[#0B1F3A]">ANNEX-A</td>
                         <td className="p-2">Purchase Invoice (Apex Textiles)</td>
@@ -384,7 +389,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
                         <td className="p-2 font-mono text-[#5B6B82]">Dhaal Match Run #109</td>
                         <td className="p-2 text-right text-[#12805C] font-bold">✓ Verified</td>
                       </tr>
-                      <tr className="bg-[#FEF3C7]/20">
+                      <tr className="bg-[#FFFBEB]/40">
                         <td className="p-2 font-mono font-bold text-[#B45309]">ANNEX-F</td>
                         <td className="p-2 font-semibold">Practicing CA Verification Certificate</td>
                         <td className="p-2 font-mono text-[#5B6B82]">Requires UDIN Signature</td>
@@ -402,16 +407,16 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     <span className="w-5 h-5 rounded-full bg-[#0B1F3A] text-white flex items-center justify-center font-mono text-[10px] font-bold">
                       4
                     </span>
-                    <h2 className="font-headline text-sm font-bold text-[#0B1F3A]">
+                    <h3 className="font-headline text-sm font-bold text-[#0B1F3A]">
                       Verified Statutory Form ASMT-11 Reply (Extract)
-                    </h2>
+                    </h3>
                   </div>
-                  <span className="font-mono text-[10px] text-[#12805C] font-bold">
-                    Deterministic checks: 5 of 5 passed
-                  </span>
+                  <Badge variant="success" size="sm">
+                    5 of 5 checks passed
+                  </Badge>
                 </div>
-                <div className="bg-[#EFF4FF] p-3 rounded-card border border-[#CBD5E1] text-xs font-mono leading-relaxed space-y-1">
-                  <div className="flex justify-between border-b border-[#CBD5E1] pb-1 text-[10px] text-[#5B6B82]">
+                <div className="bg-[#F8FAFC] p-3 rounded-control border border-[#E2E8F0] text-xs font-mono leading-relaxed space-y-1">
+                  <div className="flex justify-between border-b border-[#E2E8F0] pb-1 text-[10px] text-[#5B6B82]">
                     <span>Format: Form GST ASMT-11</span>
                     <span>Rule 99(2) CGST Rules</span>
                   </div>
@@ -422,7 +427,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
               </div>
 
               {/* Section 5: Statutory Disclaimer Box */}
-              <div className="p-3 bg-[#F6F8FB] rounded-card border border-[#CBD5E1] flex items-start gap-2.5 text-xs">
+              <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#CBD5E1] flex items-start gap-2.5 text-xs">
                 <span className="material-symbols-outlined text-[#0B1F3A] text-base shrink-0 mt-0.5">
                   gavel
                 </span>
@@ -432,7 +437,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
               </div>
 
               {/* Signatures Block */}
-              <div className="pt-4 border-t border-[#E3E8F0] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-xs font-mono">
+              <div className="pt-4 border-t border-[#E2E8F0] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-xs font-mono">
                 <div>
                   <span className="text-[10px] text-[#5B6B82] uppercase block">Assessee</span>
                   <span className="font-headline text-sm font-bold text-[#0B1F3A] block mt-0.5">
@@ -443,7 +448,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
 
                 <div className="text-left sm:text-right">
                   <span className="text-[10px] text-[#5B6B82] uppercase block">Attesting CA</span>
-                  <div className="w-44 h-7 rounded bg-[#EFF4FF] border border-[#CBD5E1] flex items-center justify-center text-[10px] text-[#5B6B82] mt-0.5">
+                  <div className="w-44 h-7 rounded-control bg-[#F8FAFC] border border-[#CBD5E1] flex items-center justify-center text-[10px] text-[#5B6B82] mt-0.5">
                     [ Digitally Signed via DSC ]
                   </div>
                   <span className="text-[10px] text-[#5B6B82] block mt-0.5">UDIN: Pending Filing</span>
@@ -456,12 +461,12 @@ export const Screen6CaReadyBrief: React.FC = () => {
         {/* RIGHT: High-Converting Action Rail (4 cols on xl) */}
         <div className="xl:col-span-4 flex flex-col gap-6 print:hidden">
           {/* Primary Delivery Card */}
-          <div className="bg-white rounded-modal shadow-tier2 border border-[#E3E8F0] p-6 flex flex-col gap-4">
+          <Card variant="default" padding="lg" className="flex flex-col gap-4">
             <div>
-              <span className="px-2 py-0.5 rounded bg-[#FEF3C7] text-[#B45309] font-mono text-[10px] font-bold uppercase tracking-wider border border-[#FDE68A]">
+              <Badge variant="warning" size="sm">
                 STEP 6 OF 6 • READY TO TRANSMIT
-              </span>
-              <h3 className="font-headline text-base font-bold text-[#0B1F3A] mt-1">
+              </Badge>
+              <h3 className="font-headline text-base font-bold text-[#0B1F3A] mt-2">
                 Hand Off To CA
               </h3>
               <p className="text-xs text-[#5B6B82] mt-0.5 leading-relaxed">
@@ -470,47 +475,50 @@ export const Screen6CaReadyBrief: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-2.5">
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                icon="share"
                 onClick={() => setIsShareModalOpen(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-[#12805C] hover:bg-[#0E9FA8] text-white font-headline text-sm font-bold shadow-md transition-all active:scale-98"
+                className="w-full bg-[#12805C] hover:bg-[#0E9FA8] text-white"
               >
-                <span className="material-symbols-outlined text-lg">share</span>
-                <span>Send CA Pack via WhatsApp</span>
-              </button>
+                Send CA Pack via WhatsApp
+              </Button>
 
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                icon="picture_as_pdf"
                 onClick={handleExportPdf}
                 disabled={isExportingPdf}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-[#0B1F3A] hover:bg-[#2B4C9B] text-white text-xs font-bold transition-all shadow-2xs disabled:opacity-50"
+                className="w-full"
               >
-                <span className="material-symbols-outlined text-base">picture_as_pdf</span>
-                <span>{isExportingPdf ? 'Generating PDF...' : 'Download Audit Dossier (PDF)'}</span>
-              </button>
+                {isExportingPdf ? 'Generating PDF...' : 'Download Audit Dossier (PDF)'}
+              </Button>
 
-              <button
+              <Button
                 type="button"
+                variant="secondary"
+                icon="description"
                 onClick={() => showToast('Word (.docx) template downloaded for CA editing.')}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-[#EFF4FF] hover:bg-[#DCE9FF] text-[#0B1F3A] text-xs font-semibold transition-colors border border-[#CBD5E1]"
+                className="w-full"
               >
-                <span className="material-symbols-outlined text-base">description</span>
-                <span>Download Word (.docx) for CA Edits</span>
-              </button>
+                Download Word (.docx) for CA Edits
+              </Button>
             </div>
 
             {/* Secure CA Passcode Handshake */}
-            <div className="p-3 bg-[#EFF4FF] rounded-card border border-[#CBD5E1] space-y-1.5">
+            <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] space-y-1.5">
               <div className="flex items-center justify-between text-xs font-semibold text-[#0B1F3A]">
                 <span className="flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-base text-[#2B4C9B]">lock</span>
                   <span>Encrypted CA Passcode</span>
                 </span>
-                <span className="font-mono text-[10px] text-[#12805C] bg-[#E6F4EA] px-1.5 py-0.2 rounded border border-[#A8DAB5]">
+                <Badge variant="success" size="sm">
                   Active
-                </span>
+                </Badge>
               </div>
-              <div className="flex items-center justify-between bg-white p-2 rounded border border-[#CBD5E1]">
+              <div className="flex items-center justify-between bg-white p-2 rounded-control border border-[#CBD5E1]">
                 <span className="font-mono text-xs font-bold text-[#0B1F3A] tracking-wider">
                   {CANONICAL_DEMO_CASE.caCounsel.passcode}
                 </span>
@@ -525,14 +533,14 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   Copy Passkey
                 </button>
               </div>
-              <p className="font-mono text-[10px] text-[#5B6B82]">
+              <p className="text-[10px] text-[#5B6B82]">
                 Your CA accesses raw GSTIN ledgers and editable tables with end-to-end audit logging.
               </p>
             </div>
-          </div>
+          </Card>
 
           {/* Pre-Filing Checklist Card */}
-          <div className="bg-white rounded-modal shadow-tier1 border border-[#E3E8F0] p-5 space-y-3">
+          <Card variant="default" padding="md" className="space-y-3">
             <h4 className="font-headline text-sm font-bold text-[#0B1F3A] flex items-center gap-2">
               <span className="material-symbols-outlined text-[#2B4C9B]">checklist_rtl</span>
               <span>Pre-Filing Checklist</span>
@@ -563,29 +571,30 @@ export const Screen6CaReadyBrief: React.FC = () => {
                 <span className="font-semibold text-[#0B1F3A]">Chartered Accountant review &amp; UDIN generated</span>
               </label>
             </div>
-          </div>
+          </Card>
 
           {/* Start New Notice / Reset Demo */}
-          <div className="bg-white rounded-modal shadow-tier1 border border-[#E3E8F0] p-5 space-y-3">
+          <Card variant="default" padding="md" className="space-y-3">
             <h4 className="font-headline text-sm font-bold text-[#0B1F3A]">
               Other Scrutiny Notices?
             </h4>
             <p className="text-xs text-[#5B6B82]">
               Have an ASMT-10 for another tax period or assessment year?
             </p>
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              icon="restart_alt"
               onClick={() => {
                 if (window.confirm('Start a new notice investigation? Current brief #DH-2025-ASMT10-8912 is safely archived.')) {
                   resetDemo();
                 }
               }}
-              className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-control bg-[#EFF4FF] hover:bg-[#DCE9FF] text-[#0B1F3A] text-xs font-semibold transition-colors border border-[#CBD5E1]"
+              className="w-full"
             >
-              <span className="material-symbols-outlined text-base">restart_alt</span>
-              <span>Start New Notice Investigation</span>
-            </button>
-          </div>
+              Start New Notice Investigation
+            </Button>
+          </Card>
         </div>
       </div>
 
@@ -614,7 +623,8 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsShareModalOpen(false)}
-                className="text-[#5B6B82] hover:text-[#0B1F3A]"
+                className="text-[#5B6B82] hover:text-[#0B1F3A] p-1 rounded"
+                aria-label="Close"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
@@ -629,27 +639,30 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   readOnly
                   rows={4}
                   value={shareWhatsAppMessage}
-                  className="w-full p-2.5 rounded-lg bg-[#EFF4FF] font-mono text-xs text-[#0B1F3A] border border-[#CBD5E1] resize-none focus:outline-none"
+                  className="w-full p-2.5 rounded-control bg-[#F8FAFC] font-mono text-xs text-[#0F172A] border border-[#CBD5E1] resize-none focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-[#E3E8F0]">
-              <button
+            <div className="flex justify-end gap-2 pt-2 border-t border-[#E2E8F0]">
+              <Button
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={handleCopyShareMessage}
-                className="px-3.5 py-2 rounded-control border border-[#CBD5E1] text-xs font-semibold text-[#0B1F3A] hover:bg-[#EFF4FF]"
               >
                 Copy Message
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="primary"
+                size="sm"
+                icon="send"
                 onClick={handleDispatchWhatsApp}
-                className="px-4 py-2 rounded-control bg-[#12805C] hover:bg-[#0E9FA8] text-white text-xs font-bold flex items-center gap-1 shadow-sm"
+                className="bg-[#12805C] hover:bg-[#0E9FA8] text-white"
               >
-                <span className="material-symbols-outlined text-sm">send</span>
-                <span>Open in WhatsApp</span>
-              </button>
+                Open in WhatsApp
+              </Button>
             </div>
           </div>
         </div>

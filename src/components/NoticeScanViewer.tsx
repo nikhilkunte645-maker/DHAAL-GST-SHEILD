@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CANONICAL_DEMO_CASE } from '../data/demoCase';
+import { Badge } from './ui/Badge';
 
 interface NoticeScanViewerProps {
   onHighlightClick?: (fieldId: string) => void;
@@ -17,15 +18,15 @@ export const NoticeScanViewer: React.FC<NoticeScanViewerProps> = ({ className = 
   return (
     <div className={`bg-white rounded-xl shadow-tier1 border border-[#E3E8F0] overflow-hidden flex flex-col ${className}`}>
       {/* Viewer Action Bar */}
-      <div className="p-3 bg-[#EFF4FF] border-b border-[#CBD5E1] flex items-center justify-between gap-2">
+      <div className="p-3 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[#2B4C9B] text-lg">document_scanner</span>
           <span className="font-mono text-xs font-bold text-[#0B1F3A]">
             FORM_GST_ASMT-10.pdf
           </span>
-          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#DCE9FF] text-[#2B4C9B] font-semibold">
+          <Badge variant="brand" size="sm">
             Page 1 of 3
-          </span>
+          </Badge>
         </div>
 
         {/* Zoom Controls */}
