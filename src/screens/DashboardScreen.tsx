@@ -2,6 +2,7 @@ import React from 'react';
 import { useDhaalStore } from '../store/useDhaalStore';
 import { CANONICAL_DEMO_CASE } from '../data/demoCase';
 import { formatINR } from '../lib/format';
+import { getUrgencyInfo } from '../lib/deadline';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Card } from '../components/ui/Card';
@@ -10,6 +11,7 @@ export const DashboardScreen: React.FC = () => {
   const { setStep, confirmedAmount, daysLeftOverride, checklist } = useDhaalStore();
 
   const amount = confirmedAmount || CANONICAL_DEMO_CASE.rows[1].difference;
+  const urgency = getUrgencyInfo(daysLeftOverride);
   const verifiedCount = checklist.filter(
     (c) => c.statusType === 'verified' || c.statusType === 'uploaded' || c.statusType === 'auto_generated'
   ).length;
@@ -20,11 +22,11 @@ export const DashboardScreen: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-[#E4E9E5]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono bg-[#E7F4EE] text-[#087F73] border border-[#119B72]/30">
-              FINANCIAL INTELLIGENCE
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]">
+              SAMPLE CASE / WORKSPACE DEMO
             </span>
             <span className="text-xs font-semibold text-[#687674]">
-              Sharma &amp; Associates, CAs • Client Portal
+              Guided Scrutiny Notice Environment • Form GST ASMT-10
             </span>
           </div>
           <h1 className="font-headline text-2xl sm:text-3xl lg:text-4xl font-bold text-[#073B3A] tracking-tight mt-1.5">
@@ -107,19 +109,19 @@ export const DashboardScreen: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-[#687674] uppercase tracking-wider">
-                Active Scrutiny Cases
+                Scrutiny Workqueue
               </span>
               <span className="material-symbols-outlined text-lg text-[#087F73]">folder_open</span>
             </div>
             <div className="font-headline text-2xl font-bold text-[#073B3A]">
-              1 Active Case
+              1 Sample Notice
             </div>
-            <span className="text-[11px] text-[#687674] mt-1 block">
-              Form GST ASMT-10 • Section 61
+            <span className="text-[11px] text-[#D97706] font-semibold mt-1 block">
+              Demonstration Mode (ASMT-10)
             </span>
           </div>
           <div className="mt-3 pt-2 border-t border-[#E4E9E5] flex items-center justify-between text-xs">
-            <span className="text-[#687674]">Assessee</span>
+            <span className="text-[#687674]">Sample Assessee</span>
             <span className="font-semibold text-[#152B2A]">Sharma Garments</span>
           </div>
         </Card>
@@ -136,7 +138,7 @@ export const DashboardScreen: React.FC = () => {
               {formatINR(amount, true)}
             </div>
             <span className="text-[11px] text-[#687674] mt-1 block">
-              Table 4(A)(5) GSTR-3B vs 2B
+              Table 4(A)(5) GSTR-3B vs 2B (Demo)
             </span>
           </div>
           <div className="mt-3 pt-2 border-t border-[#E4E9E5] flex items-center justify-between text-xs">
@@ -151,18 +153,20 @@ export const DashboardScreen: React.FC = () => {
               <span className="text-xs font-bold text-[#687674] uppercase tracking-wider">
                 Statutory Defense Clock
               </span>
-              <span className="material-symbols-outlined text-lg text-[#F59E0B]">schedule</span>
+              <span className={`material-symbols-outlined text-lg ${urgency.textColor}`}>
+                {urgency.isExpired ? 'warning' : 'schedule'}
+              </span>
             </div>
             <div className="font-headline text-2xl font-bold text-[#073B3A]">
-              {daysLeftOverride} Days Left
+              {urgency.isExpired ? 'Window Elapsed' : urgency.isDueToday ? 'Due Today' : `${daysLeftOverride} Days Left`}
             </div>
             <span className="text-[11px] text-[#687674] mt-1 block">
-              Deadline: {CANONICAL_DEMO_CASE.replyDeadline}
+              {urgency.isExpired ? 'Statutory deadline passed' : `Deadline: ${CANONICAL_DEMO_CASE.replyDeadline}`}
             </span>
           </div>
           <div className="mt-3 pt-2 border-t border-[#E4E9E5] flex items-center justify-between text-xs">
-            <span className="text-[#687674]">Statutory Rule</span>
-            <span className="font-semibold text-[#687674]">CGST Rule 99(1)</span>
+            <span className="text-[#687674]">Urgency Status</span>
+            <span className={`font-semibold ${urgency.textColor}`}>{urgency.label}</span>
           </div>
         </Card>
 
@@ -190,27 +194,41 @@ export const DashboardScreen: React.FC = () => {
 
       {/* 4. ACTIVE CASES REQUIRING ATTENTION */}
       <Card variant="default" padding="none" className="mb-8 overflow-hidden">
-        <div className="p-4 sm:p-5 bg-white border-b border-[#E4E9E5] flex items-center justify-between">
+        <div className="p-4 sm:p-5 bg-white border-b border-[#E4E9E5] flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-xl text-[#087F73]">inbox</span>
             <h2 className="font-headline text-base sm:text-lg font-bold text-[#073B3A]">
-              Active GST Scrutiny Cases
+              GST Scrutiny Workqueue
             </h2>
-            <Badge variant="brand" size="sm">
-              1 Pending Response
-            </Badge>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]">
+              DEMO DATA / SAMPLE NOTICE
+            </span>
           </div>
 
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            icon="refresh"
-            onClick={() => window.location.reload()}
-            title="Refresh active case list"
+            icon="upload_file"
+            onClick={() => setStep(1)}
+            title="Upload your own ASMT-10 notice PDF"
           >
-            Refresh
+            Upload Real Notice
           </Button>
+        </div>
+
+        {/* Informational Banner */}
+        <div className="p-3 bg-[#FAF9F5] border-b border-[#E4E9E5] text-xs text-[#687674] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-sm text-[#087F73] shrink-0">info</span>
+            <span>The entry below is a demonstration case loaded to preview DHAAL&apos;s 6-step statutory audit flow.</span>
+          </div>
+          <button
+            onClick={() => setStep(1)}
+            className="text-[11px] font-bold text-[#087F73] hover:underline whitespace-nowrap self-start sm:self-auto"
+          >
+            Upload your own notice →
+          </button>
         </div>
 
         <div className="overflow-x-auto w-full">
@@ -233,7 +251,12 @@ export const DashboardScreen: React.FC = () => {
                   {CANONICAL_DEMO_CASE.caseId}
                 </td>
                 <td className="py-3.5 px-4 font-medium text-[#152B2A]">
-                  {CANONICAL_DEMO_CASE.businessName}
+                  <div className="flex items-center gap-1.5">
+                    <span>{CANONICAL_DEMO_CASE.businessName}</span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[#FAF9F5] text-[#D97706] border border-[#E4E9E5]">
+                      SAMPLE
+                    </span>
+                  </div>
                   <span className="block font-mono text-[11px] text-[#687674]">
                     {CANONICAL_DEMO_CASE.gstin}
                   </span>
@@ -253,8 +276,8 @@ export const DashboardScreen: React.FC = () => {
                   <span className="font-semibold text-[#152B2A]">
                     {CANONICAL_DEMO_CASE.replyDeadline}
                   </span>
-                  <span className="block text-[11px] text-[#D97706] font-semibold">
-                    {daysLeftOverride} days left
+                  <span className={`block text-[11px] font-semibold ${urgency.textColor}`}>
+                    {urgency.isExpired ? 'Expired' : urgency.isDueToday ? 'Due Today' : `${daysLeftOverride} days left`}
                   </span>
                 </td>
                 <td className="py-3.5 px-4 text-center whitespace-nowrap">
@@ -272,7 +295,7 @@ export const DashboardScreen: React.FC = () => {
                     onClick={() => setStep(3)}
                     className="bg-[#073B3A] hover:bg-[#087F73]"
                   >
-                    Resume Case
+                    Explore Flow
                   </Button>
                 </td>
               </tr>
@@ -290,8 +313,8 @@ export const DashboardScreen: React.FC = () => {
               Statutory Defense Workflow Stage
             </h2>
           </div>
-          <span className="text-xs text-[#687674]">
-            Rule 99(1) Compliance Progress
+          <span className="text-xs text-[#D97706] font-semibold">
+            Demonstration Timeline
           </span>
         </div>
 
@@ -385,15 +408,15 @@ export const DashboardScreen: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="material-symbols-outlined text-xl text-[#073B3A]">lock</span>
               <h3 className="font-headline text-sm font-bold text-[#073B3A]">
-                In-Memory Privacy Guarantee
+                In-Memory Ephemeral Processing
               </h3>
             </div>
             <p className="text-xs text-[#687674] leading-relaxed">
-              DHAAL processes your notice files purely in ephemeral memory. Your tax returns, vendor lists, and financial statements are never permanently stored on external database servers or exposed to third-party models.
+              DHAAL processes uploaded notice PDFs in ephemeral memory streams. Files are not stored on persistent server disks or third-party databases, and notice data is cleared after your browser session ends.
             </p>
           </div>
           <div className="mt-3 pt-2 border-t border-[#E4E9E5] text-[11px] text-[#073B3A] font-semibold">
-            Zero-Storage Architecture
+            Client-Side &amp; RAM Architecture
           </div>
         </Card>
       </div>

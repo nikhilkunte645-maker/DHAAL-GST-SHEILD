@@ -1,7 +1,8 @@
 import re
 import sys
 import os
-from typing import Dict, Any, List
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
+from typing import Dict, Any, List, Union
 
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 if BACKEND_DIR not in sys.path:
@@ -16,8 +17,20 @@ AMOUNT_PATTERN = re.compile(r"(?:₹|Rs\.?|INR)\s*([\d,]+(?:\.\d{2})?)", re.IGNO
 SECTION_PATTERN = re.compile(r"(?:Section|Sec\.?)\s+(\d+(?:\([a-z0-9]+\))*)", re.IGNORECASE)
 DATE_PATTERN = re.compile(r"\b(\d{1,2}-(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{4})\b", re.IGNORECASE)
 
-def format_inr(val: float) -> str:
-    s = str(int(round(val)))
+def round_statutory_inr(val: Union[float, int, str, Decimal]) -> int:
+    """
+    Statutory Section 170 CGST Rounding:
+    Parts of 50 paise or more round UP to +1; less than 50 paise is ignored.
+    Uses Python Decimal with ROUND_HALF_UP (not Python's banker's rounding).
+    """
+    try:
+        d = Decimal(str(val))
+        return int(d.quantize(Decimal('1'), rounding=ROUND_HALF_UP))
+    except (InvalidOperation, ValueError):
+        return 0
+
+def format_inr(val: Union[float, int, str, Decimal]) -> str:
+    s = str(round_statutory_inr(val))
     if len(s) <= 3:
         return f"₹{s}"
     last3 = s[-3:]
@@ -38,11 +51,18 @@ def normalize_amount(amount_str: str) -> float:
     except ValueError:
         return 0.0
 
+def normalize_amount_decimal(amount_str: str) -> Decimal:
+    digits = re.sub(r"[^\d.]", "", amount_str)
+    try:
+        return Decimal(digits)
+    except (InvalidOperation, ValueError):
+        return Decimal("0.0")
+
 def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationReport:
     """
     Deterministic dual-layer check:
     Layer 1: Code checks
-    - Every amount matches confirmed records
+    - Every amount matches confirmed records using Section 170 CGST rounding
     - Every date appears in confirmed calendar
     - Statutory sections match authorized corpus
     - GSTIN / Entity match
@@ -51,42 +71,45 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
     checks: List[CheckItemResult] = []
     errors: List[str] = []
 
-    confirmed_amount = float(confirmed.get("confirmedAmount", 184250.0))
+    confirmed_amount_dec = Decimal(str(confirmed.get("confirmedAmount", 184250.0)))
+    confirmed_amount_statutory = round_statutory_inr(confirmed_amount_dec)
     allowed_dates = [d.lower() for d in confirmed.get("allowedDates", [])]
     allowed_sections = [s.lower() for s in confirmed.get("allowedSections", [])]
     gstin = confirmed.get("gstin", "27XXXXX1234X1ZX")
     notice_date = confirmed.get("noticeDate", "14-May-2025")
 
     # 1. AMOUNT CHECK
-    found_amounts = []
+    found_amounts: List[Decimal] = []
     for match in AMOUNT_PATTERN.finditer(draft_text):
-        val = normalize_amount(match.group(1))
-        if val > 10000:  # Major discrepancy threshold
+        val = normalize_amount_decimal(match.group(1))
+        if val > Decimal("10000"):  # Major discrepancy threshold
             found_amounts.append(val)
 
-    primary_draft_amount = found_amounts[0] if found_amounts else 0.0
-    amount_passed = (primary_draft_amount == confirmed_amount)
+    primary_draft_dec = found_amounts[0] if found_amounts else Decimal("0.0")
+    primary_draft_statutory = round_statutory_inr(primary_draft_dec)
+
+    amount_passed = (primary_draft_statutory == confirmed_amount_statutory)
+    delta_statutory = abs(primary_draft_statutory - confirmed_amount_statutory)
 
     if amount_passed:
         checks.append(CheckItemResult(
             id="check-1-amount",
             name="Check 1: Notice Discrepancy Amount Match",
             passed=True,
-            message=f"Notice reads {format_inr(confirmed_amount)} → Confirmed input is {format_inr(confirmed_amount)} → Legal draft asserts {format_inr(primary_draft_amount)}.",
-            extractedValue=format_inr(primary_draft_amount),
-            expectedValue=format_inr(confirmed_amount)
+            message=f"Notice reads {format_inr(confirmed_amount_statutory)} → Confirmed input is {format_inr(confirmed_amount_statutory)} → Legal draft asserts {format_inr(primary_draft_statutory)}.",
+            extractedValue=format_inr(primary_draft_statutory),
+            expectedValue=format_inr(confirmed_amount_statutory)
         ))
     else:
-        delta = abs(primary_draft_amount - confirmed_amount)
-        err = f"Draft asserts {format_inr(primary_draft_amount)}; confirmed value is {format_inr(confirmed_amount)}"
+        err = f"Draft asserts {format_inr(primary_draft_statutory)}; confirmed value is {format_inr(confirmed_amount_statutory)}"
         errors.append(err)
         checks.append(CheckItemResult(
             id="check-1-amount",
             name="Check 1: Notice Discrepancy Amount Match",
             passed=False,
-            message=f"Amount mismatch detected: Delta of {format_inr(delta)}.",
-            extractedValue=format_inr(primary_draft_amount),
-            expectedValue=format_inr(confirmed_amount)
+            message=f"Amount mismatch detected: Delta of {format_inr(delta_statutory)}.",
+            extractedValue=format_inr(primary_draft_statutory),
+            expectedValue=format_inr(confirmed_amount_statutory)
         ))
 
     # 2. STATUTORY SECTIONS CHECK
@@ -191,6 +214,6 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
         passedCount=passed_count,
         checks=checks,
         errors=errors,
-        divergenceAmount=abs(primary_draft_amount - confirmed_amount),
-        assertedAmount=primary_draft_amount
+        divergenceAmount=float(delta_statutory),
+        assertedAmount=float(primary_draft_statutory)
     )

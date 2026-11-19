@@ -1,0 +1,613 @@
+========== DHAAL PROJECT AUDIT ==========
+Generated: 11/19/2026 23:04:50
+Project path: C:\Users\lucifer\DHAAL
+
+========== ROOT FILES ==========
+
+Name                      Length LastWriteTime
+----                      ------ -------------
+.env.example                 511 18-11-2026 23:58:11
+.env.local                  1299 18-11-2026 22:44:08
+.gitignore                   373 18-11-2026 23:58:11
+banner.png               5651922 18-11-2026 23:58:11
+DEMO.md                     8770 18-11-2026 23:58:11
+DHAAL-github-header.jpg   119757 18-11-2026 23:58:11
+DHAAL-github-header.png 10729553 18-11-2026 23:58:11
+index.html                   614 18-11-2026 11:10:24
+LICENSE                      226 18-11-2026 23:58:11
+netlify.toml                 120 18-11-2026 20:59:02
+package-lock.json         142085 18-11-2026 11:22:13
+package.json                1140 18-11-2026 21:54:15
+postcss.config.js             81 18-11-2026 11:09:30
+Procfile                      66 18-11-2026 20:59:11
+README.md                  11486 19-11-2026 00:00:47
+requirements.txt              89 18-11-2026 21:11:36
+SECURITY.md                  407 18-11-2026 23:58:11
+tailwind.config.ts          5700 19-11-2026 13:28:40
+tsconfig.json                627 18-11-2026 11:08:31
+tsconfig.node.json           213 18-11-2026 11:08:36
+vercel.json                  360 18-11-2026 22:00:37
+vite.config.ts               334 18-11-2026 21:56:45
+
+
+
+========== FILE STRUCTURE ==========
+\.env.example
+\.env.local
+\.gitignore
+\banner.png
+\DEMO.md
+\DHAAL-github-header.jpg
+\DHAAL-github-header.png
+\index.html
+\LICENSE
+\netlify.toml
+\package-lock.json
+\package.json
+\postcss.config.js
+\Procfile
+\PROJECT_STATUS_REPORT.txt
+\README.md
+\requirements.txt
+\SECURITY.md
+\tailwind.config.ts
+\tsconfig.json
+\tsconfig.node.json
+\vercel.json
+\vite.config.ts
+\.github\workflows\ci.yml
+\.pytest_cache\.gitignore
+\.pytest_cache\CACHEDIR.TAG
+\.pytest_cache\README.md
+\.pytest_cache\v\cache\lastfailed
+\.pytest_cache\v\cache\nodeids
+\.vercel\project.json
+\.vercel\README.txt
+\.vercel\repo.json
+\api\index.py
+\api\requirements.txt
+\backend\main.py
+\backend\requirements-dev.txt
+\backend\requirements.txt
+\backend\schemas.py
+\backend\test_api.py
+\backend\verifier.py
+\backend\tests\__init__.py
+\backend\tests\test_upload.py
+\backend\tests\test_verifier.py
+\docs\screenshots\desktop_1_landing_upload.png
+\docs\screenshots\desktop_2_extraction_pause_confirmation.png
+\docs\screenshots\desktop_3_explainer_deadlines.png
+\docs\screenshots\desktop_4_evidence_checklist.png
+\docs\screenshots\desktop_5_draft_verifier.png
+\docs\screenshots\desktop_6_ca_ready_brief.png
+\docs\screenshots\DHAAL-github-header.jpg
+\docs\screenshots\DHAAL-github-header.png
+\docs\screenshots\mobile_1_landing_upload.png
+\docs\screenshots\mobile_2_extraction_pause_confirmation.png
+\docs\screenshots\mobile_3_explainer_deadlines.png
+\docs\screenshots\mobile_4_evidence_checklist.png
+\docs\screenshots\mobile_5_draft_verifier.png
+\docs\screenshots\mobile_6_ca_ready_brief.png
+\docs\screenshots\declutter\demo_state_2_processing.png
+\docs\screenshots\declutter\demo_state_3_blurry.png
+\docs\screenshots\declutter\demo_state_4_wrong_form.png
+\docs\screenshots\declutter\language_en.png
+\docs\screenshots\declutter\language_hi.png
+\docs\screenshots\declutter\language_mr.png
+\docs\screenshots\declutter\step_1_upload.png
+\docs\screenshots\declutter\step_2_confirm.png
+\docs\screenshots\declutter\step_3_explain.png
+\docs\screenshots\declutter\step_4_evidence.png
+\docs\screenshots\declutter\step_5_verifier.png
+\docs\screenshots\declutter\step_6_brief.png
+\docs\screenshots\declutter\viewport_1024x768.png
+\docs\screenshots\declutter\viewport_1366x768.png
+\docs\screenshots\declutter\viewport_1440x900.png
+\docs\screenshots\declutter\viewport_1536x864.png
+\docs\screenshots\declutter\viewport_1920x1080.png
+\docs\screenshots\declutter\viewport_390x844.png
+\docs\screenshots\declutter\viewport_768x1024.png
+\scripts\audit_bugs.js
+\scripts\capture_screenshots.js
+\scripts\test_pdf_and_verification.js
+\scripts\verify_ui.js
+\source\stitch_dhaal_gst_notice_assistant\1._landing_upload\code.html
+\source\stitch_dhaal_gst_notice_assistant\1._landing_upload\screen.png
+\source\stitch_dhaal_gst_notice_assistant\2._extraction_pause_confirmation\code.html
+\source\stitch_dhaal_gst_notice_assistant\2._extraction_pause_confirmation\screen.png
+\source\stitch_dhaal_gst_notice_assistant\3._explainer_deadlines\code.html
+\source\stitch_dhaal_gst_notice_assistant\3._explainer_deadlines\screen.png
+\source\stitch_dhaal_gst_notice_assistant\4._evidence_checklist\code.html
+\source\stitch_dhaal_gst_notice_assistant\4._evidence_checklist\screen.png
+\source\stitch_dhaal_gst_notice_assistant\5._draft_verifier\code.html
+\source\stitch_dhaal_gst_notice_assistant\5._draft_verifier\screen.png
+\source\stitch_dhaal_gst_notice_assistant\6._ca_ready_brief\code.html
+\source\stitch_dhaal_gst_notice_assistant\6._ca_ready_brief\screen.png
+\source\stitch_dhaal_gst_notice_assistant\dhaal_shield_precision\DESIGN.md
+\src\App.tsx
+\src\index.css
+\src\main.tsx
+\src\mockApi.ts
+\src\useDhaalStore.ts
+\src\components\Header.tsx
+\src\components\HelpFaqModal.tsx
+\src\components\NoticeScanViewer.tsx
+\src\components\RawScanModal.tsx
+\src\components\Sidebar.tsx
+\src\components\ui\Badge.tsx
+\src\components\ui\Button.tsx
+\src\components\ui\Card.tsx
+\src\data\demoCase.ts
+\src\data\i18n.ts
+\src\data\reconciliationData.ts
+\src\lib\amount.ts
+\src\lib\deadline.ts
+\src\lib\format.ts
+\src\lib\hash.ts
+\src\lib\verifier.ts
+\src\lib\__tests__\lib.test.ts
+\src\screens\Screen1Upload.tsx
+\src\screens\Screen2ConfirmPause.tsx
+\src\screens\Screen3ExplainerDeadlines.tsx
+\src\screens\Screen4EvidenceChecklist.tsx
+\src\screens\Screen5DraftVerifier.tsx
+\src\screens\Screen6CaReadyBrief.tsx
+\src\services\mockApi.ts
+\src\store\useDhaalStore.ts
+\src\utils\pdfExport.ts
+
+========== README ==========
+<p align="center">
+  <img src="banner.png" alt="Dhaal Banner" width="100%">
+</p>
+
+# Dhaal (ढाल) — GST Scrutiny Notice Shield (Form ASMT-10)
+
+> **Statutory drafting aid for professional review. Not legal advice.**
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-000000?style=for-the-badge&logo=vercel)](https://dhaal-gst-sheild.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](./LICENSE)
+[![Frontend](https://img.shields.io/badge/Frontend-React%2018%20%7C%20Vite%20%7C%20TS-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
+[![Backend](https://img.shields.io/badge/Backend-FastAPI%20%7C%20Python%203.11+-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+
+Dhaal (ढाल — *Shield*) is a full-stack compliance workspace designed for Chartered Accountants, tax practitioners, and Indian SMEs facing statutory scrutiny notices issued under **Section 61 of the CGST Act** (Form GST ASMT-10). It parses notice parameters, mathematically verifies discrepancies, enforces statutory response deadlines, and produces audit-ready reply drafts in minutes.
+
+---
+
+## 🎯 Live Application & Walkthrough
+* **Live Production URL:** [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)
+* **Judges' 3-Minute Demo Script:** [🎯 Read the Hackathon Demo Guide](./DEMO.md)
+
+---
+
+## ⚠️ The Problem: GST ASMT-10 Scrutiny Anxiety
+When a taxpayer receives Form GST ASMT-10:
+1. **Strict 30-Day Statutory Deadline:** Rule 99(1) of the CGST Rules mandates a response within 30 days. Missing this timeline automatically escalates scrutiny into summary assessments under Section 73 or Section 74.
+2. **Discrepancy Complexity:** Notices typically cite mathematical differences between GSTR-3B (outward returns) and GSTR-2A/2B (auto-drafted ITC statements) or e-Way bill logs.
+3. **Taxpayer Anxiety & High Cost:** SMEs panic over perceived tax liabilities, while CAs spend hours manually extracting DINs, verifying tax periods, and drafting repetitive legal responses.
+
+---
+
+## 🖼️ Application Walkthrough & Screenshots
+
+| Screen 1: Notice Ingestion & Validation | Screen 2: Parameter Extraction & Pause |
+| :---: | :---: |
+| ![Screen 1](docs/screenshots/desktop_1_landing_upload.png) | ![Screen 2](docs/screenshots/desktop_2_extraction_pause_confirmation.png) |
+| *Drag-and-drop PDF ingestion with client/server validation* | *Taxpayer verifies extracted DIN, section & amounts* |
+
+| Screen 3: Statutory Deadlines & Explainer | Screen 4: Evidence Checklist & WA Share |
+| :---: | :---: |
+| ![Screen 3](docs/screenshots/desktop_3_explainer_deadlines.png) | ![Screen 4](docs/screenshots/desktop_4_evidence_checklist.png) |
+| *Statutory countdown timer & plain-English/Hindi explainer* | *Required document checklist with 1-click WhatsApp delegation* |
+
+| Screen 5: Live Draft Verifier | Screen 6: CA-Ready Brief & PDF Export |
+| :---: | :---: |
+| ![Screen 5](docs/screenshots/desktop_5_draft_verifier.png) | ![Screen 6](docs/screenshots/desktop_6_ca_ready_brief.png) |
+| *Real-time statutory citation & legal validity scoring* | *Comprehensive dossier ready for CA review or submission* |
+
+---
+
+## ✨ Core Features
+* **In-Memory Notice Ingestion:** Stream-based PDF text extraction (`pypdf`) extracting Document Identification Numbers (DIN), Reference IDs, taxable periods, and discrepancy amounts.
+* **Deterministic Reconciliation Engine:** Rule-based mathematical verification between claimed Input Tax Credit (ITC) and auto-populated ledger records without LLM hallucination risk.
+* **Statutory Rule 99(1) Deadline Tracker:** Visual countdown with color-coded risk alerts to ensure zero missed statutory deadlines.
+* **Evidence Gathering Assistant:** Itemized documentary checklist (vendor invoices, proof of payment, GSTR-2B reconciliations) shareable directly via WhatsApp to business owners.
+* **Real-Time Reply Verifier:** 500ms debounced statutory analysis evaluating defense drafts against required legal citations (Section 61, Rule 99(1), circular references).
+* **Multilingual Explainer & Audio Readout:** Plain-language synthesis in English and Hindi with Web Speech vernacular audio synthesis for business owners.
+
+---
+
+## 🏗️ System Architecture & Workflow
+
+```mermaid
+flowchart TD
+    User([Taxpayer / CA]) -->|Upload ASMT-10 PDF| Frontend[React 18 + Vite SPA]
+    
+    subgraph Client ["Client Browser Layer"]
+        Frontend --> Store[Zustand Store]
+        Store --> UI[Workflow Screens 1 - 6]
+        Store --> Audio[Web Speech Synthesis]
+    end
+    
+    subgraph Vercel ["Unified Vercel Serverless Platform"]
+        Frontend -->|REST API /api/*| VercelRoute[Vercel Serverless Rewrites]
+        VercelRoute --> ApiBridge["api/index.py (WSGI/ASGI Bridge)"]
+        ApiBridge --> Backend[FastAPI Application]
+        
+        subgraph ProcessingEngine ["In-Memory Processing Engine"]
+            Backend --> PDFEngine[PyPDF Stream Parser]
+            Backend --> Verifier[Deterministic Verifier backend/verifier.py]
+            Backend --> Schemas[Pydantic Models backend/schemas.py]
+        end
+    end
+
+    Verifier -->|Validation & Scoring JSON| Frontend
+    PDFEngine -->|Extracted Notice Data| Frontend
+```
+
+---
+
+## ✨ Core Features & Workflow
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend Framework** | React 18, Vite 5, TypeScript |
+| **State Management** | Zustand (persistent state with offline demo mode) |
+| **Styling & UI** | Tailwind CSS, Lucide React, Google Material Icons |
+| **Backend Framework** | Python 3.11+, FastAPI, Uvicorn |
+| **Data Validation** | Pydantic v2 |
+| **Document Processing** | PyPDF (in-memory binary streaming) |
+| **Deployment** | Vercel Serverless Functions (`api/index.py`) |
+| **Testing** | Vitest (Frontend), Pytest (Backend) |
+
+---
+
+## 📁 Project Structure
+
+```
+DHAAL/
+├── .github/workflows/          # CI/CD pipelines (GitHub Actions)
+├── api/                        # Vercel serverless function entrypoint
+│   └── index.py                # Imports and routes FastAPI app on Vercel
+├── backend/                    # Python FastAPI service
+│   ├── main.py                 # REST endpoints (/api/notice/upload, /api/verify/draft, etc.)
+│   ├── schemas.py              # Pydantic data schemas
+│   ├── verifier.py             # Deterministic verification & legal scoring logic
+│   └── tests/                  # Backend unit & integration test suite
+├── docs/                       # Technical documentation & screenshots
+│   └── screenshots/            # UI walkthrough imagery for desktop and mobile
+├── source/                     # Original prototype & design specifications
+│   └── stitch_dhaal_.../       # Google Stitch design prototype assets
+├── src/                        # React 18 frontend codebase
+│   ├── components/             # Reusable UI components (Navbar, Stepper, Badges)
+│   ├── screens/                # The 6 core workflow screens
+│   ├── store/                  # Zustand state store
+│   └── mockApi.ts              # Resilient API client with automatic offline fallback
+├── Procfile                    # Alternative deployment config for Render/Railway/Heroku
+├── netlify.toml                # Alternative deployment config for Netlify SPA hosting
+├── vercel.json                 # Production configuration for Vercel serverless deployment
+├── package.json                # Frontend dependencies & scripts
+└── requirements.txt            # Python dependencies
+```
+
+> **Why alternative deployment files exist:**
+> * `vercel.json` is our primary production target, serving both the Vite SPA and Python API on one unified serverless domain.
+> * `Procfile` allows the backend to be deployed on container/PaaS platforms (Railway, Render, Heroku) as an independent service.
+> * `netlify.toml` provides static SPA rewrite rules if hosted separately on Netlify.
+> * `source/stitch_dhaal_gst_notice_assistant` archives the original design assets created during UI prototyping.
+
+---
+
+## 🚀 Running Locally
+
+### Prerequisites
+* **Node.js**: v18+ and `npm`
+* **Python**: v3.11+ and `pip`
+
+### 1. Backend Setup (FastAPI)
+```bash
+# From repository root
+cd backend
+
+# Create and activate virtual environment
+python -m venv .venv
+# On Windows (PowerShell):
+.venv\Scripts\Activate.ps1
+# On macOS/Linux:
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r ../requirements.txt
+
+# Start backend server on port 8001
+uvicorn main:app --reload --port 8001
+```
+
+### 2. Frontend Setup (React + Vite)
+```bash
+# In a separate terminal, from repository root
+npm install
+
+# Start Vite dev server on port 3001
+npm run dev
+```
+Open [http://localhost:3001](http://localhost:3001) in your browser.
+
+### 3. Running Test Suites
+```bash
+# Run frontend unit tests
+npm test
+
+# Run backend test suite
+pytest backend/tests
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Refer to `.env.example` for local configuration:
+
+| Variable | Default Value | Description |
+| :--- | :--- | :--- |
+| `VITE_API_BASE_URL` | `http://localhost:8001` | Base URL for FastAPI backend in local dev. In production, left empty for same-origin relative `/api` calls. |
+| `PORT` | `8001` | Port for the FastAPI Uvicorn process. |
+| `UV_LINK_MODE` | `copy` | File link mode for Python package resolution on serverless runners. |
+
+---
+
+## 🔒 Privacy & Data Handling
+* **Zero-Retention Processing:** Uploaded GST notices are parsed directly from memory via byte streams (`io.BytesIO`). Files are never written to disk, databases, or third-party storage.
+* **No External LLM Data Leakage:** Notice numbers, taxable turnover, and GSTINs are evaluated strictly through local deterministic logic and pattern matching; no financial data is transmitted to external generative AI APIs.
+* **Transparent Client-Side Storage:** Form drafts and user inputs are stored locally in the browser session via Zustand state.
+
+---
+
+## 🔍 Known Limitations
+* **Native Digital PDFs Only:** Current extraction requires PDFs with an embedded text layer (standard GST portal ASMT-10 downloads). Scanned photocopies or flat bitmap images require prior OCR preprocessing.
+* **Standard ASMT-10 Format:** Parser patterns are calibrated for standard CBIC/State GST ASMT-10 layouts. Non-standard custom notices may require manual parameter confirmation on Screen 2.
+
+---
+
+## 🗺️ Roadmap
+- [ ] Tesseract OCR integration for scanned physical notices and mobile photographs.
+- [ ] Direct GSTN Portal API integration for automatic GSTR-2B discrepancy cross-fetching.
+- [ ] Class 3 Digital Signature Certificate (DSC) signing integration for reply submission.
+- [ ] Export directly to Form GST DRC-03 payment challan format where liability is accepted.
+
+---
+
+## ⚖️ Statutory Disclaimer
+> **Notice:** Dhaal is an automated compliance drafting aid and decision-support system designed to assist qualified Chartered Accountants, tax advocates, and businesses. It does not provide legal advice, nor does it establish an attorney-client relationship. All drafted responses should be reviewed by a certified tax professional before statutory filing on the GST Portal.
+
+
+========== DEMO DOCUMENTATION ==========
+# 🎯 DHAAL (ढाल) — 3-Minute Hackathon Demo Script for Judges
+
+> **Target Audience:** Hackathon Judges, FinTech Mentors & Compliance Evaluators  
+> **Total Time:** Exactly 3 Minutes (180 Seconds)  
+> **Key Value Proposition:** Transforming GST notice anxiety into an audit-ready CA brief with mathematical certainty, zero hallucinations, and human-in-the-loop safety.  
+> **Live Production App:** [https://dhaal-gst-sheild.vercel.app](https://dhaal-gst-sheild.vercel.app)
+
+---
+
+## ⏱️ Timeline & Click Path Overview
+
+| Time | Step | Screen | Core Action to Show Judges |
+| :--- | :--- | :--- | :--- |
+| **00:00 – 00:30** | Step 1 | **Landing & Ingestion** | First impression, synthetic sandbox badge, quick test with sample ASMT-10 |
+| **00:30 – 01:00** | Step 2 | **Confirm & Pause Checkpoint** | The Amber Pause State: 4.8x smudge zoom, entering wrong amount (rejection), mathematical verification |
+| **01:00 – 01:45** | Step 3 | **Explain & Deadlines** | 12-day countdown ring, Hindi/Marathi translation, Indic speech audio, Raw Scan Modal |
+| **01:45 – 02:15** | Step 4 | **Evidence Checklist** | 6 statutory exhibits, downloading real reconciliation CSV (24 invoices), WhatsApp vendor prompt |
+| **02:15 – 02:45** | Step 5 | **Draft & Verifier** | Form ASMT-11 draft, toggling Mismatch Detected (hard-block export), clicking Re-align Auto-fix |
+| **02:45 – 03:00** | Step 6 | **CA-Ready Brief** | A4 Dossier preview, real SHA-256 content hash, 1-click PDF download & WhatsApp CA pack |
+
+---
+
+## 🎬 Minute-by-Minute Script
+
+### 🕒 00:00 – 00:30 | Step 1: Landing & Upload
+- **What to say:**
+  > *"Judges, when a small business owner in India receives a GST scrutiny notice (Form ASMT-10), their immediate reaction is panic. They see huge numbers, complicated sections like Rule 99, and think their bank accounts are about to be frozen. Meet **DHAAL (ढाल)**: their statutory notice shield. Within 5 seconds, it replaces fear with institutional order."*
+- **Click Action:**
+  1. Point to the top bar: persistent disclaimer *"Statutory Drafting aid for professional review. Not legal advice. Nothing is filed."*
+  2. Point to the Hindi tagline: **"नोटिस आया? ढाल है ना।"**
+  3. Click **"Quick Test: Load Sample ASMT-10 Notice"** (or **"Try a sample notice"**).
+  4. Show the animated deterministic parser running from 0% to 100% across the OCR, field detection, and pause checkpoint stages.
+
+---
+
+### 🕒 00:30 – 01:00 | Step 2: The Amber Pause Checkpoint
+- **What to say:**
+  > *"Here is DHAAL's defining architectural choice: **The Amber Pause State**. LLMs love to hallucinate numbers when document scans have ink smudges or printhead tears. Under tax law, declaring the wrong amount in a reply can count as an unintended tax admission. So DHAAL halts the pipeline."*
+- **Click Action:**
+  1. Point out the left side: the authentic vector-rendered Government of Maharashtra Form ASMT-10 notice.
+  2. Point to Row 02: notice the smudge on digit `4` in ₹1,84,250.
+  3. Point out the 4.8x magnified micro-scan crop: Primary Engine reads `₹1,84,250` vs Verification Pass `₹1,81,250` (a ₹3,000 delta).
+  4. **The Live Test:** Type `181250` into the input and click **"Confirm and continue"**.
+     - *Show the inline error:* *"This does not match the notice table (₹14,92,450 − ₹13,08,200 = ₹1,84,250). Please re-check the highlighted cell."*
+  5. Click **"Match Read A (₹1,84,250)"** and click **"Refer GSTR-2B Math"** to show the mathematical proof.
+  6. Click **"Confirm and continue"** → The banner turns green *"Confirmed by you"*, unlocking Step 3!
+
+---
+
+### 🕒 01:00 – 01:45 | Step 3: Explainer & Statutory Deadlines
+- **What to say:**
+  > *"Next, DHAAL answers the business owner's two most critical questions: 'How much time do I have?' and 'What is the officer actually accusing me of?' in their own mother tongue."*
+- **Click Action:**
+  1. Point out the **T-Minus 12 Days Left** countdown ring with the Saffron Caution Phase indicator.
+  2. Drag the **"Preview urgency"** slider: scrub to 5 days to show the Critical Red phase, scrub to 25 days to show the Normal phase, then return to 12 days.
+  3. Switch the language tabs:
+     - Click **"हिन्दी"** → Show the Devanagari explanation (*"जीएसटी अधिकारी ने पाया कि आपने पहली तिमाही (अप्रैल-जून 2024)..."*) with zero clipped matras.
+     - Click **"मराठी"** → Show the Marathi explanation (*"जीएसटी अधिकाऱ्यांच्या निदर्शनास आले आहे की..."*).
+  4. Click the **Audio Speaker icon** (`volume_up`) to play native voice audio synthesized via Web Speech API.
+  5. Hover over the explanation sentence to highlight the verbatim legal quote below (*Para 2(b) • Row 02*).
+  6. Click **"View Raw Scan"** to pop open the modal with zoom controls, demonstrating full traceability back to the original document.
+  7. Point to the **Clarity Checklist**: *"What this notice IS (an invitation to explain) vs What this notice IS NOT (NOT a demand order, accounts are NOT frozen)"*.
+  8. Click **"Proceed to Evidence Checklist"**.
+
+---
+
+### 🕒 01:45 – 02:15 | Step 4: Evidence Checklist & Audit Trail
+- **What to say:**
+  > *"A Chartered Accountant cannot defend a client without an evidentiary binder fulfilling all four clauses of Section 16(2). DHAAL itemizes exactly what exhibits are needed."*
+- **Click Action:**
+  1. Show the 4 summary cards: Amount questioned (₹1,84,250), Bank Audit (100% cleared, Sample Bank), Window (12 days), and live Sufficiency Progress (50%).
+  2. Click **"Download Sheet (CSV)"** on Item 3:
+     - *Open or observe the downloaded CSV:* 24 invoice-level rows from supplier M/s Apex Textiles whose tax difference sums up to **exactly ₹1,84,250.00**.
+  3. Click **"Upload Supplier Certificate"** on Item 4: show how the status immediately updates to *Uploaded (User Verified)* and the progress bar climbs live.
+  4. Click **"Send 1-Click WhatsApp Request"** to show the pre-formatted supplier communication citing CBIC Circular 183.
+  5. Click **"Continue to Draft & Verifier"**.
+
+---
+
+### 🕒 02:15 – 02:45 | Step 5: Draft & Dual-Layer Verifier
+- **What to say:**
+  > *"Now we synthesize the formal statutory Form ASMT-11 reply. But before any CA sees it, DHAAL runs a dual-layer verifier. If even a single number or date diverges from confirmed records, export is hard-blocked."*
+- **Click Action:**
+  1. Review the left column: Formal Form GST ASMT-11 draft with origin source chips (*Notice Field Verified*, *Step 2 Value*, *Sec 16(2)*) and amber *"Owner to confirm"* chips.
+  2. Hover over the source chips: see the respective draft paragraphs illuminate.
+  3. Point to the Right column: **Layer 1 Code Checks** (Amount, Sections, Dates, GSTIN, Cross-reconciliation) running through pure code regex in `verifier.ts`.
+  4. **The Dramatic Test:** Click the mode toggle: **"Mismatch Detected (Blocked)"**.
+     - Notice the full-width red alert banner: **"EXPORT HARD-BLOCKED: Statutory Discrepancy Integrity Violated"**.
+     - Point out the exact mismatch: *"Draft asserts ₹1,81,250; confirmed value is ₹1,84,250"*.
+     - Show that the *"Proceed to CA Brief"* button is disabled with a lock icon.
+  5. Click **"Re-align Figures (Auto-fix)"**!
+     - Watch the numbers restore to ₹1,84,250, the checks animate back to green, the banner clear, and the export button unlock!
+  6. Click **"Proceed to CA Brief"**.
+
+---
+
+### 🕒 02:45 – 03:00 | Step 6: CA-Ready Brief
+- **What to say:**
+  > *"In under 3 minutes, our business owner went from panic to an audit-ready, 14-page evidentiary dossier that their CA can review, sign with UDIN, and submit."*
+- **Click Action:**
+  1. Point to the A4 document layout:
+     - Verified assessee header: M/s Sharma Garments, GSTIN `27XXXXX1234X1ZX`.
+     - Real SHA-256 content hash in header: `Content hash: 8E4A9F21`.
+     - Probable cause marked *"Probable cause (to be confirmed with supplier)"*.
+     - Full Annexure table (ANNEX-A through ANNEX-F).
+  2. Click **"Export Dossier (PDF)"** to trigger html2canvas + jsPDF compiling a clean A4 PDF file.
+  3. Click **"Print"** to showcase the print stylesheet showing only the clean A4 brief.
+  4. Click **"Send CA Pack"** to show the WhatsApp handoff modal with pre-filled case reference and access passcode (`DH-8912-PASS`).
+- **Concluding Line:**
+  > *"DHAAL is fast, honest, 100% offline-ready, and brings enterprise-grade compliance defense to every small business in India. Thank you!"*
+
+
+========== PACKAGE.JSON ==========
+{
+  "name": "dhaal-gst-notice-shield",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.0.18",
+    "@fontsource/jetbrains-mono": "^5.0.20",
+    "@fontsource/material-symbols-outlined": "^5.2.0",
+    "@fontsource/noto-sans-devanagari": "^5.0.20",
+    "@fontsource/plus-jakarta-sans": "^5.0.20",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "puppeteer": "^25.18.1",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vitest": "^1.5.2"
+  },
+  "allowScripts": {
+    "core-js": true,
+    "esbuild": true,
+    "puppeteer": true,
+    "core-js@3.51.0": true,
+    "esbuild@0.21.5": true,
+    "puppeteer@25.18.1": true
+  }
+}
+
+
+========== REQUIREMENTS ==========
+fastapi>=0.115.0
+uvicorn>=0.32.0
+pydantic>=2.10.0
+python-multipart>=0.0.12
+pypdf>=5.0.0
+
+
+========== GIT STATUS ==========
+## ui/declutter...origin/ui/declutter
+?? PROJECT_STATUS_REPORT.txt
+ea59089 fix(pdf): inline self-contained multi-page A4 export with zero right-edge clipping
+48c55c8 fix(pdf): implement multi-page A4 PDF export and resolve mobile touch targets
+a117e52 fix(ui): resolve touch targets, Devanagari line-heights, and fact deduplication
+5911b47 test(ui): add full 6-step end-to-end verification and visual evidence
+4171bf2 refactor(ui): polish CA Brief dossier and secondary modal dialogs
+
+========== SOURCE FILES ==========
+\postcss.config.js
+\tailwind.config.ts
+\vite.config.ts
+\api\index.py
+\backend\main.py
+\backend\schemas.py
+\backend\test_api.py
+\backend\verifier.py
+\backend\tests\__init__.py
+\backend\tests\test_upload.py
+\backend\tests\test_verifier.py
+\scripts\audit_bugs.js
+\scripts\capture_screenshots.js
+\scripts\test_pdf_and_verification.js
+\scripts\verify_ui.js
+\src\App.tsx
+\src\main.tsx
+\src\mockApi.ts
+\src\useDhaalStore.ts
+\src\components\Header.tsx
+\src\components\HelpFaqModal.tsx
+\src\components\NoticeScanViewer.tsx
+\src\components\RawScanModal.tsx
+\src\components\Sidebar.tsx
+\src\components\ui\Badge.tsx
+\src\components\ui\Button.tsx
+\src\components\ui\Card.tsx
+\src\data\demoCase.ts
+\src\data\i18n.ts
+\src\data\reconciliationData.ts
+\src\lib\amount.ts
+\src\lib\deadline.ts
+\src\lib\format.ts
+\src\lib\hash.ts
+\src\lib\verifier.ts
+\src\lib\__tests__\lib.test.ts
+\src\screens\Screen1Upload.tsx
+\src\screens\Screen2ConfirmPause.tsx
+\src\screens\Screen3ExplainerDeadlines.tsx
+\src\screens\Screen4EvidenceChecklist.tsx
+\src\screens\Screen5DraftVerifier.tsx
+\src\screens\Screen6CaReadyBrief.tsx
+\src\services\mockApi.ts
+\src\store\useDhaalStore.ts
+\src\utils\pdfExport.ts
+
+========== ENVIRONMENT FILE NAMES ONLY ==========
+\.env.example
+\.env.local
+========== AUDIT COMPLETE ==========

@@ -52,6 +52,8 @@ try:
         CaCounselDetails,
     )
     from verifier import verify_draft as verify_draft_detailed, format_inr
+    from reconciler import run_deterministic_reconciliation
+    from evidence_graph import build_evidence_graph_for_case
 except ImportError:
     from backend.schemas import (
         NoticeMetadata,
@@ -77,6 +79,8 @@ except ImportError:
         CaCounselDetails,
     )
     from backend.verifier import verify_draft as verify_draft_detailed, format_inr
+    from backend.reconciler import run_deterministic_reconciliation
+    from backend.evidence_graph import build_evidence_graph_for_case
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("dhaal_backend")
@@ -114,7 +118,7 @@ async def log_requests(request: Request, call_next):
         origin = request.headers.get("origin", "*")
         return JSONResponse(
             status_code=500,
-            content={"detail": "Server error", "error": str(exc)},
+            content={"detail": "Server error", "error": "An internal processing error occurred."},
             headers={
                 "Access-Control-Allow-Origin": origin,
                 "Access-Control-Allow-Credentials": "true",
@@ -422,7 +426,9 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
             )
 
         metadata = extract_notice_metadata_from_pdf(file_bytes, file.filename, pre_extracted_text=extracted_text)
-        logger.info(f"Dynamically parsed metadata: notice_id={metadata.notice_id}, amount={metadata.discrepancy_amount}")
+        # Redact notice_id and omit raw amount in routine logs for privacy
+        masked_id = f"{metadata.notice_id[:4]}***{metadata.notice_id[-2:]}" if len(metadata.notice_id) > 6 else "***"
+        logger.info(f"Notice upload metadata extracted: notice_id={masked_id}, section={metadata.section}")
         return metadata.model_dump() if hasattr(metadata, "model_dump") else metadata.dict()
 
     except Exception as exc:
@@ -431,7 +437,7 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={
                 "error": "PARSE_ERROR",
-                "message": f"Could not parse notice details: {str(exc)}"
+                "message": "Could not parse notice details. Please ensure the document is a valid text-searchable Form GST ASMT-10 PDF."
             }
         )
 
@@ -667,6 +673,75 @@ def generate_ca_brief(case_id: str, req: CaBriefRequest):
         isAuditReady=True,
         status="ready"
     )
+
+# ============================================================================
+# DHAAL 2.0 ADVANCED RECONCILIATION & EVIDENCE GRAPH ENDPOINTS
+# ============================================================================
+
+CANONICAL_24_SEEDS = [
+    (8250, 45833), (7500, 41667), (9200, 51111), (6800, 37778),
+    (11400, 63333), (5600, 31111), (8900, 49444), (7100, 39444),
+    (9500, 52778), (6400, 35556), (8100, 45000), (7300, 40556),
+    (8800, 48889), (6200, 34444), (7900, 43889), (8300, 46111),
+    (6900, 38333), (7700, 42778), (8500, 47222), (6600, 36667),
+    (9100, 50556), (7400, 41111), (8300, 46111), (2500, 13889),
+]
+
+@app.post("/api/reconciliation/run")
+@app.post("/api/v2/reconciliation/run")
+async def run_reconciliation(req: Optional[dict] = None):
+    req = req or {}
+    purchase_register = req.get("purchase_register")
+    gstr_2b = req.get("gstr_2b_records", [])
+    target = req.get("target_discrepancy_amount", 184250)
+
+    # Use canonical 24 invoices if no custom register provided
+    if not purchase_register:
+        purchase_register = []
+        for i, (tax, taxable) in enumerate(CANONICAL_24_SEEDS):
+            month = "04" if i < 8 else "05" if i < 16 else "06"
+            day = (i % 25) + 1
+            purchase_register.append({
+                "invoice_no": f"AT/24-25/{1101 + i}",
+                "invoice_date": f"2024-{month}-{day:02d}",
+                "supplier_gstin": "27XXXXX5678X1ZX",
+                "supplier_name": "M/s Apex Textiles (fictional)",
+                "taxable_value": taxable,
+                "claimed_itc": tax,
+                "cgst": tax // 2,
+                "sgst": tax // 2,
+            })
+
+    report = run_deterministic_reconciliation(
+        purchase_register=purchase_register,
+        gstr_2b_records=gstr_2b,
+        target_notice_amount=target
+    )
+    return report.model_dump() if hasattr(report, "model_dump") else report.dict()
+
+@app.get("/api/evidence/{case_id}/graph")
+@app.get("/api/v2/evidence/{case_id}/graph")
+def get_evidence_graph(case_id: str):
+    graph = build_evidence_graph_for_case(
+        case_id=case_id,
+        discrepancy_amount=int(case_state["confirmed_amount"])
+    )
+    return graph.model_dump() if hasattr(graph, "model_dump") else graph.dict()
+
+@app.get("/api/evidence/{case_id}/scorecard")
+@app.get("/api/v2/evidence/{case_id}/scorecard")
+def get_evidence_scorecard(case_id: str):
+    graph = build_evidence_graph_for_case(
+        case_id=case_id,
+        discrepancy_amount=int(case_state["confirmed_amount"])
+    )
+    return {
+        "case_id": case_id,
+        "evidentiary_strength_score": graph.evidentiary_strength_score,
+        "missing_evidence_count": graph.missing_evidence_count,
+        "unverified_hypotheses_count": graph.unverified_hypotheses_count,
+        "section_16_compliance": graph.section_16_compliance
+    }
 
 if __name__ == "__main__":
     import uvicorn

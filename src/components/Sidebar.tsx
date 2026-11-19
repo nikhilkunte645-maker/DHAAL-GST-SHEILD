@@ -69,8 +69,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-[#134E4A] text-xs">
             <span className="text-[#A3B8B5] font-mono text-[11px]">₹1,84,250</span>
             <div className="flex items-center gap-1 font-semibold text-[#FEF3C7]" title={`Urgency: ${urgency.label}`}>
-              <span className="material-symbols-outlined text-xs text-[#F59E0B]">schedule</span>
-              <span>{daysLeftOverride}d left</span>
+              <span className={`material-symbols-outlined text-xs ${urgency.isExpired ? 'text-[#EF4444]' : 'text-[#F59E0B]'}`}>
+                {urgency.isExpired ? 'warning' : 'schedule'}
+              </span>
+              <span>{urgency.isExpired ? 'Expired' : urgency.isDueToday ? 'Due Today' : `${daysLeftOverride}d left`}</span>
             </div>
           </div>
         </div>

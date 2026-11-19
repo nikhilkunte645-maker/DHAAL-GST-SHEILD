@@ -83,6 +83,45 @@ def test_spa_endpoints():
     assert res.status_code == 200
     assert res.json()["businessName"] == "M/s Sharma Garments"
 
+def test_section_170_statutory_rounding():
+    from verifier import round_statutory_inr, format_inr
+    # Section 170: >= 50 paise rounds UP, < 50 paise rounds DOWN
+    assert round_statutory_inr(184250.49) == 184250
+    assert round_statutory_inr(184250.50) == 184251
+    assert round_statutory_inr(184250.51) == 184251
+    # Contrast with Python banker's rounding: 2.5 rounds to 3 under Section 170
+    assert round_statutory_inr(2.5) == 3
+    assert round_statutory_inr(3.5) == 4
+    # Formatting
+    assert format_inr(184250) == "₹1,84,250"
+    assert format_inr(184250.50) == "₹1,84,251"
+
+def test_reconciliation_endpoint():
+    res = client.post("/api/reconciliation/run", json={})
+    assert res.status_code == 200
+    data = res.json()
+    assert data["total_purchase_invoices"] == 24
+    assert data["total_taxable_value"] == 1023611
+    assert data["total_questioned_difference"] == 184250
+    assert data["unexplained_variance"] == 0
+    assert data["accuracy_ratio"] == 1.0
+
+def test_evidence_graph_endpoint():
+    res = client.get("/api/evidence/DH-2025-ASMT10-8912/graph")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["case_id"] == "DH-2025-ASMT10-8912"
+    assert len(data["nodes"]) >= 8
+    assert len(data["edges"]) >= 8
+    assert data["evidentiary_strength_score"] >= 70
+
+def test_evidence_scorecard_endpoint():
+    res = client.get("/api/evidence/DH-2025-ASMT10-8912/scorecard")
+    assert res.status_code == 200
+    data = res.json()
+    assert "section_16_compliance" in data
+    assert data["section_16_compliance"]["16_2_a"]["status"] == "COMPLIANT"
+
 if __name__ == "__main__":
     test_health_check()
     test_upload_notice_metadata()

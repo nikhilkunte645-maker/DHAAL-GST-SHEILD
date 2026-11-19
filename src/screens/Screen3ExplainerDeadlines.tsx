@@ -462,16 +462,16 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                   <span className="text-[10px] uppercase tracking-widest text-[#D97706] font-bold">
-                    T-Minus
+                    {urgency.isExpired ? 'STATUS' : urgency.isDueToday ? 'ACTION' : 'T-Minus'}
                   </span>
                   <span className="font-headline text-4xl font-bold text-[#073B3A] tracking-tight">
-                    {daysLeftOverride}
+                    {daysLeftOverride < 0 ? '0' : daysLeftOverride}
                   </span>
                   <span className="text-xs text-[#073B3A] font-bold -mt-1">
-                    DAYS LEFT
+                    {urgency.isExpired ? 'EXPIRED' : urgency.isDueToday ? 'DUE TODAY' : 'DAYS LEFT'}
                   </span>
                   <span className="text-[11px] text-[#687674] mt-0.5">
-                    out of 30 days
+                    {urgency.isExpired ? 'Statutory window elapsed' : urgency.isDueToday ? 'Submit response today' : 'out of 30 days'}
                   </span>
                 </div>
               </div>
@@ -512,9 +512,9 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                 />
                 <div
                   className={`rounded-r-full transition-opacity ${
-                    urgency.level === 'critical' ? 'bg-[#C0392B]' : 'bg-[#C0392B]/30'
+                    urgency.level === 'critical' || urgency.level === 'expired' || urgency.level === 'due_today' ? 'bg-[#C0392B]' : 'bg-[#C0392B]/30'
                   }`}
-                  title="Critical: < 7 days"
+                  title="Critical: < 7 days / Due / Expired"
                 />
               </div>
 

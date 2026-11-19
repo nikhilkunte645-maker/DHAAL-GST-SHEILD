@@ -6,6 +6,7 @@ import { downloadReconciliationCsv } from '../data/reconciliationData';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Card } from '../components/ui/Card';
+import { EvidenceGraphViewer } from '../components/EvidenceGraphViewer';
 
 export const Screen4EvidenceChecklist: React.FC = () => {
   const {
@@ -16,6 +17,7 @@ export const Screen4EvidenceChecklist: React.FC = () => {
     setStep,
   } = useDhaalStore();
 
+  const [viewMode, setViewMode] = useState<'graph' | 'checklist'>('graph');
   const [activeFilter, setActiveFilter] = useState<'all' | 'needs_action'>('all');
   const [selectedInvoicesModal, setSelectedInvoicesModal] = useState(false);
 
@@ -77,9 +79,38 @@ export const Screen4EvidenceChecklist: React.FC = () => {
             Audit Trail &amp; Statutory Evidentiary Binder • Mandate: CGST Sec 16(2) Clauses (a) to (d)
           </p>
         </div>
-        <Badge variant="brand" size="md">
-          CGST Sec 16(2) Compliant
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-[#E7F4EE] p-1 rounded-control border border-[#E4E9E5]">
+            <button
+              type="button"
+              onClick={() => setViewMode('graph')}
+              className={`px-3 py-1.5 min-h-[36px] rounded-control text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                viewMode === 'graph'
+                  ? 'bg-[#073B3A] text-white shadow-2xs'
+                  : 'text-[#073B3A] hover:bg-[#D4ECE1]'
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">account_tree</span>
+              <span>Evidence Graph (DAG)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('checklist')}
+              className={`px-3 py-1.5 min-h-[36px] rounded-control text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                viewMode === 'checklist'
+                  ? 'bg-[#073B3A] text-white shadow-2xs'
+                  : 'text-[#073B3A] hover:bg-[#D4ECE1]'
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">checklist</span>
+              <span>Statutory Checklist</span>
+            </button>
+          </div>
+          <Badge variant="brand" size="md">
+            CGST Sec 16(2) Compliant
+          </Badge>
+        </div>
       </div>
 
       {/* Summary Cards Grid */}
@@ -146,10 +177,16 @@ export const Screen4EvidenceChecklist: React.FC = () => {
         </Card>
       </div>
 
-      {/* Main Section: Evidentiary Items List */}
-      <Card variant="default" padding="none" className="overflow-hidden mb-8">
-        {/* Control Bar */}
-        <div className="p-4 sm:p-5 bg-[#F8FAFC] border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* Main Section: Evidence Graph or Evidentiary Items List */}
+      {viewMode === 'graph' ? (
+        <div className="mb-8">
+          <EvidenceGraphViewer />
+        </div>
+      ) : (
+        <>
+          <Card variant="default" padding="none" className="overflow-hidden mb-8">
+            {/* Control Bar */}
+            <div className="p-4 sm:p-5 bg-[#F8FAFC] border-b border-[#E2E8F0] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex flex-col">
             <span className="text-xs uppercase tracking-wider text-[#087F73] font-bold">
               Evidentiary Itemization
@@ -397,6 +434,8 @@ export const Screen4EvidenceChecklist: React.FC = () => {
           </div>
         </Card>
       </div>
+      </>
+      )}
 
       {/* Bottom Navigation & Workflow CTA */}
       <Card variant="default" padding="md" className="flex flex-col sm:flex-row items-center justify-between gap-4">
