@@ -4,10 +4,11 @@ import { CANONICAL_DEMO_CASE } from '../data/demoCase';
 import { formatINR } from '../lib/format';
 import { computeSha256 } from '../lib/hash';
 import { dhaalApi } from '../mockApi';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Card } from '../components/ui/Card';
-import { exportDossierToPdf } from '../utils/pdfExport';
 
 export const Screen6CaReadyBrief: React.FC = () => {
   const { confirmedAmount, resetDemo } = useDhaalStore();
@@ -61,26 +62,175 @@ export const Screen6CaReadyBrief: React.FC = () => {
       });
   }, [amount]);
 
-  // High-precision A4 multi-page PDF Export using smart section-slicing
+  // High-precision A4 multi-page PDF Export with smart pagination & zero right-edge clipping
   const handleExportPdf = async () => {
     if (!printableRef.current) return;
     setIsExportingPdf(true);
     showToast('Compiling high-resolution A4 PDF Dossier...');
 
+    let clone: HTMLElement | null = null;
+
     try {
-      await exportDossierToPdf(printableRef.current, {
-        fileName: `DHAAL_CA_Brief_${CANONICAL_DEMO_CASE.caseId}.pdf`,
-        caseId: CANONICAL_DEMO_CASE.caseId,
-        marginMm: 12,
+      // 1. Wait for web fonts (including Noto Sans Devanagari) to finish loading
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch {
+          // ignore font loading error
+        }
+      }
+
+      const element = printableRef.current;
+
+      // 2. Clone the element to render at standard A4 desktop width (794px = 210mm @ 96 DPI)
+      // This ensures mobile/tablet viewports produce the identical clean A4 desktop layout
+      // with zero cramped columns or right-edge clipping.
+      clone = element.cloneNode(true) as HTMLElement;
+      clone.id = 'printable-dossier-a4-export';
+      clone.style.width = '794px';
+      clone.style.maxWidth = '794px';
+      clone.style.minWidth = '794px';
+      clone.style.position = 'fixed';
+      clone.style.left = '-9999px';
+      clone.style.top = '0';
+      clone.style.zIndex = '-9999';
+      clone.style.backgroundColor = '#FFFFFF';
+      clone.style.boxShadow = 'none';
+      clone.style.transform = 'none';
+      document.body.appendChild(clone);
+
+      // 3. Render clone to high-resolution canvas with 2x retina scale
+      const canvas = await html2canvas(clone, {
         scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#FFFFFF',
+        windowWidth: 1200,
       });
 
+      // 4. Standard A4 Dimensions in millimeters
+      const a4WidthMm = 210;
+      const a4HeightMm = 297;
+      const marginMm = 12; // Consistent 12mm page margin
+      const usableWidthMm = a4WidthMm - marginMm * 2; // 186mm
+      const usableHeightMm = a4HeightMm - marginMm * 2; // 273mm
+
+      // Canvas pixels per millimeter
+      const pxPerMm = canvas.width / usableWidthMm;
+      const maxPageHeightPx = Math.floor(usableHeightMm * pxPerMm);
+
+      // 5. Detect semantic section boundaries from child cards
+      const sectionBreaksPx: number[] = [];
+      const container = clone.querySelector('.flex.flex-col.gap-6') || clone;
+      const containerTop = container.getBoundingClientRect().top;
+
+      for (const child of Array.from(container.children)) {
+        const rect = child.getBoundingClientRect();
+        const bottomRel = rect.bottom - containerTop;
+        sectionBreaksPx.push(Math.round(bottomRel * 2));
+      }
+
+      // 6. Calculate page slices
+      const slices: { startY: number; heightPx: number }[] = [];
+      let currentY = 0;
+      const totalHeightPx = canvas.height;
+
+      while (currentY < totalHeightPx) {
+        const remainingPx = totalHeightPx - currentY;
+        if (remainingPx <= maxPageHeightPx) {
+          slices.push({ startY: currentY, heightPx: remainingPx });
+          break;
+        }
+
+        const maxNextY = currentY + maxPageHeightPx;
+        let bestBreak = maxNextY;
+        let foundSmartBreak = false;
+
+        for (let i = sectionBreaksPx.length - 1; i >= 0; i--) {
+          const b = sectionBreaksPx[i];
+          if (b > currentY + maxPageHeightPx * 0.65 && b <= maxNextY) {
+            bestBreak = b;
+            foundSmartBreak = true;
+            break;
+          }
+        }
+
+        const sliceH = foundSmartBreak ? bestBreak - currentY : maxPageHeightPx;
+        slices.push({ startY: currentY, heightPx: sliceH });
+        currentY += sliceH;
+      }
+
+      // 7. Initialize jsPDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true,
+      });
+
+      const totalPages = slices.length;
+
+      // 8. Draw each page slice into PDF
+      for (let pageIdx = 0; pageIdx < totalPages; pageIdx++) {
+        if (pageIdx > 0) {
+          pdf.addPage('a4', 'portrait');
+        }
+
+        const { startY, heightPx } = slices[pageIdx];
+
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = heightPx;
+
+        const pageCtx = pageCanvas.getContext('2d');
+        if (pageCtx) {
+          pageCtx.fillStyle = '#FFFFFF';
+          pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+          pageCtx.drawImage(
+            canvas,
+            0,
+            startY,
+            canvas.width,
+            heightPx,
+            0,
+            0,
+            pageCanvas.width,
+            heightPx
+          );
+
+          const pageImgData = pageCanvas.toDataURL('image/png');
+          const sliceHeightMm = (heightPx * usableWidthMm) / canvas.width;
+
+          pdf.addImage(
+            pageImgData,
+            'PNG',
+            marginMm,
+            marginMm,
+            usableWidthMm,
+            sliceHeightMm,
+            undefined,
+            'FAST'
+          );
+        }
+
+        // Add formal running footer
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(8);
+        pdf.setTextColor(91, 107, 130);
+        const footerText = `Page ${pageIdx + 1} of ${totalPages} • Case Reference: #${CANONICAL_DEMO_CASE.caseId} • Dhaal GST Notice Shield (Form ASMT-10)`;
+        pdf.text(footerText, a4WidthMm / 2, a4HeightMm - 5, { align: 'center' });
+      }
+
+      pdf.save(`DHAAL_CA_Brief_${CANONICAL_DEMO_CASE.caseId}.pdf`);
       showToast('PDF Dossier downloaded successfully!');
     } catch (err) {
       console.error('PDF export failed:', err);
       showToast('Error generating PDF. Using standard print fallback.');
       window.print();
     } finally {
+      if (clone && clone.parentNode) {
+        clone.parentNode.removeChild(clone);
+      }
       setIsExportingPdf(false);
     }
   };
@@ -211,7 +361,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
             {/* Inner Content Container */}
             <div className="flex flex-col gap-6 relative z-10">
               {/* Official Printable Header */}
-              <div className="font-mono text-[10px] uppercase tracking-widest text-[#5B6B82] border-b border-[#CBD5E1] pb-1.5 mb-1 flex justify-between items-center">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-[#5B6B82] border-b border-[#CBD5E1] pb-1.5 mb-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
                 <span className="font-bold text-[#0B1F3A]">DHAAL COMPLIANCE DOSSIER | STRICTLY CONFIDENTIAL</span>
                 <span>FORM ASMT-10 RESPONSE FILE • STATUTORY COMPLIANCE</span>
               </div>
@@ -267,11 +417,11 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   </h3>
                 </div>
                 <div className="p-4 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] space-y-2 text-xs">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <span className="font-mono font-bold text-[#2B4C9B]">
                       Scrutiny Ground: Table 4(A)(5) GSTR-3B Discrepancy
                     </span>
-                    <span className="font-mono font-bold text-[#0B1F3A] bg-white px-2 py-0.5 rounded border border-[#CBD5E1]">
+                    <span className="font-mono font-bold text-[#0B1F3A] bg-white px-2 py-0.5 rounded border border-[#CBD5E1] shrink-0">
                       Amount questioned: {formatINR(amount, true)}
                     </span>
                   </div>
@@ -341,8 +491,8 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   </Badge>
                 </div>
 
-                <div className="rounded-control border border-[#E2E8F0] overflow-hidden text-xs">
-                  <table className="w-full text-left">
+                <div className="rounded-control border border-[#E2E8F0] overflow-x-auto text-xs">
+                  <table className="w-full text-left min-w-[500px] sm:min-w-0">
                     <thead className="bg-[#F8FAFC] text-[#0B1F3A] font-bold text-[11px] border-b border-[#E2E8F0]">
                       <tr>
                         <th className="p-2 font-mono">Annexure</th>

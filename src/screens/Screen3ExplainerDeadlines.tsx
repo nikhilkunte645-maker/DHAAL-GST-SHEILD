@@ -212,21 +212,18 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
 
               <div className="grid grid-cols-3 gap-1.5 h-2.5 rounded-full overflow-hidden bg-white p-0.5 border border-[#CBD5E1]">
                 <div
-                  className={`rounded-l-full transition-opacity ${
-                    urgency.level === 'normal' ? 'bg-[#2B4C9B]' : 'bg-[#2B4C9B]/30'
-                  }`}
+                  className={`rounded-l-full transition-opacity ${urgency.level === 'normal' ? 'bg-[#2B4C9B]' : 'bg-[#2B4C9B]/30'
+                    }`}
                   title="Normal: 30-15 days"
                 />
                 <div
-                  className={`rounded-xs transition-opacity ${
-                    urgency.level === 'caution' ? 'bg-[#F59E0B]' : 'bg-[#F59E0B]/30'
-                  }`}
+                  className={`rounded-xs transition-opacity ${urgency.level === 'caution' ? 'bg-[#F59E0B]' : 'bg-[#F59E0B]/30'
+                    }`}
                   title="Caution: 14-7 days"
                 />
                 <div
-                  className={`rounded-r-full transition-opacity ${
-                    urgency.level === 'critical' ? 'bg-[#C0392B]' : 'bg-[#C0392B]/30'
-                  }`}
+                  className={`rounded-r-full transition-opacity ${urgency.level === 'critical' ? 'bg-[#C0392B]' : 'bg-[#C0392B]/30'
+                    }`}
                   title="Critical: < 7 days"
                 />
               </div>
@@ -350,11 +347,10 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
                     key={lang}
                     type="button"
                     onClick={() => setLanguage(lang)}
-                    className={`px-3 py-1.5 sm:py-1 rounded text-xs transition-all min-h-[44px] sm:min-h-[34px] font-medium flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${
-                      language === lang
-                        ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
-                        : 'text-[#5B6B82] hover:text-[#0B1F3A]'
-                    }`}
+                    className={`px-3 py-1.5 sm:py-1 rounded text-xs transition-all min-h-[44px] sm:min-h-[34px] font-medium flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4C9B] ${language === lang
+                      ? 'bg-white text-[#0B1F3A] font-bold shadow-2xs'
+                      : 'text-[#5B6B82] hover:text-[#0B1F3A]'
+                      }`}
                     lang={lang}
                   >
                     {lang === 'en' ? 'English' : lang === 'hi' ? 'हिन्दी' : 'मराठी'}
@@ -467,11 +463,10 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
 
             {/* Source-Sentence Grounding Quote Card */}
             <div
-              className={`p-4 rounded-control border transition-all ${
-                isQuoteHighlighted
-                  ? 'bg-[#FEF3C7] border-[#F59E0B] shadow-2xs'
-                  : 'bg-[#F8FAFC] border-[#E2E8F0]'
-              }`}
+              className={`p-4 rounded-control border transition-all ${isQuoteHighlighted
+                ? 'bg-[#FEF3C7] border-[#F59E0B] shadow-2xs'
+                : 'bg-[#F8FAFC] border-[#E2E8F0]'
+                }`}
             >
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-1.5">
