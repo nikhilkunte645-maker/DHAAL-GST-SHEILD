@@ -26,6 +26,7 @@ if BACKEND_DIR not in sys.path:
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 try:
     from schemas import (
@@ -778,9 +779,18 @@ def get_evidence_scorecard(case_id: str):
         "circular_183_assessment": graph.circular_183_assessment
     }
 
+class Circular183RequestBody(BaseModel):
+    financial_year: Optional[str] = None
+    mismatch_type: Optional[str] = None
+    tax_difference: Optional[float] = None
+    has_supplier_certificate: Optional[bool] = None
+    has_ca_certificate: Optional[bool] = None
+    has_udin: Optional[bool] = None
+
 @app.post("/api/circular-183/assess")
 @app.get("/api/circular-183/assess")
 def assess_circular_183_endpoint(
+    req: Optional[Circular183RequestBody] = None,
     financial_year: Optional[str] = "2024-25",
     mismatch_type: Optional[str] = "GSTR_3B_VS_GSTR_2B",
     tax_difference: Optional[float] = 184250.0,
@@ -788,13 +798,20 @@ def assess_circular_183_endpoint(
     has_ca_certificate: bool = False,
     has_udin: bool = False
 ):
+    fy = req.financial_year if req and req.financial_year is not None else financial_year
+    mm = req.mismatch_type if req and req.mismatch_type is not None else mismatch_type
+    td = req.tax_difference if req and req.tax_difference is not None else tax_difference
+    sc = req.has_supplier_certificate if req and req.has_supplier_certificate is not None else has_supplier_certificate
+    cc = req.has_ca_certificate if req and req.has_ca_certificate is not None else has_ca_certificate
+    ud = req.has_udin if req and req.has_udin is not None else has_udin
+
     inp = Circular183AssessmentInput(
-        financial_year=financial_year,
-        mismatch_type=mismatch_type,
-        tax_difference_amount=tax_difference,
-        supplier_certificate_obtained=has_supplier_certificate,
-        ca_cma_certificate_obtained=has_ca_certificate,
-        udin_verified=has_udin
+        financial_year=fy,
+        mismatch_type=mm,
+        tax_difference_amount=td,
+        supplier_certificate_obtained=sc,
+        ca_cma_certificate_obtained=cc,
+        udin_verified=ud
     )
     result = assess_circular_183_applicability(inp)
     return result.model_dump() if hasattr(result, "model_dump") else result.dict()
