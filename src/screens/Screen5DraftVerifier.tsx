@@ -94,6 +94,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
   // 500ms Debounced live REST API verification on FastAPI backend (POST /api/verify/draft)
   useEffect(() => {
     setIsVerifyingLive(true);
+    setApiVerification(null); // Instantly invalidate stale verification results on draft or amount modification
     const debounceTimer = setTimeout(() => {
       dhaalApi.verifyDraft({
         draft_text: draftContent,
@@ -121,7 +122,9 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
     }, 450);
   };
 
-  const isVerifiedPass = apiVerification ? apiVerification.status === 'PASS' : localReport.passed;
+  // Stale-safe pass flag: Requires local deterministic checks to pass,
+  // and if live API verification is present, it must also be PASS.
+  const isVerifiedPass = localReport.passed && (!apiVerification || apiVerification.status === 'PASS');
 
   return (
     <div className="flex flex-col w-full pb-16">
