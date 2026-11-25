@@ -90,27 +90,42 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
   }, [draftContent, confirmedConfig]);
 
   const [apiVerification, setApiVerification] = useState<DraftVerifyResponse | null>(null);
+  const [verifiedDraftText, setVerifiedDraftText] = useState<string>('');
 
   // 500ms Debounced live REST API verification on FastAPI backend (POST /api/verify/draft)
   useEffect(() => {
+    let isCancelled = false;
+    const currentDraft = draftContent;
+    const currentAmount = displayedAmount;
+
     setIsVerifyingLive(true);
     setApiVerification(null); // Instantly invalidate stale verification results on draft or amount modification
+    setVerifiedDraftText(''); // Invalidate confirmed verified text snapshot
+
     const debounceTimer = setTimeout(() => {
       dhaalApi.verifyDraft({
-        draft_text: draftContent,
-        confirmed_amount: displayedAmount,
+        draft_text: currentDraft,
+        confirmed_amount: currentAmount,
         confirmed_section: '61',
         confirmed_period: 'Apr-Jun 2024',
       }).then((res) => {
-        setApiVerification(res);
-        setIsVerifyingLive(false);
+        if (!isCancelled) {
+          setApiVerification(res);
+          setVerifiedDraftText(currentDraft);
+          setIsVerifyingLive(false);
+        }
       }).catch((err) => {
-        console.warn('[Dhaal Verifier] Debounced live verification error:', err);
-        setIsVerifyingLive(false);
+        if (!isCancelled) {
+          console.warn('[Dhaal Verifier] Debounced live verification error:', err);
+          setIsVerifyingLive(false);
+        }
       });
     }, 500);
 
-    return () => clearTimeout(debounceTimer);
+    return () => {
+      isCancelled = true;
+      clearTimeout(debounceTimer);
+    };
   }, [draftContent, displayedAmount]);
 
   const handleAutoFix = () => {
@@ -123,8 +138,13 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
   };
 
   // Stale-safe pass flag: Requires local deterministic checks to pass,
-  // and if live API verification is present, it must also be PASS.
-  const isVerifiedPass = localReport.passed && (!apiVerification || apiVerification.status === 'PASS');
+  // not currently re-verifying (debouncing), verified API status must be PASS,
+  // and the verified draft text snapshot must be strictly identical to current draft content.
+  const isVerifiedPass =
+    !isVerifyingLive &&
+    localReport.passed &&
+    apiVerification?.status === 'PASS' &&
+    verifiedDraftText === draftContent;
 
   return (
     <div className="flex flex-col w-full pb-16">

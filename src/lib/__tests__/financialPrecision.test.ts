@@ -17,6 +17,24 @@ describe('Financial Precision & Statutory Reconciliation Policy', () => {
       expect(roundStatutoryINR(0.0)).toBe(0);
     });
 
+    it('verifies all 12 positive and negative Section 170 rounding boundaries', () => {
+      // Positive boundaries
+      expect(roundStatutoryINR(0.49)).toBe(0);
+      expect(roundStatutoryINR(0.50)).toBe(1);
+      expect(roundStatutoryINR(0.51)).toBe(1);
+      expect(roundStatutoryINR(1.49)).toBe(1);
+      expect(roundStatutoryINR(1.50)).toBe(2);
+      expect(roundStatutoryINR(1.51)).toBe(2);
+
+      // Negative boundaries
+      expect(roundStatutoryINR(-0.49)).toBe(0);
+      expect(roundStatutoryINR(-0.50)).toBe(-1);
+      expect(roundStatutoryINR(-0.51)).toBe(-1);
+      expect(roundStatutoryINR(-1.49)).toBe(-1);
+      expect(roundStatutoryINR(-1.50)).toBe(-2);
+      expect(roundStatutoryINR(-1.51)).toBe(-2);
+    });
+
     it('rounds negative amounts (credit notes) symmetrically per Section 170', () => {
       expect(roundStatutoryINR(-1800.50)).toBe(-1801);
       expect(roundStatutoryINR(-1800.49)).toBe(-1800);

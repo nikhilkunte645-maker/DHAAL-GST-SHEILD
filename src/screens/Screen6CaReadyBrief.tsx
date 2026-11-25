@@ -19,6 +19,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
     shortHash: '8E4A9F21',
   });
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [isDossierConfirmedForCa, setIsDossierConfirmedForCa] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -65,6 +66,10 @@ export const Screen6CaReadyBrief: React.FC = () => {
   // High-precision A4 multi-page PDF Export with smart pagination & zero right-edge clipping
   const handleExportPdf = async () => {
     if (!printableRef.current) return;
+    if (!isDossierConfirmedForCa) {
+      showToast('Action required: Please confirm that this dossier is ready to be shared with a Chartered Accountant before exporting.');
+      return;
+    }
     setIsExportingPdf(true);
     showToast('Compiling high-resolution A4 PDF Dossier...');
 
@@ -217,7 +222,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
         pdf.setFont('helvetica', 'normal');
         pdf.setFontSize(8);
         pdf.setTextColor(91, 107, 130);
-        const footerText = `Page ${pageIdx + 1} of ${totalPages} • Case Reference: #${CANONICAL_DEMO_CASE.caseId} • Dhaal GST Notice Shield (Form ASMT-10)`;
+        const footerText = `Page ${pageIdx + 1} of ${totalPages} • Case Reference: #${CANONICAL_DEMO_CASE.caseId} • Assistive Drafting Aid for Professional CA Review (Form GST ASMT-10)`;
         pdf.text(footerText, a4WidthMm / 2, a4HeightMm - 5, { align: 'center' });
       }
 
@@ -236,6 +241,10 @@ export const Screen6CaReadyBrief: React.FC = () => {
   };
 
   const handlePrint = () => {
+    if (!isDossierConfirmedForCa) {
+      showToast('Action required: Please confirm that this dossier is ready to be shared with a Chartered Accountant before printing.');
+      return;
+    }
     window.print();
   };
 
@@ -325,7 +334,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
             size="sm"
             icon={isExportingPdf ? 'hourglass_top' : 'picture_as_pdf'}
             onClick={handleExportPdf}
-            disabled={isExportingPdf}
+            disabled={isExportingPdf || !isDossierConfirmedForCa}
           >
             {isExportingPdf ? 'Generating PDF...' : 'Download Audit Dossier (PDF)'}
           </Button>
@@ -336,6 +345,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
             size="sm"
             icon="print"
             onClick={handlePrint}
+            disabled={!isDossierConfirmedForCa}
           >
             Print
           </Button>
@@ -633,11 +643,16 @@ export const Screen6CaReadyBrief: React.FC = () => {
                 variant="primary"
                 icon="picture_as_pdf"
                 onClick={handleExportPdf}
-                disabled={isExportingPdf}
+                disabled={isExportingPdf || !isDossierConfirmedForCa}
                 className="w-full"
               >
                 {isExportingPdf ? 'Generating PDF...' : 'Download Audit Dossier (PDF)'}
               </Button>
+              {!isDossierConfirmedForCa && (
+                <p className="text-[10px] text-[#C0392B] font-semibold text-center -mt-1">
+                  * Confirm readiness in Pre-Filing Checklist below to unlock PDF export.
+                </p>
+              )}
 
               <Button
                 type="button"
@@ -704,14 +719,18 @@ export const Screen6CaReadyBrief: React.FC = () => {
               <label className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1 select-none">
                 <input
                   type="checkbox"
+                  checked={isDossierConfirmedForCa}
                   onChange={(e) => {
+                    setIsDossierConfirmedForCa(e.target.checked);
                     if (e.target.checked) {
-                      showToast('Status updated: Brief signed and ready for GST Portal submission!');
+                      showToast('Dossier confirmed: Ready for professional Chartered Accountant review.');
                     }
                   }}
                   className="w-4 h-4 rounded text-[#073B3A] focus:ring-[#087F73] shrink-0"
                 />
-                <span className="font-semibold text-[#073B3A]">Chartered Accountant review &amp; UDIN generated</span>
+                <span className="font-semibold text-[#073B3A]">
+                  I confirm that this dossier is ready to be shared with a Chartered Accountant for review.
+                </span>
               </label>
             </div>
           </Card>

@@ -2,6 +2,9 @@
  * Dhaal (ढाल) - Live REST API Client Layer
  * Connects React SPA directly to live Python FastAPI Backend on http://localhost:8001
  */
+import { roundStatutoryINR } from './lib/amount';
+import { formatINR } from './lib/format';
+import { isSectionMatch, isTaxPeriodMatch, normalizeAmount } from './lib/verifier';
 
 interface CustomImportMeta {
   env?: {
@@ -57,6 +60,10 @@ export interface DraftVerifyResponse {
   message: string;
   mismatches?: VerificationMismatch[] | null;
   checks?: Record<string, boolean> | null;
+  financial_consistency?: boolean;
+  source_data_consistency?: boolean;
+  legal_verification?: boolean;
+  human_approval_required?: boolean;
 }
 
 export interface ExplanationResponse {
@@ -234,25 +241,88 @@ export const dhaalApi = {
    * Deterministic client-side fallback verification
    */
   runLocalVerification(payload: DraftVerifyRequest): DraftVerifyResponse {
-    const amountInText =
-      payload.draft_text.includes(String(payload.confirmed_amount)) ||
-      payload.draft_text.includes('1,84,250');
+    const amountStatutory = roundStatutoryINR(payload.confirmed_amount);
     const mismatches: VerificationMismatch[] = [];
 
-    if (payload.confirmed_amount !== 184250 && !amountInText) {
+    // 1. Bounded Section Verification (61 accepts 61(1), but 61(1) rejects 61; rejects 161, 610, 61A)
+    const sectionRegex = /(?:Section|Sec\.?)\s*([0-9]+[A-Za-z0-9]*(?:\s*\([a-zA-Z0-9]+\))*)/gi;
+    const foundSections: string[] = [];
+    let sm: RegExpExecArray | null;
+    while ((sm = sectionRegex.exec(payload.draft_text)) !== null) {
+      foundSections.push(sm[1]);
+    }
+    const sectionMatch = foundSections.some(s => isSectionMatch(s, payload.confirmed_section));
+    if (!sectionMatch) {
+      mismatches.push({
+        field: 'Section Code',
+        expected: `Section ${payload.confirmed_section}`,
+        found_in_draft: 'Missing/Unbounded Mismatch',
+        severity: 'WARNING',
+      });
+    }
+
+    // 2. Contextual & Competing Financial Evaluation (Numeric token boundaries, no unrestricted substring matching)
+    const numericTokenRegex = /(?<![0-9A-Za-z])(?:₹|Rs\.?|INR)?\s*(-?[0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]+)?|-?[0-9]+(?:\.[0-9]+)?)(?![0-9A-Za-z])/gi;
+    const discrepancyRegex = /(?:discrepancy|mismatch(?:ed)?|difference|variance|demand|unreconciled|disputed?|liability|tax\s+gap|amounting\s+to|table\s*4\([a-z0-9]+\)\([0-9]+\)|settlement)\s*(?:amount|value|figure|sum)?\s*(?:of|is|in|worth|for)?\s*(?:₹|Rs\.?|INR)?\s*(-?[0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]+)?|-?[0-9]+(?:\.[0-9]+)?)(?![0-9A-Za-z])/gi;
+
+    const contextMatches: number[] = [];
+    let cm: RegExpExecArray | null;
+    while ((cm = discrepancyRegex.exec(payload.draft_text)) !== null) {
+      const val = roundStatutoryINR(normalizeAmount(cm[1]));
+      if (val !== 0) contextMatches.push(val);
+    }
+
+    const allNumericTokens: number[] = [];
+    let tm: RegExpExecArray | null;
+    while ((tm = numericTokenRegex.exec(payload.draft_text)) !== null) {
+      const val = roundStatutoryINR(normalizeAmount(tm[1]));
+      if (Math.abs(val) >= 100) allNumericTokens.push(val);
+    }
+
+    let amountMatch = false;
+    let competingAmounts: number[] = [];
+
+    if (contextMatches.length > 0) {
+      if (contextMatches.includes(amountStatutory)) {
+        const competing = contextMatches.filter(a => a !== amountStatutory && a > 10000);
+        if (competing.length === 0) {
+          amountMatch = true;
+        } else {
+          competingAmounts = competing;
+        }
+      } else {
+        const competing = contextMatches.slice(1).filter(a => a > 10000);
+        if (competing.length > 0) {
+          competingAmounts = contextMatches;
+        }
+      }
+    } else if (allNumericTokens.includes(amountStatutory)) {
+      const competing = allNumericTokens.filter(a => a !== amountStatutory && a > 10000);
+      if (competing.length === 0) {
+        amountMatch = true;
+      } else {
+        competingAmounts = competing;
+      }
+    }
+
+    if (!amountMatch) {
       mismatches.push({
         field: 'Discrepancy Amount',
-        expected: `₹${payload.confirmed_amount.toLocaleString('en-IN')}`,
-        found_in_draft: 'Mismatch',
+        expected: formatINR(amountStatutory),
+        found_in_draft: competingAmounts.length > 0
+          ? `Contradictory amounts: ${competingAmounts.join(', ')}`
+          : 'Missing',
         severity: 'CRITICAL',
       });
     }
 
-    if (!payload.draft_text.includes(payload.confirmed_section)) {
+    // 3. Tax Period Verification
+    const periodMatch = isTaxPeriodMatch(payload.draft_text, payload.confirmed_period);
+    if (payload.confirmed_period && !periodMatch) {
       mismatches.push({
-        field: 'Section Code',
-        expected: `Section ${payload.confirmed_section}`,
-        found_in_draft: 'Missing',
+        field: 'Tax Period',
+        expected: payload.confirmed_period,
+        found_in_draft: 'Missing/Mismatch',
         severity: 'WARNING',
       });
     }
@@ -262,12 +332,25 @@ export const dhaalApi = {
         status: 'PASS',
         message: 'Checks passed.',
         checks: { amount_match: true, section_match: true, period_match: true },
+        financial_consistency: true,
+        source_data_consistency: true,
+        legal_verification: true,
+        human_approval_required: true,
       };
     } else {
       return {
         status: 'FAIL',
         message: 'Export blocked.',
         mismatches,
+        checks: {
+          amount_match: amountMatch,
+          section_match: sectionMatch,
+          period_match: periodMatch,
+        },
+        financial_consistency: amountMatch,
+        source_data_consistency: periodMatch,
+        legal_verification: sectionMatch,
+        human_approval_required: true,
       };
     }
   },

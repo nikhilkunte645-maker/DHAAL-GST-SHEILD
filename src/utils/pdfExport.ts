@@ -175,7 +175,7 @@ export async function exportDossierToPdf(
       pdf.setFont('helvetica', 'normal');
       pdf.setFontSize(8);
       pdf.setTextColor(91, 107, 130); // #5B6B82
-      const footerText = `Page ${pageIdx + 1} of ${totalPages} • Case Reference: #${caseId} • Dhaal GST Notice Shield (Form ASMT-10)`;
+      const footerText = `Page ${pageIdx + 1} of ${totalPages} • Case Reference: #${caseId} • Assistive Drafting Aid for Professional CA Review (Form GST ASMT-10)`;
       pdf.text(footerText, a4WidthMm / 2, a4HeightMm - 5, { align: 'center' });
     }
 

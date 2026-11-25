@@ -14,8 +14,73 @@ except ImportError:
     from backend.schemas import CheckItemResult, VerificationReport
 
 AMOUNT_PATTERN = re.compile(r"(?:₹|Rs\.?|INR)\s*([\d,]+(?:\.\d{2})?)", re.IGNORECASE)
-SECTION_PATTERN = re.compile(r"(?:Section|Sec\.?)\s+(\d+(?:\([a-z0-9]+\))*)", re.IGNORECASE)
+SECTION_PATTERN = re.compile(r"(?:Section|Sec\.?)\s*([0-9]+[A-Za-z0-9]*(?:\s*\([a-zA-Z0-9]+\))*)", re.IGNORECASE)
 DATE_PATTERN = re.compile(r"\b(\d{1,2}-(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\d{4})\b", re.IGNORECASE)
+DISCREPANCY_CONTEXT_PATTERN = re.compile(
+    r"(?:discrepancy|mismatch(?:ed)?|difference|variance|demand|unreconciled|disputed?|liability|tax\s+gap|amounting\s+to|table\s*4\([a-z0-9]+\)\([0-9]+\)|settlement)\s*(?:amount|value|figure|sum)?\s*(?:of|is|in|worth|for)?\s*(?:₹|Rs\.?|INR)?\s*(-?[0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]+)?|-?[0-9]+(?:\.[0-9]+)?)(?![0-9A-Za-z])",
+    re.IGNORECASE
+)
+NUMERIC_TOKEN_PATTERN = re.compile(
+    r"(?<![0-9A-Za-z])(?:₹|Rs\.?|INR)?\s*(-?[0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]+)?|-?[0-9]+(?:\.[0-9]+)?)(?![0-9A-Za-z])",
+    re.IGNORECASE
+)
+
+def is_section_match(sec_found: str, allowed_sec: str) -> bool:
+    """
+    Ensures strict statutory section matching:
+    - Normalizes prefixes like 'Section', 'Sec.', 'Sec'.
+    - If confirmed is '61', accepts '61', '61(1)', '61(2)', etc.
+    - If confirmed is '61(1)', accepts '61(1)', but REJECTS generic '61'.
+    - Rejects '61A', '610', '161', '74' when confirmed is '61'.
+    """
+    f = re.sub(r'^(?:section|sec\.?)\s*', '', sec_found.strip(), flags=re.I).lower()
+    c = re.sub(r'^(?:section|sec\.?)\s*', '', allowed_sec.strip(), flags=re.I).lower()
+    f = re.sub(r'\s+', '', f)
+    c = re.sub(r'\s+', '', c)
+    if f == c:
+        return True
+    if f.startswith(c):
+        remainder = f[len(c):]
+        if remainder.startswith('(') and remainder.endswith(')'):
+            return True
+    return False
+
+def is_tax_period_match(draft_text: str, confirmed_period: str) -> bool:
+    if not confirmed_period:
+        return True
+    text = draft_text.lower()
+    norm = confirmed_period.lower().strip()
+    has_valid = norm in text
+    if not has_valid and "apr" in norm and "jun" in norm and "2024" in norm:
+        equivalents = [
+            "april-june 2024",
+            "april - june 2024",
+            "april to june 2024",
+            "q1 fy 2024-25",
+            "q1 2024-25",
+            "q1 (2024-25)",
+            "01-apr-2024 to 30-jun-2024",
+            "01-04-2024 to 30-06-2024"
+        ]
+        has_valid = any(eq in text for eq in equivalents)
+
+    if not has_valid:
+        return False
+
+    if "apr" in norm and "jun" in norm and "2024" in norm:
+        contradictory = [
+            "oct-dec 2024", "october to december 2024", "october-december 2024",
+            "jul-sep 2024", "july to september 2024", "july-september 2024",
+            "jan-mar 2025", "january to march 2025", "january-march 2025",
+            "q2 fy 2024-25", "q2 2024-25",
+            "q3 fy 2024-25", "q3 2024-25",
+            "q4 fy 2024-25", "q4 2024-25",
+            "apr-jun 2023", "fy 2023-24"
+        ]
+        if any(c in text for c in contradictory):
+            return False
+
+    return True
 
 def round_statutory_inr(val: Union[float, int, str, Decimal]) -> int:
     """
@@ -79,16 +144,42 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
     notice_date = confirmed.get("noticeDate", "14-May-2025")
 
     # 1. AMOUNT CHECK
-    found_amounts: List[Decimal] = []
-    for match in AMOUNT_PATTERN.finditer(draft_text):
-        val = normalize_amount_decimal(match.group(1))
-        if val > Decimal("10000"):  # Major discrepancy threshold
-            found_amounts.append(val)
+    context_matches = [round_statutory_inr(normalize_amount_decimal(m.group(1))) for m in DISCREPANCY_CONTEXT_PATTERN.finditer(draft_text)]
+    all_numeric_tokens = [round_statutory_inr(normalize_amount_decimal(m.group(1))) for m in NUMERIC_TOKEN_PATTERN.finditer(draft_text)]
+    all_numeric_tokens = [t for t in all_numeric_tokens if abs(t) >= 100]
 
-    primary_draft_dec = found_amounts[0] if found_amounts else Decimal("0.0")
-    primary_draft_statutory = round_statutory_inr(primary_draft_dec)
+    amount_passed = False
+    primary_draft_statutory = 0
+    competing_amounts: List[int] = []
 
-    amount_passed = (primary_draft_statutory == confirmed_amount_statutory)
+    if context_matches:
+        if confirmed_amount_statutory in context_matches:
+            competing = [a for a in context_matches if a != confirmed_amount_statutory and abs(a - confirmed_amount_statutory) > 10000]
+            if not competing:
+                amount_passed = True
+                primary_draft_statutory = confirmed_amount_statutory
+            else:
+                competing_amounts = competing
+                primary_draft_statutory = competing[0]
+        else:
+            primary_draft_statutory = context_matches[0]
+            competing = [a for a in context_matches[1:] if abs(a - context_matches[0]) > 10000]
+            if competing:
+                competing_amounts = context_matches
+    elif confirmed_amount_statutory in all_numeric_tokens:
+        competing = [a for a in all_numeric_tokens if a != confirmed_amount_statutory and abs(a - confirmed_amount_statutory) > 10000]
+        if not competing:
+            amount_passed = True
+            primary_draft_statutory = confirmed_amount_statutory
+        else:
+            competing_amounts = competing
+            primary_draft_statutory = competing[0]
+    elif all_numeric_tokens:
+        primary_draft_statutory = all_numeric_tokens[0]
+        competing = [a for a in all_numeric_tokens[1:] if abs(a - all_numeric_tokens[0]) > 10000]
+        if competing:
+            competing_amounts = all_numeric_tokens
+
     delta_statutory = abs(primary_draft_statutory - confirmed_amount_statutory)
 
     if amount_passed:
@@ -101,13 +192,16 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
             expectedValue=format_inr(confirmed_amount_statutory)
         ))
     else:
-        err = f"Draft asserts {format_inr(primary_draft_statutory)}; confirmed value is {format_inr(confirmed_amount_statutory)}"
+        if competing_amounts:
+            err = f"Draft contains contradictory or unverified discrepancy amounts: {competing_amounts} (expected {format_inr(confirmed_amount_statutory)})"
+        else:
+            err = f"Draft asserts {format_inr(primary_draft_statutory)}; confirmed value is {format_inr(confirmed_amount_statutory)}"
         errors.append(err)
         checks.append(CheckItemResult(
             id="check-1-amount",
             name="Check 1: Notice Discrepancy Amount Match",
             passed=False,
-            message=f"Amount mismatch detected: Delta of {format_inr(delta_statutory)}.",
+            message=f"Amount mismatch detected: Delta of {format_inr(delta_statutory)}." if not competing_amounts else f"Contradictory discrepancy amounts detected: {competing_amounts}.",
             extractedValue=format_inr(primary_draft_statutory),
             expectedValue=format_inr(confirmed_amount_statutory)
         ))
@@ -120,8 +214,7 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
     sections_passed = True
     invalid_sections = []
     for sec in found_sections:
-        sec_lower = sec.lower()
-        if not any(sec_lower.startswith(a) or a.startswith(sec_lower) for a in allowed_sections):
+        if not any(is_section_match(sec, a) for a in allowed_sections):
             sections_passed = False
             invalid_sections.append(sec)
 

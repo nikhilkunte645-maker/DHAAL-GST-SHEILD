@@ -112,6 +112,21 @@ def test_section_170_statutory_rounding():
     # Contrast with Python banker's rounding: 2.5 rounds to 3 under Section 170
     assert round_statutory_inr(2.5) == 3
     assert round_statutory_inr(3.5) == 4
+
+    # 12 Positive and negative Section 170 boundaries
+    assert round_statutory_inr(0.49) == 0
+    assert round_statutory_inr(0.50) == 1
+    assert round_statutory_inr(0.51) == 1
+    assert round_statutory_inr(1.49) == 1
+    assert round_statutory_inr(1.50) == 2
+    assert round_statutory_inr(1.51) == 2
+    assert round_statutory_inr(-0.49) == 0
+    assert round_statutory_inr(-0.50) == -1
+    assert round_statutory_inr(-0.51) == -1
+    assert round_statutory_inr(-1.49) == -1
+    assert round_statutory_inr(-1.50) == -2
+    assert round_statutory_inr(-1.51) == -2
+
     # Formatting
     assert format_inr(184250) == "₹1,84,250"
     assert format_inr(184250.50) == "₹1,84,251"

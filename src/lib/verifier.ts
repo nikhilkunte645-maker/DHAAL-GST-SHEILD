@@ -1,3 +1,5 @@
+import { roundStatutoryINR } from './amount';
+
 export interface ConfirmedFields {
   confirmedAmount: number; // 184250
   noticeDate: string; // "14-May-2025"
@@ -32,12 +34,66 @@ export interface VerificationReport {
 }
 
 /**
- * Normalizes currency string to pure number
- * e.g. "₹1,84,250" -> 184250
+ * Normalizes currency string to pure number with Section 170 rounding
+ * e.g. "₹1,84,250" -> 184250, "₹1,84,250.50" -> 184251, "-1,84,250.50" -> -184251
  */
 export function normalizeAmount(str: string): number {
-  const digits = str.replace(/[^0-9]/g, '');
-  return parseInt(digits, 10) || 0;
+  const cleaned = str.replace(/,/g, '').trim();
+  const match = /-?\d+(?:\.\d+)?/.exec(cleaned);
+  if (!match) return 0;
+  return roundStatutoryINR(parseFloat(match[0])) || 0;
+}
+
+export function isSectionMatch(secFound: string, allowedSec: string): boolean {
+  let f = secFound.trim().replace(/^(?:section|sec\.?)\s*/i, '').toLowerCase();
+  let c = allowedSec.trim().replace(/^(?:section|sec\.?)\s*/i, '').toLowerCase();
+  f = f.replace(/\s+/g, '');
+  c = c.replace(/\s+/g, '');
+  if (f === c) return true;
+  if (f.startsWith(c)) {
+    const remainder = f.slice(c.length);
+    if (remainder.startsWith('(') && remainder.endsWith(')')) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function isTaxPeriodMatch(draftText: string, confirmedPeriod?: string): boolean {
+  if (!confirmedPeriod) return true;
+  const text = draftText.toLowerCase();
+  const norm = confirmedPeriod.toLowerCase().trim();
+  let hasValid = text.includes(norm);
+  if (!hasValid && norm.includes('apr') && norm.includes('jun') && norm.includes('2024')) {
+    const equivalents = [
+      'april-june 2024',
+      'april - june 2024',
+      'april to june 2024',
+      'q1 fy 2024-25',
+      'q1 2024-25',
+      'q1 (2024-25)',
+      '01-apr-2024 to 30-jun-2024',
+      '01-04-2024 to 30-06-2024',
+    ];
+    hasValid = equivalents.some(eq => text.includes(eq));
+  }
+  if (!hasValid) return false;
+
+  if (norm.includes('apr') && norm.includes('jun') && norm.includes('2024')) {
+    const contradictory = [
+      'oct-dec 2024', 'october to december 2024', 'october-december 2024',
+      'jul-sep 2024', 'july to september 2024', 'july-september 2024',
+      'jan-mar 2025', 'january to march 2025', 'january-march 2025',
+      'q2 fy 2024-25', 'q2 2024-25',
+      'q3 fy 2024-25', 'q3 2024-25',
+      'q4 fy 2024-25', 'q4 2024-25',
+      'apr-jun 2023', 'fy 2023-24'
+    ];
+    if (contradictory.some(c => text.includes(c))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -47,65 +103,103 @@ export function verifyDraft(draftText: string, confirmed: ConfirmedFields): Veri
   const checks: CheckItemResult[] = [];
   const errors: string[] = [];
 
-  // 1. AMOUNT CHECK
-  // Match currency values like ₹1,84,250 or Rs 1,81,250 or INR 1,84,250
-  const amountRegex = /(?:₹|Rs\.?|INR)\s*([\d,]+(?:\.\d{2})?)/gi;
-  const foundAmounts: number[] = [];
-  let match: RegExpExecArray | null;
+  // 1. AMOUNT CHECK WITH CONTEXTUAL & COMPETING AMOUNTS LOGIC
+  const numericTokenRegex = /(?<![0-9A-Za-z])(?:₹|Rs\.?|INR)?\s*(-?[0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]+)?|-?[0-9]+(?:\.[0-9]+)?)(?![0-9A-Za-z])/gi;
+  const discrepancyRegex = /(?:discrepancy|mismatch(?:ed)?|difference|variance|demand|unreconciled|disputed?|liability|tax\s+gap|amounting\s+to|table\s*4\([a-z0-9]+\)\([0-9]+\)|settlement)\s*(?:amount|value|figure|sum)?\s*(?:of|is|in|worth|for)?\s*(?:₹|Rs\.?|INR)?\s*(-?[0-9]{1,3}(?:,[0-9]{2,3})*(?:\.[0-9]+)?|-?[0-9]+(?:\.[0-9]+)?)(?![0-9A-Za-z])/gi;
 
-  while ((match = amountRegex.exec(draftText)) !== null) {
-    const rawVal = match[1];
-    const val = normalizeAmount(rawVal);
-    // Ignore minor/unrelated small numbers if any, look for main dispute figures
-    if (val > 10000) {
-      foundAmounts.push(val);
-    }
+  const contextMatches: number[] = [];
+  let cm: RegExpExecArray | null;
+  while ((cm = discrepancyRegex.exec(draftText)) !== null) {
+    const val = normalizeAmount(cm[1]);
+    if (val !== 0) contextMatches.push(val);
   }
 
-  // Primary discrepancy amount mentioned in paragraph 1/2 of draft
-  const primaryDraftAmount = foundAmounts.length > 0 ? foundAmounts[0] : 0;
-  const amountPassed = primaryDraftAmount === confirmed.confirmedAmount;
+  const allNumericTokens: number[] = [];
+  let tm: RegExpExecArray | null;
+  while ((tm = numericTokenRegex.exec(draftText)) !== null) {
+    const val = normalizeAmount(tm[1]);
+    if (Math.abs(val) >= 100) allNumericTokens.push(val);
+  }
+
+  const expectedAmount = roundStatutoryINR(confirmed.confirmedAmount);
+  let amountPassed = false;
+  let primaryDraftAmount = 0;
+  let competingAmounts: number[] = [];
+
+  if (contextMatches.length > 0) {
+    if (contextMatches.includes(expectedAmount)) {
+      const competing = contextMatches.filter(a => a !== expectedAmount && a > 10000);
+      if (competing.length === 0) {
+        amountPassed = true;
+        primaryDraftAmount = expectedAmount;
+      } else {
+        competingAmounts = competing;
+        primaryDraftAmount = competing[0];
+      }
+    } else {
+      primaryDraftAmount = contextMatches[0];
+      const competing = contextMatches.slice(1).filter(a => a > 10000);
+      if (competing.length > 0) {
+        competingAmounts = contextMatches;
+      }
+    }
+  } else if (allNumericTokens.includes(expectedAmount)) {
+    const competing = allNumericTokens.filter(a => a !== expectedAmount && a > 10000);
+    if (competing.length === 0) {
+      amountPassed = true;
+      primaryDraftAmount = expectedAmount;
+    } else {
+      competingAmounts = competing;
+      primaryDraftAmount = competing[0];
+    }
+  } else if (allNumericTokens.length > 0) {
+    primaryDraftAmount = allNumericTokens[0];
+    const competing = allNumericTokens.slice(1).filter(a => a > 10000);
+    if (competing.length > 0) {
+      competingAmounts = allNumericTokens;
+    }
+  }
 
   if (amountPassed) {
     checks.push({
       id: 'check-1-amount',
       name: 'Check 1: Notice Discrepancy Amount Match',
       passed: true,
-      message: `Notice reads ₹1,84,250 → Confirmed input is ₹1,84,250 → Legal draft asserts ₹1,84,250.`,
-      extractedValue: `₹${primaryDraftAmount.toLocaleString('en-IN')}`,
+      message: `Notice reads ₹${confirmed.confirmedAmount.toLocaleString('en-IN')} → Confirmed input is ₹${confirmed.confirmedAmount.toLocaleString('en-IN')} → Legal draft asserts ₹${confirmed.confirmedAmount.toLocaleString('en-IN')}.`,
+      extractedValue: `₹${confirmed.confirmedAmount.toLocaleString('en-IN')}`,
       expectedValue: `₹${confirmed.confirmedAmount.toLocaleString('en-IN')}`,
     });
   } else {
     const delta = primaryDraftAmount - confirmed.confirmedAmount;
-    const err = `Draft asserts ₹${primaryDraftAmount.toLocaleString('en-IN')}; confirmed value is ₹${confirmed.confirmedAmount.toLocaleString('en-IN')}`;
+    const err = competingAmounts.length > 0
+      ? `Draft contains contradictory or unverified discrepancy amounts: ${competingAmounts.join(', ')} (expected ₹${confirmed.confirmedAmount.toLocaleString('en-IN')})`
+      : `Draft asserts ₹${primaryDraftAmount.toLocaleString('en-IN')}; confirmed value is ₹${confirmed.confirmedAmount.toLocaleString('en-IN')}`;
     errors.push(err);
     checks.push({
       id: 'check-1-amount',
       name: 'Check 1: Notice Discrepancy Amount Match',
       passed: false,
-      message: `Amount mismatch detected: Delta of ₹${Math.abs(delta).toLocaleString('en-IN')}.`,
+      message: competingAmounts.length > 0
+        ? `Contradictory discrepancy amounts detected: ${competingAmounts.join(', ')}.`
+        : `Amount mismatch detected: Delta of ₹${Math.abs(delta).toLocaleString('en-IN')}.`,
       extractedValue: `₹${primaryDraftAmount.toLocaleString('en-IN')}`,
       expectedValue: `₹${confirmed.confirmedAmount.toLocaleString('en-IN')}`,
     });
   }
 
-  // 2. STATUTORY SECTIONS CHECK
-  // Match "Section \d+(\([a-z0-9]+\))*" or "Rule \d+(\([a-z0-9]+\))*"
+  // 2. STATUTORY SECTIONS CHECK WITH STRICT BOUNDARIES
   const sectionRegex = /(?:Section|Sec\.?)\s+(\d+(?:\([a-z0-9]+\))*)/gi;
   const foundSections: string[] = [];
+  let match: RegExpExecArray | null;
   while ((match = sectionRegex.exec(draftText)) !== null) {
     foundSections.push(`Section ${match[1]}`);
   }
 
-  const validSectionsLower = confirmed.allowedSections.map(s => s.toLowerCase());
   let sectionsPassed = true;
   const invalidSections: string[] = [];
 
   for (const sec of foundSections) {
-    // Check if it matches allowed section base (e.g., Section 16 matches Section 16(2))
-    const isAllowed = validSectionsLower.some(allowed => 
-      sec.toLowerCase().startsWith(allowed) || allowed.startsWith(sec.toLowerCase())
-    );
+    const isAllowed = confirmed.allowedSections.some(allowed => isSectionMatch(sec, allowed));
     if (!isAllowed) {
       sectionsPassed = false;
       invalidSections.push(sec);

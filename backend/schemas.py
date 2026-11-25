@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 class NoticeMetadata(BaseModel):
     notice_id: str = Field(..., json_schema_extra={"example": "ZA270525008912M"})
@@ -13,7 +13,7 @@ class NoticeMetadata(BaseModel):
 
 class DraftVerifyRequest(BaseModel):
     draft_text: str = Field(..., description="The generated legal text reply.")
-    confirmed_amount: int = Field(..., description="The user-confirmed discrepancy amount.")
+    confirmed_amount: Union[int, float] = Field(..., description="The user-confirmed discrepancy amount.")
     confirmed_section: str = Field(..., description="Section code from notice.")
     confirmed_period: str = Field(..., description="Tax period from notice.")
 

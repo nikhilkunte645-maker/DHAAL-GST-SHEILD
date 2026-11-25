@@ -52,7 +52,18 @@ try:
         TransportDetails,
         CaCounselDetails,
     )
-    from verifier import verify_draft as verify_draft_detailed, format_inr, round_statutory_inr
+    from verifier import (
+        verify_draft as verify_draft_detailed,
+        format_inr,
+        round_statutory_inr,
+        AMOUNT_PATTERN,
+        NUMERIC_TOKEN_PATTERN,
+        SECTION_PATTERN,
+        DISCREPANCY_CONTEXT_PATTERN,
+        is_section_match,
+        is_tax_period_match,
+        normalize_amount_decimal,
+    )
     from reconciler import run_deterministic_reconciliation
     from evidence_graph import build_evidence_graph_for_case
     from circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
@@ -80,7 +91,18 @@ except ImportError:
         TransportDetails,
         CaCounselDetails,
     )
-    from backend.verifier import verify_draft as verify_draft_detailed, format_inr, round_statutory_inr
+    from backend.verifier import (
+        verify_draft as verify_draft_detailed,
+        format_inr,
+        round_statutory_inr,
+        AMOUNT_PATTERN,
+        NUMERIC_TOKEN_PATTERN,
+        SECTION_PATTERN,
+        DISCREPANCY_CONTEXT_PATTERN,
+        is_section_match,
+        is_tax_period_match,
+        normalize_amount_decimal,
+    )
     from backend.reconciler import run_deterministic_reconciliation
     from backend.evidence_graph import build_evidence_graph_for_case
     from backend.circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
@@ -465,43 +487,77 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
 async def verify_draft_endpoint(payload: DraftVerifyRequest):
     mismatches = []
     amount_statutory = round_statutory_inr(payload.confirmed_amount)
-    raw_amount_str = str(amount_statutory)
     inr_formatted = format_inr(amount_statutory).replace("₹", "")
-    std_comma = f"{amount_statutory:,}"
-    amount_in_text = (
-        raw_amount_str in payload.draft_text or 
-        inr_formatted in payload.draft_text or 
-        std_comma in payload.draft_text
-    )
-    
-    if not amount_in_text:
-        mismatches.append(VerificationMismatch(
-            field="Discrepancy Amount",
-            expected=f"₹{inr_formatted}",
-            found_in_draft="Mismatch",
-            severity="CRITICAL"
-        ))
-        
-    if payload.confirmed_section not in payload.draft_text:
+
+    # 1. Bounded Section Verification (e.g., 61 accepts 61(1), but 61(1) rejects 61; rejects 161, 610, 61A)
+    found_sections = [m.group(1) for m in SECTION_PATTERN.finditer(payload.draft_text)]
+    section_match = any(is_section_match(s, payload.confirmed_section) for s in found_sections)
+    if not section_match:
         mismatches.append(VerificationMismatch(
             field="Section Code",
             expected=f"Section {payload.confirmed_section}",
-            found_in_draft="Missing",
+            found_in_draft="Missing/Unbounded Mismatch",
             severity="WARNING"
         ))
 
-    amount_match = amount_in_text
-    section_match = (payload.confirmed_section in payload.draft_text)
-    period_match = (payload.confirmed_period.lower() in payload.draft_text.lower()) if payload.confirmed_period else True
+    # 2. Contextual & Competing Financial Evaluation (Numeric token boundaries, no unrestricted substring matching)
+    context_matches = [round_statutory_inr(normalize_amount_decimal(m.group(1))) for m in DISCREPANCY_CONTEXT_PATTERN.finditer(payload.draft_text)]
+    all_numeric_tokens = [round_statutory_inr(normalize_amount_decimal(m.group(1))) for m in NUMERIC_TOKEN_PATTERN.finditer(payload.draft_text)]
+    all_numeric_tokens = [t for t in all_numeric_tokens if abs(t) >= 100]
+
+    amount_match = False
+    competing_amounts = []
+
+    if context_matches:
+        if amount_statutory in context_matches:
+            competing = [a for a in context_matches if a != amount_statutory and abs(a - amount_statutory) > 10000]
+            if not competing:
+                amount_match = True
+            else:
+                competing_amounts = competing
+        else:
+            competing_amounts = context_matches
+    elif amount_statutory in all_numeric_tokens:
+        competing = [a for a in all_numeric_tokens if a != amount_statutory and abs(a - amount_statutory) > 10000]
+        if not competing:
+            amount_match = True
+        else:
+            competing_amounts = competing
+
+    if not amount_match:
+        if competing_amounts:
+            mismatches.append(VerificationMismatch(
+                field="Discrepancy Amount",
+                expected=f"₹{inr_formatted}",
+                found_in_draft=f"Contradictory amounts: {competing_amounts}",
+                severity="CRITICAL"
+            ))
+        else:
+            mismatches.append(VerificationMismatch(
+                field="Discrepancy Amount",
+                expected=f"₹{inr_formatted}",
+                found_in_draft="Missing",
+                severity="CRITICAL"
+            ))
+
+    # 3. Tax Period Verification
+    period_match = is_tax_period_match(payload.draft_text, payload.confirmed_period)
+    if payload.confirmed_period and not period_match:
+        mismatches.append(VerificationMismatch(
+            field="Tax Period",
+            expected=payload.confirmed_period,
+            found_in_draft="Missing/Mismatch",
+            severity="WARNING"
+        ))
 
     if len(mismatches) == 0:
         return DraftVerifyResponse(
             status="PASS",
             message="Checks passed.",
             checks={"amount_match": True, "section_match": True, "period_match": True},
-            financial_consistency=amount_match,
-            source_data_consistency=period_match,
-            legal_verification=section_match,
+            financial_consistency=True,
+            source_data_consistency=True,
+            legal_verification=True,
             human_approval_required=True
         )
     else:
