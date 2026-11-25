@@ -86,7 +86,7 @@ flowchart LR
 │ Focus: Gemini 1.5 Pro structured outputs, Pydantic guardrails, zero hallucination│
 └─────────────────────────────────────────────────────────────────────────────────┘
   ├── [ ] Bind Gemini 1.5 Pro to strict Pydantic v2 schemas (`LegalDraftSchema`)
-  ├── [ ] Build deterministic pre-flight AST verifier checking amounts & citations
+  ├── [ ] Build deterministic pre-flight token & statutory assertion verifier checking amounts & citations
   ├── [ ] Integrate immutable GST judicial precedent whitelist
   ├── [ ] Add multi-lingual tax glossary translations for Hindi and Marathi
   └── [ ] Build zero-LLM deterministic Jinja2 fallback template engine

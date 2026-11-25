@@ -157,11 +157,11 @@ export const NoticeScanViewer: React.FC<NoticeScanViewerProps> = ({ className = 
             <table className="w-full text-left text-[10px] bg-white">
               <thead className="bg-[#EFF4FF] text-[#0B1F3A] font-bold border-b border-[#CBD5E1]">
                 <tr>
-                  <th className="p-1.5 font-mono">Sr. No.</th>
-                  <th className="p-1.5">Discrepancy Category</th>
-                  <th className="p-1.5 text-right font-mono">As Per GSTR-3B</th>
-                  <th className="p-1.5 text-right font-mono">As Per GSTR-2B</th>
-                  <th className="p-1.5 text-right font-mono">Tax Difference (₹)</th>
+                  <th scope="col" className="p-1.5 font-mono">Sr. No.</th>
+                  <th scope="col" className="p-1.5">Discrepancy Category</th>
+                  <th scope="col" className="p-1.5 text-right font-mono">As Per GSTR-3B</th>
+                  <th scope="col" className="p-1.5 text-right font-mono">As Per GSTR-2B</th>
+                  <th scope="col" className="p-1.5 text-right font-mono">Tax Difference (₹)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E3E8F0]">

@@ -277,16 +277,16 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
 
           {/* Filter Chips */}
           <div className="flex flex-wrap items-center gap-1.5">
-            {[
+            {([
               { id: 'all', label: `All (${RECONCILIATION_ROWS.length})` },
               { id: 'unreported', label: 'Unreported in 2B (12)' },
               { id: 'delayed', label: 'Delayed Filing (11)' },
               { id: 'classification', label: 'Classification Error (1)' },
-            ].map((f) => (
+            ] as const).map((f) => (
               <button
                 key={f.id}
                 type="button"
-                onClick={() => setReconFilter(f.id as any)}
+                onClick={() => setReconFilter(f.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all min-h-[44px] sm:min-h-[36px] flex items-center justify-center ${
                   reconFilter === f.id
                     ? 'bg-[#073B3A] text-white shadow-xs'
@@ -304,15 +304,15 @@ export const Screen3ExplainerDeadlines: React.FC = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#FAF9F5] text-[#687674] border-b border-[#E4E9E5] font-semibold">
-                <th className="py-3 px-4 font-mono w-12 text-center">#</th>
-                <th className="py-3 px-4">Invoice Number</th>
-                <th className="py-3 px-4">Invoice Date</th>
-                <th className="py-3 px-4">Supplier</th>
-                <th className="py-3 px-4 text-right">Taxable Val</th>
-                <th className="py-3 px-4 text-right">GSTR-3B Claimed</th>
-                <th className="py-3 px-4 text-right">GSTR-2B Available</th>
-                <th className="py-3 px-4 text-right">Difference</th>
-                <th className="py-3 px-4 text-center">Audit Status</th>
+                <th scope="col" className="py-3 px-4 font-mono w-12 text-center">#</th>
+                <th scope="col" className="py-3 px-4">Invoice Number</th>
+                <th scope="col" className="py-3 px-4">Invoice Date</th>
+                <th scope="col" className="py-3 px-4">Supplier</th>
+                <th scope="col" className="py-3 px-4 text-right">Taxable Val</th>
+                <th scope="col" className="py-3 px-4 text-right">GSTR-3B Claimed</th>
+                <th scope="col" className="py-3 px-4 text-right">GSTR-2B Available</th>
+                <th scope="col" className="py-3 px-4 text-right">Difference</th>
+                <th scope="col" className="py-3 px-4 text-center">Audit Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E4E9E5] bg-white">

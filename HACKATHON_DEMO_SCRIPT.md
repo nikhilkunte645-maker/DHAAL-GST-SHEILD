@@ -12,7 +12,7 @@
 
 | Time Interval | Stage / Screen | Key Visual Action | Key Verbal Hook |
 |:---|:---|:---|:---|
-| **0:00 – 0:30** | The Problem | High-contrast ASMT-10 Notice Slide / Intro | *"50,000 Indian businesses receive ASMT-10 notices every month. Generic AI ruins tax defense."* |
+| **0:00 – 0:30** | The Problem | High-contrast ASMT-10 Notice Slide / Intro | *"Automated ASMT-10 scrutiny notices create acute compliance pressure for Indian SMEs and CAs. Generic AI ruins tax defense."* |
 | **0:30 – 1:15** | Screen 1 & 2: Ingest & Pause | Upload notice; show the Confirmation Screen | *"DHAAL extracts in 340ms, but pauses for human verification before downstream math."* |
 | **1:15 – 2:00** | Screen 3: Urgency & Statutory Time | Show UTC-midnight countdown & Expired banner | *"Section 61 gives exactly 30 days. We enforce statutory deadlines without timezone bugs."* |
 | **2:00 – 3:00** | Screen 3: Deterministic Reconciliation | Expand 24-Invoice Ledger | *"24 invoices. Exact ₹1,84,250. Section 170 CGST rounding. Zero mathematical drift."* |
@@ -66,7 +66,7 @@
 > - It links the invoices $\to$ to the HDFC Bank RTGS UTR `SAMPLEUTR0001` (satisfying the 180-day payment condition under the second proviso to Section 16(2)).
 > - It links to E-Way bills (satisfying Section 16(2)(b)).
 > 
-> But look at this amber node: DHAAL detects that the supplier's tax payment proof under Section 16(2)(c) is missing. Instead of hallucinating that it exists, DHAAL flags it as an 'Action Required' and cites landmark CBIC Circular 183 to protect the taxpayer."
+> But look at this amber node: DHAAL detects that the supplier's tax payment proof under Section 16(2)(c) is missing. Instead of hallucinating that it exists, DHAAL flags it as an 'Action Required' and clarifies that CBIC Circular 183/15/2022-GST addresses specified FY 2017–18 and FY 2018–19 GSTR-2A mismatches (with Circular 193/05/2023-GST extending the clarification to FY 2019–20 and FY 2020–21), whereas FY 2024–25 ITC claims are subject to applicable statutory conditions—including Section 16(2)(aa), supplier reporting, and GSTR-2B communication requirements—requiring invoice-level reconciliation and case-specific professional CA review rather than an automatic defence."
 
 ### [3:45 – 4:30] Grounded Response Copilot & Pre-Flight Verification
 *(Visual: Click 'Continue to Draft & Verifier' `#draft`. Show split-screen editor)*

@@ -6,7 +6,7 @@
 ---
 
 ## 1. 30-Second Elevator Pitch
-> *"Over 50,000 Indian businesses receive automated GST scrutiny notices (Form ASMT-10) every year alleging input tax credit discrepancies. Chartered Accountants waste 8 to 15 billable hours manually cross-referencing hundreds of purchase invoices against GSTR-2B spreadsheets.  
+> *"Indian businesses and tax practitioners regularly receive automated GST scrutiny notices (Form ASMT-10) alleging input tax credit discrepancies. Chartered Accountants waste 8 to 15 billable hours manually cross-referencing hundreds of purchase invoices against GSTR-2B spreadsheets.
 > **DHAAL** is the first GST Scrutiny Intelligence Platform that automates notice ingestion, executes deterministic invoice reconciliation down to the rupee, constructs a Section 16(2) Evidentiary DAG, and drafts a statutory, multi-lingual Form ASMT-11 response in under 90 seconds."*
 
 ---

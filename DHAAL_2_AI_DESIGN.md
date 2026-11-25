@@ -4,7 +4,7 @@
 **Version:** 2.0.0-PROD-AI  
 **Status:** Canonical Engineering Specification  
 **Inference Engine:** Gemini 1.5 Pro / Flash (Primary) via `google-genai` / LangChain Core  
-**Validation & Guardrail Engine:** Deterministic Pydantic v2 + Regex AST Validator  
+**Validation & Guardrail Engine:** Deterministic Pydantic v2 + Deterministic Token & Statutory Assertion Verifier
 
 ---
 
@@ -62,7 +62,7 @@ flowchart TD
     end
 
     subgraph VerificationStage["4. Deterministic Post-Inference Guardrails"]
-        AST_Parser["Pydantic Parser & AST Validator"]
+        Token_Verifier["Pydantic & Deterministic Token Verifier"]
         NumCheck{"Amount Match?\n(Sum == ₹1,84,250)"}
         CiteCheck{"All Citations\nin Evidence Graph?"}
         LawCheck{"Statutory Sections\nReal & Relevant?"}
@@ -72,8 +72,8 @@ flowchart TD
 
     NoticeData & RecRows & GraphCtx & PrecedentDB --> ContextAssembler
     SystemPrompt & ContextAssembler & JSONSchema --> LLM
-    LLM --> AST_Parser
-    AST_Parser --> NumCheck
+    LLM --> Token_Verifier
+    Token_Verifier --> NumCheck
     NumCheck -- Pass --> CiteCheck
     CiteCheck -- Pass --> LawCheck
     LawCheck -- Pass --> ApprovedDraft

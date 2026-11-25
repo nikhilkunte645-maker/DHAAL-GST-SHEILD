@@ -338,6 +338,12 @@ export const useDhaalStore = create<DhaalState>((set, get) => ({
   },
 }));
 
+declare global {
+  interface Window {
+    __DHAAL_STORE__?: typeof useDhaalStore;
+  }
+}
+
 if (typeof window !== 'undefined') {
-  (window as any).__DHAAL_STORE__ = useDhaalStore;
+  window.__DHAAL_STORE__ = useDhaalStore;
 }

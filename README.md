@@ -53,7 +53,7 @@ Unlike generic document parsers or basic AI wrappers, Dhaal provides a productio
 ## ⚠️ The Problem: GST Scrutiny Anxiety in India
 
 When an Indian small business receives a Form GST ASMT-10 scrutiny notice:
-1. **Strict 30-Day Statutory Countdown:** Under **Rule 99(1) of the CGST Rules, 2017**, the taxpayer must reply within 30 days. Failure to reply escalates the scrutiny notice into summary assessment proceedings under Section 73 or Section 74, potentially freezing operational bank accounts.
+1. **Strict 30-Day Statutory Countdown:** Under **Section 61 and Rule 99(1) of the CGST Rules, 2017**, the taxpayer must furnish an explanation within 30 days (or permitted extension). Under Rule 99(3), if no satisfactory explanation is furnished, the proper officer may initiate appropriate proceedings such as audit (Section 65/66), inspection (Section 67), or tax determination proceedings under Section 73 or Section 74 (distinct from Section 64 summary assessment; provisional bank attachment is separately governed by Section 83).
 2. **Mathematical Complexity:** Scrutiny notices highlight arithmetic variances between self-assessed monthly returns (**GSTR-3B Table 4(A)(5)**) and auto-populated supplier statements (**GSTR-2B**), frequently involving dozens of individual invoices with timing differences.
 3. **Severe Panic & Jargon Overload:** Small business owners panic over large headline figures, while CAs spend hours manually extracting DINs, verifying tax periods, and drafting repetitive legal explanations.
 
@@ -256,16 +256,16 @@ DHAAL maintains automated test suites covering TypeScript compilation, frontend 
 # 1. TypeScript Static Typecheck (0 errors)
 npx tsc --noEmit
 
-# 2. Frontend Unit Tests (51/51 passing across 4 test suites)
+# 2. Frontend Unit Tests (83/83 passing across 7 test suites)
 npm test
 
 # 3. Production Bundle Build (0 errors, ~327 kB gzip JS)
 npm run build
 
-# 4. Backend Integration & Unit Tests (41/41 passing across 6 test modules)
+# 4. Backend Integration & Unit Tests (62/62 passing across 8 test modules)
 python -m pytest backend/
 
-# 5. End-to-End Multi-Page PDF & Touch Target Verification
+# 5. End-to-End Multi-Page PDF & Touch Target Verification (requires 'npm run preview' in separate terminal)
 node scripts/test_pdf_and_verification.js
 ```
 

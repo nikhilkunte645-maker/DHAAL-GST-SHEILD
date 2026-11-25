@@ -13,7 +13,7 @@
 > "We enforce a strict separation of concerns: **AI is completely banned from performing financial math or determining statutory applicability.**
 > 
 > 1. **Zero Math in Prompts:** All rupee figures (₹1,84,250, ₹10,23,611, 24 invoices) are calculated in our deterministic Python/TypeScript reconciliation kernel and passed as immutable constants into a Pydantic v2 structured output schema (`LegalDraftSchema`).
-> 2. **Post-Inference AST Pre-Flight Scanner:** Before a draft is displayed or exported, our deterministic AST parser scans the generated text. If any number appears that does not exist in our pre-calculated reconciliation ledger, or if an invalid section code is found, the pre-flight check immediately flags a `CRITICAL_VERIFICATION_MISMATCH` and blocks export.
+> 2. **Post-Inference Deterministic Token & Statutory Assertion Verifier:** Before a draft is displayed or exported, our deterministic token and regex verifier scans the generated text. If any number appears that does not exist in our pre-calculated reconciliation ledger, or if an invalid section code is found, the pre-flight check immediately flags a `CRITICAL_VERIFICATION_MISMATCH` and blocks export.
 > 3. **Deterministic Fallback Engine:** If the LLM provider fails, times out, or triggers verification errors, DHAAL seamlessly falls back to our deterministic Jinja2 rule-based template engine."
 
 #### Q2: "What is the DHAAL Evidence Graph, and how does it prevent unsupported claims?"

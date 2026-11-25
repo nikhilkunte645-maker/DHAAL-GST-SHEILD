@@ -78,6 +78,13 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-[#152B2A] flex flex-col font-sans selection:bg-[#087F73] selection:text-white overflow-x-hidden">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[#073B3A] focus:text-white focus:rounded-control focus:shadow-tier2 focus:font-semibold focus:text-sm focus:outline-none focus:ring-2 focus:ring-[#F59E0B]"
+      >
+        Skip to main content
+      </a>
+
       {/* Top Fixed Header with Integrated Single-line Disclaimer */}
       <Header
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -97,9 +104,11 @@ export const App: React.FC = () => {
       {/* Main Content Area: Responsive offsets and centered 1240px container */}
       <div className="lg:pl-16 xl:pl-[260px] flex-1 flex flex-col transition-all duration-200 min-w-0">
         <main
+          id="main-content"
+          tabIndex={-1}
           className={`${
             isBannerDismissed ? 'pt-16 sm:pt-20' : 'pt-[88px] sm:pt-[96px]'
-          } pb-16 sm:pb-24 min-h-screen px-4 sm:px-6 max-w-[1240px] w-full mx-auto flex flex-col`}
+          } pb-16 sm:pb-24 min-h-screen px-4 sm:px-6 max-w-[1240px] w-full mx-auto flex flex-col focus:outline-none`}
         >
           {step === 0 && <DashboardScreen />}
           {step === 1 && <Screen1Upload />}

@@ -29,7 +29,7 @@ All timings measured across 5 repeated runs in local and serverless execution en
 | **Notice PDF Ingestion & OCR Extraction** | < 1,000 ms | **342 ms** | PyMuPDF text stream extraction in RAM |
 | **24-Invoice Reconcile & Hash Lookup** | < 100 ms | **12 ms** | Compound hash map `SHA256(GSTIN+InvNo)` |
 | **Evidence Graph DAG Traversal & Score** | < 50 ms | **8 ms** | In-memory directed acyclic graph |
-| **Pre-Flight AST Verification Scan** | < 100 ms | **35 ms** | Deterministic Python regex & numerical scanner |
+| **Pre-Flight Token Verification Scan** | < 100 ms | **35 ms** | Deterministic Python regex & numerical scanner |
 | **Multi-Page A4 PDF Generation (EN)** | < 2,000 ms | **1,150 ms** | Client-side jsPDF + html2canvas |
 | **Multi-Page A4 PDF Generation (HI/MR)**| < 2,000 ms | **1,210 ms** | Embedded Noto Sans Devanagari WOFF/TTF |
 | **Vite Production Bundle Build Time** | < 10,000 ms | **5,300 ms** | Vite 5 + Rollup tree-shaking |
@@ -40,16 +40,23 @@ All timings measured across 5 repeated runs in local and serverless execution en
 
 | Test Suite | Total Tests | Passed | Failed | Skipped | Status |
 |:---|:---:|:---:|:---:|:---:|:---:|
-| **Frontend Unit Tests (Vitest)** | 43 | 43 | 0 | 0 | ✅ **100% Pass** |
-| - `src/lib/__tests__/deadline.test.ts` | 18 | 18 | 0 | 0 | ✅ Pass |
-| - `src/lib/__tests__/financialPrecision.test.ts` | 13 | 13 | 0 | 0 | ✅ Pass |
+| **Frontend Unit Tests (Vitest)** | 83 | 83 | 0 | 0 | ✅ **100% Pass** |
+| - `src/lib/__tests__/section16.test.ts` | 4 | 4 | 0 | 0 | ✅ Pass |
+| - `src/lib/__tests__/deadline.test.ts` | 22 | 22 | 0 | 0 | ✅ Pass |
+| - `src/lib/__tests__/mockApiVerification.test.ts` | 22 | 22 | 0 | 0 | ✅ Pass |
+| - `src/lib/__tests__/financialPrecision.test.ts` | 16 | 16 | 0 | 0 | ✅ Pass |
+| - `src/lib/__tests__/e2eWorkflow.test.ts` | 2 | 2 | 0 | 0 | ✅ Pass |
 | - `src/lib/__tests__/lib.test.ts` | 12 | 12 | 0 | 0 | ✅ Pass |
-| **Backend Unit Tests (pytest)** | 28 | 28 | 0 | 0 | ✅ **100% Pass** |
-| - `backend/test_api.py` | 12 | 12 | 0 | 0 | ✅ Pass |
-| - `backend/tests/test_reconciler.py` | 4 | 4 | 0 | 0 | ✅ Pass |
-| - `backend/tests/test_evidence_graph.py` | 2 | 2 | 0 | 0 | ✅ Pass |
+| - `src/lib/__tests__/failureScenarios.test.ts` | 5 | 5 | 0 | 0 | ✅ Pass |
+| **Backend Unit Tests (pytest)** | 62 | 62 | 0 | 0 | ✅ **100% Pass** |
+| - `backend/test_api.py` | 14 | 14 | 0 | 0 | ✅ Pass |
+| - `backend/tests/test_circular_183.py` | 7 | 7 | 0 | 0 | ✅ Pass |
+| - `backend/tests/test_e2e_gst_workflow.py` | 2 | 2 | 0 | 0 | ✅ Pass |
+| - `backend/tests/test_evidence_graph.py` | 7 | 7 | 0 | 0 | ✅ Pass |
+| - `backend/tests/test_failure_scenarios.py` | 15 | 15 | 0 | 0 | ✅ Pass |
+| - `backend/tests/test_reconciler.py` | 6 | 6 | 0 | 0 | ✅ Pass |
 | - `backend/tests/test_upload.py` | 6 | 6 | 0 | 0 | ✅ Pass |
-| - `backend/tests/test_verifier.py` | 4 | 4 | 0 | 0 | ✅ Pass |
+| - `backend/tests/test_verifier.py` | 5 | 5 | 0 | 0 | ✅ Pass |
 | **TypeScript Typecheck (`npx tsc`)** | Full codebase | 0 errors | 0 | 0 | ✅ **Zero Errors** |
 | **E2E PDF & Touch Target Verification** | 6 screens, 7 viewports | 100% | 0 | 0 | ✅ **100% Pass** |
 | - Multi-page PDF Exports (EN, HI, MR) | 3 exports | 3 | 0 | 0 | ✅ Zero right-edge clipping |

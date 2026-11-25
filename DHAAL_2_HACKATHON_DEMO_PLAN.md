@@ -43,7 +43,7 @@ To adhere strictly to truth-in-claims and prevent any exposure of confidential t
 ### Minute 0:00 – 0:45 | The Hook: The ₹1.84 Lakh Notice Shock
 - **Speaker Action:** Open the DHAAL Dashboard on the large screen.
 - **Verbal Delivery:**
-  > *"Judges, every month over 50,000 Indian businesses receive this dreaded document: Form GST ASMT-10. An automated tax scrutiny notice alleging an ITC mismatch. In our case, the GST department demands ₹1,84,250 because supplier invoices didn't appear in GSTR-2B.
+  > *"Judges, across India, businesses and Chartered Accountants regularly face this high-stakes document: Form GST ASMT-10. An automated tax scrutiny notice alleging an ITC mismatch. In our case, the GST department demands ₹1,84,250 because supplier invoices didn't appear in GSTR-2B.
   > 
   > If a CA pastes this into ChatGPT, two disasters occur: the LLM hallucinates invoice numbers and cites fake court rulings, and proprietary financial data leaks to public servers.
   > 
@@ -73,7 +73,7 @@ To adhere strictly to truth-in-claims and prevent any exposure of confidential t
   > In GST law, you cannot just tell the tax officer 'I paid the tax'. You must satisfy the four pillars of Section 16(2).
   > Look at this graph: it connects the Notice Allegation $\to$ to the 24 Invoices (proving Section 16(2)(a)) $\to$ to the HDFC Bank RTGS UTR (proving Section 16(2) 2nd Proviso within 180 days) $\to$ to E-Way bills (proving receipt under 16(2)(b)).
   > 
-  > Notice this amber node: DHAAL detects that the supplier's tax payment proof under Section 16(2)(c) is missing. Instead of hallucinating that it exists, DHAAL flags it as an 'Action Required' and cites CBIC Circular 183 to protect the taxpayer."*
+  > Notice this amber node: DHAAL detects that the supplier's tax payment proof under Section 16(2)(c) is missing. Instead of hallucinating that it exists, DHAAL flags it as an 'Action Required' and clarifies that CBIC Circular 183/15/2022-GST addresses specified FY 2017–18 and FY 2018–19 GSTR-2A mismatches (with Circular 193/05/2023-GST extending the clarification to FY 2019–20 and FY 2020–21), whereas FY 2024–25 ITC claims are subject to applicable statutory conditions—including Section 16(2)(aa), supplier reporting, and GSTR-2B communication requirements—requiring invoice-level reconciliation and case-specific professional CA review rather than an automatic defence."*
 
 ### Minute 3:45 – 4:30 | Grounded Response Copilot & Pre-Flight Consistency Check
 - **Speaker Action:** Navigate to Screen 5 (`#draft`). Show the split-screen legal editor. Click `Run Pre-Flight Verifier`.
@@ -106,7 +106,7 @@ Judges evaluate engineering credibility through measured data, not claims:
 | **Notice OCR & Digital Extraction** | < 1,000 ms | **342 ms** | Serverless trace (`extraction_duration_ms`) |
 | **24-Invoice Reconcile & Hash** | < 100 ms | **12 ms** | Deterministic Python Decimal kernel |
 | **Evidence Graph DAG Traversal** | < 50 ms | **8 ms** | In-memory NetworkX/DAG traversal |
-| **Pre-Flight Draft Verification** | < 200 ms | **35 ms** | Regex & numerical AST scanner |
+| **Pre-Flight Draft Verification** | < 200 ms | **35 ms** | Deterministic token & numerical verifier |
 | **Multi-Page A4 PDF Generation** | < 2,000 ms | **1,150 ms** | Client-side jsPDF + html2canvas |
 | **Math Discrepancy Error Rate** | **0.00%** | **0.00% (₹0.00 delta)** | Vitest & pytest financial suites |
 | **Devanagari Rendering Accuracy** | 100% | **100% (Zero glyph corruption)** | Automated headless browser audit |
@@ -119,7 +119,7 @@ Judges evaluate engineering credibility through measured data, not claims:
 **Answer:**
 > *"We completely removed math from the LLM prompt. The LLM is never asked to calculate anything. All figures (₹1,84,250, ₹10,23,611, 24 invoices) are passed as immutable variables into a Pydantic structured output schema.
 > 
-> Furthermore, we run a deterministic post-inference regex AST parser. If the generated text contains any number that doesn't match our pre-calculated reconciliation ledger, the draft fails pre-flight and reverts to our deterministic rule-based template engine."*
+> Furthermore, we run a deterministic post-inference token and statutory assertion verifier. If the generated text contains any number that doesn't match our pre-calculated reconciliation ledger, the draft fails pre-flight and reverts to our deterministic rule-based template engine."*
 
 ### Q2 (Tax Domain): "Under Section 16(2)(c), if the supplier didn't deposit the tax, how can the buyer claim ITC?"
 **Answer:**

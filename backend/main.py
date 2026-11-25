@@ -116,18 +116,29 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# ============================================================================
+# CORS SECURITY CONFIGURATION
+# ============================================================================
+
+ALLOWED_ORIGINS = [
+    # Verified Localhost Development (Vite dev server: vite.config.ts)
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
+    # Verified Localhost Preview (Vite preview server: scripts/test_pdf_and_verification.js)
+    "http://localhost:4173",
+    "http://127.0.0.1:4173",
+    # Production Canonical Domains
+    "https://dhaal-gst-sheild.vercel.app",
+    "https://dhaal-gst-shield-v2.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3001",
-    ],
-    allow_origin_regex=r"https?://.*",
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Accept"],
+    max_age=600,
 )
 
 @app.middleware("http")
@@ -140,14 +151,9 @@ async def log_requests(request: Request, call_next):
         return response
     except Exception as exc:
         logger.error(f"Server error on {request.url.path}: {exc}", exc_info=True)
-        origin = request.headers.get("origin", "*")
         return JSONResponse(
             status_code=500,
             content={"detail": "Server error", "error": "An internal processing error occurred."},
-            headers={
-                "Access-Control-Allow-Origin": origin,
-                "Access-Control-Allow-Credentials": "true",
-            }
         )
 
 # ============================================================================

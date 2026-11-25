@@ -127,3 +127,5 @@ export const I18N: Record<Language, I18nDictionary> = {
     },
   },
 };
+
+export * from './dossierI18n';

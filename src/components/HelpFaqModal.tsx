@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from './ui/Button';
+import { useModalAccessibility } from '../hooks/useModalAccessibility';
 
 interface HelpFaqModalProps {
   isOpen: boolean;
@@ -7,6 +8,9 @@ interface HelpFaqModalProps {
 }
 
 export const HelpFaqModal: React.FC<HelpFaqModalProps> = ({ isOpen, onClose }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  useModalAccessibility({ isOpen, onClose, modalRef });
+
   if (!isOpen) return null;
 
   const faqs = [
@@ -32,13 +36,18 @@ export const HelpFaqModal: React.FC<HelpFaqModalProps> = ({ isOpen, onClose }) =
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby="faq-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1F3A]/40 backdrop-blur-xs animate-in fade-in duration-150"
     >
-      <div className="bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] max-w-xl w-full p-6 flex flex-col gap-4 max-h-[85vh] overflow-hidden">
+      <div
+        ref={modalRef}
+        tabIndex={-1}
+        className="bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] max-w-xl w-full p-6 flex flex-col gap-4 max-h-[85vh] overflow-hidden focus:outline-none"
+      >
         <div className="flex justify-between items-start pb-2 border-b border-[#E2E8F0]">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#2B4C9B]">help</span>
-            <h3 className="font-headline text-base font-bold text-[#0B1F3A]">
+            <span className="material-symbols-outlined text-[#2B4C9B]" aria-hidden="true">help</span>
+            <h3 id="faq-modal-title" className="font-headline text-base font-bold text-[#0B1F3A]">
               Help &amp; Statutory FAQ
             </h3>
           </div>

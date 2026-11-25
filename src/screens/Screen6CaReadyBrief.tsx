@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useDhaalStore } from '../store/useDhaalStore';
 import { CANONICAL_DEMO_CASE } from '../data/demoCase';
 import { formatINR } from '../lib/format';
@@ -9,10 +9,14 @@ import html2canvas from 'html2canvas';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Card } from '../components/ui/Card';
+import { useModalAccessibility } from '../hooks/useModalAccessibility';
+import { DOSSIER_I18N } from '../data/dossierI18n';
 
 export const Screen6CaReadyBrief: React.FC = () => {
-  const { confirmedAmount, resetDemo } = useDhaalStore();
+  const { confirmedAmount, resetDemo, language } = useDhaalStore();
+  const t = DOSSIER_I18N[language] || DOSSIER_I18N.en;
   const printableRef = useRef<HTMLDivElement>(null);
+  const shareModalRef = useRef<HTMLDivElement>(null);
 
   const [contentHash, setContentHash] = useState<{ fullHash: string; shortHash: string }>({
     fullHash: '',
@@ -22,6 +26,13 @@ export const Screen6CaReadyBrief: React.FC = () => {
   const [isDossierConfirmedForCa, setIsDossierConfirmedForCa] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const closeShareModal = useCallback(() => setIsShareModalOpen(false), []);
+  useModalAccessibility({
+    isOpen: isShareModalOpen,
+    onClose: closeShareModal,
+    modalRef: shareModalRef,
+  });
 
   const amount = confirmedAmount || CANONICAL_DEMO_CASE.rows[1].difference;
 
@@ -124,21 +135,34 @@ export const Screen6CaReadyBrief: React.FC = () => {
       const pxPerMm = canvas.width / usableWidthMm;
       const maxPageHeightPx = Math.floor(usableHeightMm * pxPerMm);
 
-      // 5. Detect semantic section boundaries from child cards
-      const sectionBreaksPx: number[] = [];
-      const container = clone.querySelector('.flex.flex-col.gap-6') || clone;
-      const containerTop = container.getBoundingClientRect().top;
+      // 5. Detect semantic section and internal content boundaries relative to clone root (y = 0 on canvas)
+      const cloneRect = clone.getBoundingClientRect();
+      const cloneTop = cloneRect.top;
+      const canvasScale = cloneRect.width > 0 ? canvas.width / cloneRect.width : 2;
+      const totalHeightPx = canvas.height;
 
+      const container = clone.querySelector('.flex.flex-col.gap-6') || clone;
+      const sectionBreaksPx: number[] = [];
       for (const child of Array.from(container.children)) {
         const rect = child.getBoundingClientRect();
-        const bottomRel = rect.bottom - containerTop;
-        sectionBreaksPx.push(Math.round(bottomRel * 2));
+        // Place cut slightly below card border in the inter-section gap so borders are never clipped
+        const breakY = Math.min(
+          Math.round((rect.bottom - cloneTop) * canvasScale + 4 * canvasScale),
+          totalHeightPx
+        );
+        sectionBreaksPx.push(breakY);
       }
 
-      // 6. Calculate page slices
+      // Internal boundaries (table rows, paragraphs, inner blocks) as fallback for oversized sections
+      const internalBreaksPx: number[] = Array.from(
+        container.querySelectorAll('tr, p, .rounded-control, .space-y-2 > div')
+      )
+        .map((el) => Math.min(Math.round((el.getBoundingClientRect().bottom - cloneTop) * canvasScale + 2 * canvasScale), totalHeightPx))
+        .sort((a, b) => a - b);
+
+      // 6. Calculate page slices without splitting cards, rows, or text lines
       const slices: { startY: number; heightPx: number }[] = [];
       let currentY = 0;
-      const totalHeightPx = canvas.height;
 
       while (currentY < totalHeightPx) {
         const remainingPx = totalHeightPx - currentY;
@@ -151,16 +175,29 @@ export const Screen6CaReadyBrief: React.FC = () => {
         let bestBreak = maxNextY;
         let foundSmartBreak = false;
 
+        // Prefer outer section/card boundaries that fit within the page
         for (let i = sectionBreaksPx.length - 1; i >= 0; i--) {
           const b = sectionBreaksPx[i];
-          if (b > currentY + maxPageHeightPx * 0.65 && b <= maxNextY) {
+          if (b > currentY && b <= maxNextY) {
             bestBreak = b;
             foundSmartBreak = true;
             break;
           }
         }
 
-        const sliceH = foundSmartBreak ? bestBreak - currentY : maxPageHeightPx;
+        // Fallback to safe internal content boundaries if a single section exceeds one page
+        if (!foundSmartBreak) {
+          for (let i = internalBreaksPx.length - 1; i >= 0; i--) {
+            const b = internalBreaksPx[i];
+            if (b > currentY && b <= maxNextY) {
+              bestBreak = b;
+              foundSmartBreak = true;
+              break;
+            }
+          }
+        }
+
+        const sliceH = foundSmartBreak && bestBreak > currentY ? bestBreak - currentY : maxPageHeightPx;
         slices.push({ startY: currentY, heightPx: sliceH });
         currentY += sliceH;
       }
@@ -364,7 +401,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
             {/* Watermark */}
             <div className="absolute inset-0 pointer-events-none flex items-center justify-center -rotate-45 opacity-5">
               <span className="font-headline text-6xl text-[#073B3A] uppercase font-bold tracking-widest text-center">
-                SYNTHETIC DEMO<br />CA BRIEF
+                {t.watermarkLine1}<br />{t.watermarkLine2}
               </span>
             </div>
 
@@ -372,8 +409,8 @@ export const Screen6CaReadyBrief: React.FC = () => {
             <div className="flex flex-col gap-6 relative z-10">
               {/* Official Printable Header */}
               <div className="font-mono text-[10px] uppercase tracking-widest text-[#687674] border-b border-[#E4E9E5] pb-1.5 mb-1 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
-                <span className="font-bold text-[#073B3A]">DHAAL COMPLIANCE DOSSIER | STRICTLY CONFIDENTIAL</span>
-                <span>FORM ASMT-10 RESPONSE FILE • STATUTORY COMPLIANCE</span>
+                <span className="font-bold text-[#073B3A]">{t.topRibbonLeft}</span>
+                <span>{t.topRibbonRight}</span>
               </div>
 
               {/* Dossier Header */}
@@ -384,18 +421,18 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   </div>
                   <div>
                     <h2 className="font-headline text-lg font-bold text-[#073B3A] tracking-tight">
-                      DHAAL LEGAL SHIELD • CA BRIEF
+                      {t.dossierTitle}
                     </h2>
                     <p className="font-mono text-xs text-[#687674]">
-                      Case Reference: #{CANONICAL_DEMO_CASE.caseId}
+                      {t.caseReference}: #{CANONICAL_DEMO_CASE.caseId}
                     </p>
                   </div>
                 </div>
 
                 <div className="text-left sm:text-right font-mono text-xs text-[#687674]">
-                  <div>Generation: {CANONICAL_DEMO_CASE.fixedClockDate} | 14:38 IST</div>
+                  <div>{t.generation}: {CANONICAL_DEMO_CASE.fixedClockDate} | 14:38 IST</div>
                   <div className="text-[11px] text-[#087F73] font-bold mt-0.5">
-                    Content hash: {contentHash.shortHash}
+                    {t.contentHash}: {contentHash.shortHash}
                   </div>
                 </div>
               </div>
@@ -403,16 +440,16 @@ export const Screen6CaReadyBrief: React.FC = () => {
               {/* Assessee Metadata Ribbon */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] text-xs">
                 <div>
-                  <span className="text-[#687674] block">Assessee Legal Trade Name:</span>
+                  <span className="text-[#687674] block">{t.assesseeTradeNameLabel}:</span>
                   <span className="font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.businessName}</span>
                 </div>
                 <div>
-                  <span className="text-[#687674] block">GSTIN / Registration:</span>
+                  <span className="text-[#687674] block">{t.gstinRegistrationLabel}:</span>
                   <span className="font-mono font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.gstin}</span>
                 </div>
                 <div>
-                  <span className="text-[#687674] block">Jurisdiction:</span>
-                  <span className="font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.office.ward} (Mumbai)</span>
+                  <span className="text-[#687674] block">{t.jurisdictionLabel}:</span>
+                  <span className="font-bold text-[#073B3A] block">{CANONICAL_DEMO_CASE.office.ward} ({t.mumbaiCity})</span>
                 </div>
               </div>
 
@@ -423,28 +460,27 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     1
                   </span>
                   <h3 className="font-headline text-sm font-bold text-[#073B3A]">
-                    Executive Summary &amp; Allegation Mapping
+                    {t.section1Heading}
                   </h3>
                 </div>
                 <div className="p-4 bg-[#F8FAFC] rounded-control border border-[#E2E8F0] space-y-2 text-xs">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <span className="font-mono font-bold text-[#087F73]">
-                      Scrutiny Ground: Table 4(A)(5) GSTR-3B Discrepancy
+                      {t.scrutinyGround}
                     </span>
                     <span className="font-mono font-bold text-[#073B3A] bg-white px-2 py-0.5 rounded border border-[#E4E9E5] shrink-0">
-                      Amount questioned: {formatINR(amount, true)}
+                      {t.amountQuestioned}: {formatINR(amount, true)}
                     </span>
                   </div>
                   <p className="text-[#152B2A] leading-relaxed">
-                    Form ASMT-10 scrutiny notice received alleging an apparent excess Input Tax Credit (ITC) claim of{' '}
-                    <strong>₹{amount.toLocaleString('en-IN')}</strong> in monthly return GSTR-3B compared with system-generated GSTR-2B for {CANONICAL_DEMO_CASE.taxPeriod}.
+                    {t.section1Summary(amount, CANONICAL_DEMO_CASE.taxPeriod)}
                   </p>
                   <div className="p-3 bg-white rounded-control border border-[#E2E8F0]">
                     <span className="font-mono text-[10px] text-[#B45309] block uppercase font-bold">
-                      Probable cause (to be confirmed with supplier):
+                      {t.probableCauseLabel}:
                     </span>
                     <p className="text-xs text-[#152B2A] mt-0.5">
-                      Principal vendor <strong>{CANONICAL_DEMO_CASE.supplier.name} ({CANONICAL_DEMO_CASE.supplier.gstin})</strong> reported supply in subsequent tax period. Assessee maintains verified physical possession of goods, original tax invoices ({CANONICAL_DEMO_CASE.supplier.invoiceNo}), valid E-Way bills, and prompt electronic bank settlement.
+                      {t.probableCauseText(CANONICAL_DEMO_CASE.supplier.name, CANONICAL_DEMO_CASE.supplier.gstin, CANONICAL_DEMO_CASE.supplier.invoiceNo)}
                     </p>
                   </div>
                 </div>
@@ -457,26 +493,26 @@ export const Screen6CaReadyBrief: React.FC = () => {
                     2
                   </span>
                   <h3 className="font-headline text-sm font-bold text-[#073B3A]">
-                    Statutory Countdown &amp; Safe Filing Windows
+                    {t.section2Heading}
                   </h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
-                    <span className="text-[#687674] block text-[11px]">Statutory Deadline</span>
+                    <span className="text-[#687674] block text-[11px]">{t.statutoryDeadline}</span>
                     <span className="font-mono text-sm font-bold text-[#073B3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.replyDeadline}
                     </span>
-                    <span className="text-[10px] text-[#B45309] font-bold">12 Days strictly remaining</span>
+                    <span className="text-[10px] text-[#B45309] font-bold">{t.daysRemainingStrict}</span>
                   </div>
                   <div className="p-3 bg-[#FFFBEB] rounded-control border border-[#FDE68A]">
-                    <span className="text-[#B45309] block text-[11px] font-semibold">Recommended CA Sign</span>
+                    <span className="text-[#B45309] block text-[11px] font-semibold">{t.recommendedCaSign}</span>
                     <span className="font-mono text-sm font-bold text-[#073B3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.recommendedCaSign}
                     </span>
-                    <span className="text-[10px] text-[#B45309]">5-day contingency buffer</span>
+                    <span className="text-[10px] text-[#B45309]">{t.contingencyBuffer}</span>
                   </div>
                   <div className="p-3 bg-[#F8FAFC] rounded-control border border-[#E2E8F0]">
-                    <span className="text-[#687674] block text-[11px]">Assigned Counsel / CA</span>
+                    <span className="text-[#687674] block text-[11px]">{t.assignedCounsel}</span>
                     <span className="font-bold text-[#073B3A] block mt-0.5">
                       {CANONICAL_DEMO_CASE.caCounsel.name}
                     </span>
@@ -493,11 +529,11 @@ export const Screen6CaReadyBrief: React.FC = () => {
                       3
                     </span>
                     <h3 className="font-headline text-sm font-bold text-[#073B3A]">
-                      Assembled Evidentiary Annexures
+                      {t.section3Heading}
                     </h3>
                   </div>
                   <Badge variant="success" size="sm">
-                    5 of 6 Sealed
+                    {t.sealedCountBadge}
                   </Badge>
                 </div>
 
@@ -505,48 +541,48 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   <table className="w-full text-left min-w-[500px] sm:min-w-0">
                     <thead className="bg-[#F8FAFC] text-[#073B3A] font-bold text-[11px] border-b border-[#E2E8F0]">
                       <tr>
-                        <th className="p-2 font-mono">Annexure</th>
-                        <th className="p-2">Document Description</th>
-                        <th className="p-2 font-mono">Proof Reference</th>
-                        <th className="p-2 text-right">Audit Status</th>
+                        <th scope="col" className="p-2 font-mono">{t.colAnnexure}</th>
+                        <th scope="col" className="p-2">{t.colDocDesc}</th>
+                        <th scope="col" className="p-2 font-mono">{t.colProofRef}</th>
+                        <th scope="col" className="p-2 text-right">{t.colAuditStatus}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#E2E8F0]">
                       <tr>
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-A</td>
-                        <td className="p-2">Purchase Invoice (Apex Textiles)</td>
+                        <td className="p-2">{t.annexA_desc}</td>
                         <td className="p-2 font-mono text-[#687674]">INV #{CANONICAL_DEMO_CASE.supplier.invoiceNo}</td>
-                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">{t.statusVerified}</td>
                       </tr>
                       <tr className="bg-blue-50/30">
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-B</td>
-                        <td className="p-2">Bank Payment Voucher [SYNTHETIC DEMO]</td>
-                        <td className="p-2 font-mono text-blue-700">{CANONICAL_DEMO_CASE.banking.utr} (Demo)</td>
-                        <td className="p-2 text-right text-blue-700 font-bold">SYNTHETIC (Demo)</td>
+                        <td className="p-2">{t.annexB_desc}</td>
+                        <td className="p-2 font-mono text-blue-700">{CANONICAL_DEMO_CASE.banking.utr} ({t.demoTag})</td>
+                        <td className="p-2 text-right text-blue-700 font-bold">{t.statusSynthetic}</td>
                       </tr>
                       <tr className="bg-amber-50/30">
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-C</td>
-                        <td className="p-2">Consignment Notes &amp; E-Way Bills (18 attached)</td>
+                        <td className="p-2">{t.annexC_desc}</td>
                         <td className="p-2 font-mono text-[#687674]">{CANONICAL_DEMO_CASE.transport.ewayBillNo}</td>
-                        <td className="p-2 text-right text-amber-700 font-bold">Partial (18/24)</td>
+                        <td className="p-2 text-right text-amber-700 font-bold">{t.statusPartial}</td>
                       </tr>
                       <tr className="bg-red-50/30">
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-D</td>
-                        <td className="p-2">Supplier 16(2)(c) Tax Clearance Proof</td>
-                        <td className="p-2 font-mono text-red-700">Missing Supplier Proof</td>
-                        <td className="p-2 text-right text-red-700 font-bold">Action Required</td>
+                        <td className="p-2">{t.annexD_desc}</td>
+                        <td className="p-2 font-mono text-red-700">{t.missingSupplierProof}</td>
+                        <td className="p-2 text-right text-red-700 font-bold">{t.statusActionRequired}</td>
                       </tr>
                       <tr>
                         <td className="p-2 font-mono font-bold text-[#073B3A]">ANNEX-E</td>
-                        <td className="p-2">Reconciliation Ledger &amp; GSTR-2B Proof</td>
-                        <td className="p-2 font-mono text-[#687674]">Dhaal Match Run #109</td>
-                        <td className="p-2 text-right text-[#119B72] font-bold">✓ Verified</td>
+                        <td className="p-2">{t.annexE_desc}</td>
+                        <td className="p-2 font-mono text-[#687674]">{t.dhaalMatchRun} #109</td>
+                        <td className="p-2 text-right text-[#119B72] font-bold">{t.statusVerified}</td>
                       </tr>
                       <tr className="bg-[#FFFBEB]/40">
                         <td className="p-2 font-mono font-bold text-[#B45309]">ANNEX-F</td>
-                        <td className="p-2 font-semibold">Practicing CA Verification Certificate</td>
-                        <td className="p-2 font-mono text-[#687674]">Requires UDIN Signature</td>
-                        <td className="p-2 text-right text-[#B45309] font-bold">CA Pending</td>
+                        <td className="p-2 font-semibold">{t.annexF_desc}</td>
+                        <td className="p-2 font-mono text-[#687674]">{t.requiresUdinSignature}</td>
+                        <td className="p-2 text-right text-[#B45309] font-bold">{t.statusCaPending}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -561,20 +597,20 @@ export const Screen6CaReadyBrief: React.FC = () => {
                       4
                     </span>
                     <h3 className="font-headline text-sm font-bold text-[#073B3A]">
-                      Verified Statutory Form ASMT-11 Reply (Extract)
+                      {t.section4Heading}
                     </h3>
                   </div>
                   <Badge variant="success" size="sm">
-                    5 of 5 checks passed
+                    {t.section4Badge}
                   </Badge>
                 </div>
                 <div className="bg-[#F8FAFC] p-3 rounded-control border border-[#E2E8F0] text-xs font-mono leading-relaxed space-y-1">
                   <div className="flex justify-between border-b border-[#E2E8F0] pb-1 text-[10px] text-[#687674]">
-                    <span>Format: Form GST ASMT-11</span>
+                    <span>{t.formatLabel}: Form GST ASMT-11</span>
                     <span>Rule 99(2) CGST Rules</span>
                   </div>
                   <p>
-                    &quot;Respected Officer, with reference to scrutiny notice {CANONICAL_DEMO_CASE.noticeRef} pointing out alleged difference in ITC claimed under Table 4(A)(5) amounting to ₹{amount.toLocaleString('en-IN')}, conditions under Section 16(2) stand complied with...&quot;
+                    {t.asmt11ExtractText(CANONICAL_DEMO_CASE.noticeRef, amount)}
                   </p>
                 </div>
               </div>
@@ -585,26 +621,26 @@ export const Screen6CaReadyBrief: React.FC = () => {
                   gavel
                 </span>
                 <p className="text-[11px] text-[#687674] leading-tight">
-                  <strong className="text-[#073B3A]">Statutory Disclaimer:</strong> This CA Brief is an algorithmic compliance compilation designed strictly as an assistive drafting aid for independent professional review. It does not constitute formal legal opinion or tax filing. The brief must be independently verified, endorsed, and uploaded under valid digital signature / UDIN by a practicing Chartered Accountant before GST portal submission.
+                  <strong className="text-[#073B3A]">{t.disclaimerHeading}:</strong> {t.disclaimerText}
                 </p>
               </div>
 
               {/* Signatures Block */}
               <div className="pt-4 border-t border-[#E2E8F0] flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-xs font-mono">
                 <div>
-                  <span className="text-[10px] text-[#687674] uppercase block">Assessee</span>
+                  <span className="text-[10px] text-[#687674] uppercase block">{t.assesseeSignatureLabel}</span>
                   <span className="font-headline text-sm font-bold text-[#073B3A] block mt-0.5">
                     {CANONICAL_DEMO_CASE.proprietorName}
                   </span>
-                  <span className="text-[10px] text-[#687674]">Proprietor, Sharma Garments</span>
+                  <span className="text-[10px] text-[#687674]">{t.proprietorRole}</span>
                 </div>
 
                 <div className="text-left sm:text-right">
-                  <span className="text-[10px] text-[#687674] uppercase block">Attesting CA</span>
-                  <div className="w-44 h-7 rounded-control bg-[#F8FAFC] border border-[#E4E9E5] flex items-center justify-center text-[10px] text-[#687674] mt-0.5">
-                    [ Digitally Signed via DSC ]
+                  <span className="text-[10px] text-[#687674] uppercase block">{t.attestingCaLabel}</span>
+                  <div className="w-48 h-7 rounded-control bg-[#F8FAFC] border border-dashed border-[#CBD5E1] flex items-center justify-center text-[10px] text-[#687674] mt-0.5">
+                    [ Requires CA Signature / DSC ]
                   </div>
-                  <span className="text-[10px] text-[#687674] block mt-0.5">UDIN: Pending Filing</span>
+                  <span className="text-[10px] text-[#687674] block mt-0.5">{t.udinPlaceholder}</span>
                 </div>
               </div>
             </div>
@@ -765,16 +801,21 @@ export const Screen6CaReadyBrief: React.FC = () => {
         <div
           role="dialog"
           aria-modal="true"
+          aria-labelledby="share-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#073B3A]/40 backdrop-blur-xs animate-in fade-in duration-150"
         >
-          <div className="bg-white rounded-modal shadow-tier3 border border-[#E4E9E5] max-w-lg w-full p-6 flex flex-col gap-4">
+          <div
+            ref={shareModalRef}
+            tabIndex={-1}
+            className="bg-white rounded-modal shadow-tier3 border border-[#E4E9E5] max-w-lg w-full p-6 flex flex-col gap-4 focus:outline-none"
+          >
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-full bg-[#E6F4EA] text-[#119B72] flex items-center justify-center">
-                  <span className="material-symbols-outlined text-lg">send</span>
+                  <span className="material-symbols-outlined text-lg" aria-hidden="true">send</span>
                 </div>
                 <div>
-                  <h3 className="font-headline text-base font-bold text-[#073B3A]">
+                  <h3 id="share-modal-title" className="font-headline text-base font-bold text-[#073B3A]">
                     Share Legal Pack with CA
                   </h3>
                   <p className="text-xs text-[#687674]">
@@ -784,7 +825,7 @@ export const Screen6CaReadyBrief: React.FC = () => {
               </div>
               <button
                 type="button"
-                onClick={() => setIsShareModalOpen(false)}
+                onClick={closeShareModal}
                 className="text-[#687674] hover:text-[#073B3A] hover:bg-[#F1F5F9] p-1.5 rounded-control transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#087F73]"
                 aria-label="Close"
               >
@@ -794,14 +835,15 @@ export const Screen6CaReadyBrief: React.FC = () => {
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="text-[11px] font-bold text-[#687674] block mb-1">
+                <label htmlFor="share-whatsapp-payload" className="text-[11px] font-bold text-[#687674] block mb-1">
                   Prepared Message Payload
                 </label>
                 <textarea
+                  id="share-whatsapp-payload"
                   readOnly
                   rows={4}
                   value={shareWhatsAppMessage}
-                  className="w-full p-2.5 rounded-control bg-[#F8FAFC] font-mono text-xs text-[#152B2A] border border-[#E4E9E5] resize-none focus:outline-none"
+                  className="w-full p-2.5 rounded-control bg-[#F8FAFC] font-mono text-xs text-[#152B2A] border border-[#E4E9E5] resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#087F73]"
                 />
               </div>
             </div>
@@ -830,15 +872,19 @@ export const Screen6CaReadyBrief: React.FC = () => {
         </div>
       )}
 
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom duration-200">
-          <div className="bg-[#073B3A] text-white px-4 py-3 rounded-card shadow-tier3 flex items-center gap-2.5 border border-[#087F73]">
-            <span className="material-symbols-outlined text-[#F59E0B] text-lg">check_circle</span>
+      {/* Toast Notification — Live region stays mounted for reliable screen-reader announcements */}
+      <div
+        role="status"
+        aria-live="polite"
+        className="fixed bottom-6 right-6 z-50 pointer-events-none"
+      >
+        {toastMessage && (
+          <div className="bg-[#073B3A] text-white px-4 py-3 rounded-card shadow-tier3 flex items-center gap-2.5 border border-[#087F73] animate-in slide-in-from-bottom duration-200 pointer-events-auto">
+            <span className="material-symbols-outlined text-[#F59E0B] text-lg" aria-hidden="true">check_circle</span>
             <span className="text-xs font-medium">{toastMessage}</span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

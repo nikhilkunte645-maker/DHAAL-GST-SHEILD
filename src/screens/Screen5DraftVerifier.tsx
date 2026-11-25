@@ -155,7 +155,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
             Draft &amp; Statutory Verifier
           </h1>
           <p className="text-xs sm:text-sm text-[#687674] mt-0.5">
-            Form GST ASMT-11 Draft • Deterministic AST &amp; Statutory Assertion Safety Guard
+            Form GST ASMT-11 Draft • Deterministic Token &amp; Statutory Assertion Verifier
           </p>
         </div>
 
@@ -187,6 +187,13 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Screen-reader live announcement for verification pass */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {isVerifiedPass
+          ? 'Deterministic verification passed. Draft assertions match confirmed case records.'
+          : ''}
       </div>
 
       {/* Discrepancy Warning Banner (When in Fail Mode) */}
@@ -513,7 +520,7 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                     Dual-Layer Verification Engine
                   </h3>
                   <p className="text-xs text-[#E4E9E5]">
-                    Deterministic AST &amp; Statutory Assertion Safety Guard
+                    Deterministic Token &amp; Statutory Assertion Verifier
                   </p>
                 </div>
               </div>

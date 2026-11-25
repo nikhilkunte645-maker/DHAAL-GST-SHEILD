@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { NoticeScanViewer } from './NoticeScanViewer';
 import { Button } from './ui/Button';
+import { useModalAccessibility } from '../hooks/useModalAccessibility';
 
 interface RawScanModalProps {
   isOpen: boolean;
@@ -9,26 +10,7 @@ interface RawScanModalProps {
 
 export const RawScanModal: React.FC<RawScanModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onClose]);
+  useModalAccessibility({ isOpen, onClose, modalRef });
 
   if (!isOpen) return null;
 
@@ -41,7 +23,8 @@ export const RawScanModal: React.FC<RawScanModalProps> = ({ isOpen, onClose }) =
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150"
+        tabIndex={-1}
+        className="bg-white rounded-modal shadow-tier3 border border-[#E3E8F0] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150 focus:outline-none"
       >
         <div className="p-4 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -235,14 +235,14 @@ export const DashboardScreen: React.FC = () => {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-[#FAF9F5] text-[#687674] border-b border-[#E4E9E5] font-semibold">
-                <th className="py-3 px-4">Case Reference</th>
-                <th className="py-3 px-4">Taxpayer / Business</th>
-                <th className="py-3 px-4">Notice Type</th>
-                <th className="py-3 px-4">Tax Period</th>
-                <th className="py-3 px-4 text-right">Questioned ITC</th>
-                <th className="py-3 px-4">Response Due</th>
-                <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-4 text-right">Action</th>
+                <th scope="col" className="py-3 px-4">Case Reference</th>
+                <th scope="col" className="py-3 px-4">Taxpayer / Business</th>
+                <th scope="col" className="py-3 px-4">Notice Type</th>
+                <th scope="col" className="py-3 px-4">Tax Period</th>
+                <th scope="col" className="py-3 px-4 text-right">Questioned ITC</th>
+                <th scope="col" className="py-3 px-4">Response Due</th>
+                <th scope="col" className="py-3 px-4 text-center">Status</th>
+                <th scope="col" className="py-3 px-4 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E4E9E5] bg-white">
