@@ -59,6 +59,26 @@ def test_verify_draft_fail():
     assert res.json()["status"] == "FAIL"
     assert len(res.json()["mismatches"]) >= 1
 
+def test_verify_draft_tampered_standard_amount():
+    """
+    CRITICAL REGRESSION TEST:
+    Ensures that when confirmed_amount is 184250 (the standard case) but the user
+    tampered with the draft text to assert ₹1,50,000, the verifier flags FAIL with
+    non-empty mismatches, preventing false PASS bypass.
+    """
+    payload = {
+        "draft_text": "In response to notice under Section 61, the discrepancy of ₹1,50,000 for Apr-Jun 2024 is reconciled.",
+        "confirmed_amount": 184250,
+        "confirmed_section": "61",
+        "confirmed_period": "Apr-Jun 2024"
+    }
+    res = client.post("/api/verify/draft", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "FAIL"
+    assert data["financial_consistency"] is False
+    assert any(m["field"] == "Discrepancy Amount" for m in data["mismatches"])
+
 def test_explanations():
     for lang in ["en", "hi", "mr"]:
         res = client.get(f"/api/explain/{lang}")

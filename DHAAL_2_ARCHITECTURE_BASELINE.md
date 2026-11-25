@@ -93,23 +93,23 @@ C:\Users\lucifer\DHAAL
 
 ```mermaid
 graph TD
-    UI[React 18 SPA] --> Store[Zustand Store]
-    Store --> Screen1[Screen 1: Upload]
-    Store --> Screen2[Screen 2: Confirm]
-    Store --> Screen3[Screen 3: Reconcile & Deadlines]
-    Store --> Screen4[Screen 4: Evidence Checklist]
-    Store --> Screen5[Screen 5: Draft Verifier]
-    Store --> Screen6[Screen 6: CA Brief]
+    UI["React 18 SPA"] --> Store["Zustand Store"]
+    Store --> Screen1["Screen 1: Upload"]
+    Store --> Screen2["Screen 2: Confirm"]
+    Store --> Screen3["Screen 3: Reconcile and Deadlines"]
+    Store --> Screen4["Screen 4: Evidence Checklist"]
+    Store --> Screen5["Screen 5: Draft Verifier"]
+    Store --> Screen6["Screen 6: CA Brief"]
 
-    Screen1 --> API_Upload[/api/notice/upload]
-    Screen2 --> API_Confirm[/api/notices/confirm]
-    Screen3 --> Data_Rec[reconciliationData.ts]
-    Screen3 --> Lib_Deadline[deadline.ts]
-    Screen5 --> API_Verify[/api/verify/draft]
-    Screen6 --> Util_PDF[pdfExport.ts]
+    Screen1 --> API_Upload["/api/notice/upload"]
+    Screen2 --> API_Confirm["/api/notices/confirm"]
+    Screen3 --> Data_Rec["reconciliationData.ts"]
+    Screen3 --> Lib_Deadline["deadline.ts"]
+    Screen5 --> API_Verify["/api/verify/draft"]
+    Screen6 --> Util_PDF["pdfExport.ts"]
 
-    API_Upload --> Python_PyPDF[pypdf RAM Stream]
-    API_Confirm --> Python_Verifier[verifier.py Section 170]
+    API_Upload --> Python_PyPDF["pypdf RAM Stream"]
+    API_Confirm --> Python_Verifier["verifier.py Section 170"]
     API_Verify --> Python_Verifier
 ```
 

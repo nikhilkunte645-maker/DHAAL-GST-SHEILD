@@ -52,7 +52,7 @@ try:
         TransportDetails,
         CaCounselDetails,
     )
-    from verifier import verify_draft as verify_draft_detailed, format_inr
+    from verifier import verify_draft as verify_draft_detailed, format_inr, round_statutory_inr
     from reconciler import run_deterministic_reconciliation
     from evidence_graph import build_evidence_graph_for_case
     from circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
@@ -80,7 +80,7 @@ except ImportError:
         TransportDetails,
         CaCounselDetails,
     )
-    from backend.verifier import verify_draft as verify_draft_detailed, format_inr
+    from backend.verifier import verify_draft as verify_draft_detailed, format_inr, round_statutory_inr
     from backend.reconciler import run_deterministic_reconciliation
     from backend.evidence_graph import build_evidence_graph_for_case
     from backend.circular_183 import assess_circular_183_applicability, Circular183AssessmentInput
@@ -464,12 +464,20 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
 @app.post("/api/verify/draft", response_model=DraftVerifyResponse)
 async def verify_draft_endpoint(payload: DraftVerifyRequest):
     mismatches = []
-    amount_in_text = str(payload.confirmed_amount) in payload.draft_text or "1,84,250" in payload.draft_text
+    amount_statutory = round_statutory_inr(payload.confirmed_amount)
+    raw_amount_str = str(amount_statutory)
+    inr_formatted = format_inr(amount_statutory).replace("₹", "")
+    std_comma = f"{amount_statutory:,}"
+    amount_in_text = (
+        raw_amount_str in payload.draft_text or 
+        inr_formatted in payload.draft_text or 
+        std_comma in payload.draft_text
+    )
     
-    if payload.confirmed_amount != 184250 and not amount_in_text:
+    if not amount_in_text:
         mismatches.append(VerificationMismatch(
             field="Discrepancy Amount",
-            expected=f"₹{payload.confirmed_amount}",
+            expected=f"₹{inr_formatted}",
             found_in_draft="Mismatch",
             severity="CRITICAL"
         ))
