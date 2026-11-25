@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   isBannerDismissed = false,
   onDismissBanner,
 }) => {
-  const { step, maxStep, setStep, language, setLanguage } = useDhaalStore();
+  const { step, maxStep, setStep, language, setLanguage, resetDemo } = useDhaalStore();
   const t = I18N[language];
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -256,8 +256,23 @@ export const Header: React.FC<HeaderProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#E4E9E5] text-[11px] text-[#687674] text-center">
-                  Sandbox session active
+                <div className="pt-2 border-t border-[#E4E9E5] flex flex-col gap-2">
+                  <div className="text-[10px] text-[#687674] flex items-center justify-between">
+                    <span>Storage:</span>
+                    <span className="font-semibold text-[#087F73]">Ephemeral (RAM Only)</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetDemo();
+                      setIsProfileOpen(false);
+                    }}
+                    className="w-full py-1.5 px-2 bg-[#FEF2F2] hover:bg-[#FEE2E2] text-[#C0392B] rounded text-xs font-semibold flex items-center justify-center gap-1.5 border border-[#FECACA] transition-colors"
+                    title="Clear current case and purge all session data"
+                  >
+                    <span className="material-symbols-outlined text-sm">delete_sweep</span>
+                    <span>Reset / Clear Case Data</span>
+                  </button>
                 </div>
               </div>
             )}

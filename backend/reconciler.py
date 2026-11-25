@@ -26,13 +26,14 @@ class NormalizedInvoice(BaseModel):
     igst: Decimal
     total_tax: Decimal
     source_type: str  # "PURCHASE_REGISTER" or "GSTR_2B"
+    doc_type: str = "INVOICE"  # "INVOICE", "CREDIT_NOTE", "DEBIT_NOTE"
     row_id: str
 
 
 class MatchResult(BaseModel):
     match_id: str
-    status: str  # "EXACT_MATCH", "FUZZY_MATCH", "UNREPORTED_IN_2B", "DELAYED_FILING", "DUPLICATE_INVOICE", "RATE_MISMATCH"
-    match_method: str  # "EXACT_COMPOUND_HASH", "NORMALIZED_SUBSTRING", "LEVENSTEIN_DATE_WINDOW", "MANUAL_OVERRIDE"
+    status: str  # "EXACT_MATCH", "FUZZY_MATCH", "UNREPORTED_IN_2B", "DELAYED_FILING", "DUPLICATE_INVOICE", "RATE_MISMATCH", "SURPLUS_IN_2B"
+    match_method: str  # "EXACT_COMPOUND_HASH", "NORMALIZED_SUBSTRING", "LEVENSTEIN_DATE_WINDOW", "MANUAL_OVERRIDE", "UNMATCHED_IN_BOOKS"
     purchase_invoice: Optional[NormalizedInvoice] = None
     gstr2b_invoice: Optional[NormalizedInvoice] = None
     taxable_diff: Decimal = Decimal(0)
@@ -50,6 +51,9 @@ class ReconciliationReport(BaseModel):
     unreported_2b_count: int
     delayed_filing_count: int
     duplicates_count: int
+    rate_mismatch_count: int = 0
+    surplus_2b_count: int = 0
+    credit_notes_count: int = 0
     total_taxable_value: int
     total_questioned_difference: int
     target_notice_amount: int
@@ -112,6 +116,7 @@ def run_deterministic_reconciliation(
     clean_2b: List[NormalizedInvoice] = []
 
     # 1. Normalize Purchase Register
+    credit_notes = 0
     for i, pr in enumerate(purchase_register):
         inv_date = pr.get("invoice_date")
         if isinstance(inv_date, str):
@@ -120,17 +125,24 @@ def run_deterministic_reconciliation(
             except ValueError:
                 inv_date = datetime.strptime(inv_date, "%d-%b-%Y").date()
 
+        taxable = Decimal(str(pr.get("taxable_value", 0)))
+        doc_type = pr.get("doc_type", "INVOICE").upper()
+        if pr.get("is_credit_note") or taxable < 0 or doc_type == "CREDIT_NOTE":
+            doc_type = "CREDIT_NOTE"
+            credit_notes += 1
+
         clean_purchases.append(NormalizedInvoice(
             raw_invoice_no=pr.get("invoice_no", f"PR_{i+1}"),
             clean_invoice_no=clean_invoice_number(pr.get("invoice_no", "")),
             invoice_date=inv_date,
             supplier_gstin=normalize_gstin(pr.get("supplier_gstin", "")),
-            taxable_value=Decimal(str(pr.get("taxable_value", 0))),
+            taxable_value=taxable,
             cgst=Decimal(str(pr.get("cgst", 0))),
             sgst=Decimal(str(pr.get("sgst", 0))),
             igst=Decimal(str(pr.get("igst", 0))),
             total_tax=round_statutory_inr(Decimal(str(pr.get("claimed_itc", pr.get("total_tax", 0))))),
             source_type="PURCHASE_REGISTER",
+            doc_type=doc_type,
             row_id=f"pr_row_{i+1}"
         ))
 
@@ -143,17 +155,23 @@ def run_deterministic_reconciliation(
             except ValueError:
                 inv_date = datetime.strptime(inv_date, "%d-%b-%Y").date()
 
+        taxable_2b = Decimal(str(g2.get("taxable_value", 0)))
+        doc_type_2b = g2.get("doc_type", "INVOICE").upper()
+        if g2.get("is_credit_note") or taxable_2b < 0 or doc_type_2b == "CREDIT_NOTE":
+            doc_type_2b = "CREDIT_NOTE"
+
         clean_2b.append(NormalizedInvoice(
             raw_invoice_no=g2.get("invoice_no", f"G2B_{j+1}"),
             clean_invoice_no=clean_invoice_number(g2.get("invoice_no", "")),
             invoice_date=inv_date,
             supplier_gstin=normalize_gstin(g2.get("supplier_gstin", "")),
-            taxable_value=Decimal(str(g2.get("taxable_value", 0))),
+            taxable_value=taxable_2b,
             cgst=Decimal(str(g2.get("cgst", 0))),
             sgst=Decimal(str(g2.get("sgst", 0))),
             igst=Decimal(str(g2.get("igst", 0))),
             total_tax=round_statutory_inr(Decimal(str(g2.get("available_itc", g2.get("total_tax", 0))))),
             source_type="GSTR_2B",
+            doc_type=doc_type_2b,
             row_id=f"g2b_row_{j+1}"
         ))
 
@@ -166,6 +184,7 @@ def run_deterministic_reconciliation(
     unreported_2b = 0
     delayed_filing = 0
     duplicates = 0
+    rate_mismatches = 0
 
     # 3. Match Evaluation
     for p in clean_purchases:
@@ -189,6 +208,7 @@ def run_deterministic_reconciliation(
 
         # Tier 1: Exact Match (GSTIN + Clean Invoice No + Exact Tax)
         exact_candidate = None
+        rate_mismatch_candidate = None
         for g in clean_2b:
             if g.row_id in matched_2b_ids:
                 continue
@@ -196,6 +216,10 @@ def run_deterministic_reconciliation(
                 if abs(g.total_tax - p.total_tax) <= Decimal(1):
                     exact_candidate = g
                     break
+                elif abs(g.taxable_value - p.taxable_value) <= Decimal(1) or (p.taxable_value != Decimal(0) and abs(g.taxable_value - p.taxable_value) / abs(p.taxable_value) < Decimal('0.05')):
+                    # Same invoice, matching taxable value, but tax divergence > 1 -> RATE_MISMATCH
+                    if not rate_mismatch_candidate:
+                        rate_mismatch_candidate = g
 
         if exact_candidate:
             matched_2b_ids.add(exact_candidate.row_id)
@@ -210,6 +234,25 @@ def run_deterministic_reconciliation(
                 tax_diff=p.total_tax - exact_candidate.total_tax,
                 confidence=1.0,
                 reason="Exact match on GSTIN, invoice number, and tax amount.",
+                section_16_eligible=True
+            ))
+            continue
+
+        if rate_mismatch_candidate:
+            matched_2b_ids.add(rate_mismatch_candidate.row_id)
+            rate_mismatches += 1
+            p_rate = (abs(p.total_tax) / abs(p.taxable_value) * Decimal(100)) if p.taxable_value != Decimal(0) else Decimal(0)
+            g_rate = (abs(rate_mismatch_candidate.total_tax) / abs(rate_mismatch_candidate.taxable_value) * Decimal(100)) if rate_mismatch_candidate.taxable_value != Decimal(0) else Decimal(0)
+            matches.append(MatchResult(
+                match_id=f"mat_rate_{p.row_id}",
+                status="RATE_MISMATCH",
+                match_method="EXACT_COMPOUND_HASH",
+                purchase_invoice=p,
+                gstr2b_invoice=rate_mismatch_candidate,
+                taxable_diff=p.taxable_value - rate_mismatch_candidate.taxable_value,
+                tax_diff=p.total_tax - rate_mismatch_candidate.total_tax,
+                confidence=0.95,
+                reason=f"Tax rate mismatch: books assert tax of ₹{p.total_tax} (~{p_rate:.1f}%) vs GSTR-2B reflecting ₹{rate_mismatch_candidate.total_tax} (~{g_rate:.1f}%).",
                 section_16_eligible=True
             ))
             continue
@@ -273,19 +316,37 @@ def run_deterministic_reconciliation(
             section_16_eligible=True
         ))
 
+    # Tier 4: Unmatched in GSTR-2B (Surplus in 2B, missing in books)
+    surplus_2b_count = 0
+    for g in clean_2b:
+        if g.row_id not in matched_2b_ids:
+            surplus_2b_count += 1
+            matches.append(MatchResult(
+                match_id=f"mat_surplus_{g.row_id}",
+                status="SURPLUS_IN_2B",
+                match_method="UNMATCHED_IN_BOOKS",
+                purchase_invoice=None,
+                gstr2b_invoice=g,
+                taxable_diff=-g.taxable_value,
+                tax_diff=-g.total_tax,
+                confidence=1.0,
+                reason=f"Invoice {g.raw_invoice_no} from {g.supplier_gstin} appears in GSTR-2B but is omitted from books / purchase register.",
+                section_16_eligible=False
+            ))
+
     # Calculate authoritative financial totals
     total_taxable = sum(int(p.taxable_value) for p in clean_purchases)
-    total_questioned_difference = sum(int(m.tax_diff) for m in matches if m.status in ["UNREPORTED_IN_2B", "DELAYED_FILING", "CLASSIFICATION_ERROR"])
+    total_questioned_difference = sum(int(m.tax_diff) for m in matches if m.status in ["UNREPORTED_IN_2B", "DELAYED_FILING", "CLASSIFICATION_ERROR", "RATE_MISMATCH"])
     unexplained = target_notice_amount - total_questioned_difference
 
     # Precision & Recall metrics
     tp = exact_matches + fuzzy_matches
-    fp = duplicates
-    fn = unreported_2b + delayed_filing
+    fp = duplicates + surplus_2b_count
+    fn = unreported_2b + delayed_filing + rate_mismatches
     precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
     recall = tp / (tp + fn) if (tp + fn) > 0 else 1.0
     f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 1.0
-    accuracy = 1.0 if unexplained == 0 else max(0.0, 1.0 - (abs(unexplained) / target_notice_amount))
+    accuracy = 1.0 if unexplained == 0 else (max(0.0, 1.0 - (abs(unexplained) / target_notice_amount)) if target_notice_amount > 0 else 0.0)
 
     return ReconciliationReport(
         total_purchase_invoices=len(clean_purchases),
@@ -295,6 +356,9 @@ def run_deterministic_reconciliation(
         unreported_2b_count=unreported_2b,
         delayed_filing_count=delayed_filing,
         duplicates_count=duplicates,
+        rate_mismatch_count=rate_mismatches,
+        surplus_2b_count=surplus_2b_count,
+        credit_notes_count=credit_notes,
         total_taxable_value=total_taxable,
         total_questioned_difference=total_questioned_difference,
         target_notice_amount=target_notice_amount,

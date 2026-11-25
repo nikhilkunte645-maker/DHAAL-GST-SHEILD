@@ -543,6 +543,34 @@ Date: 26-May-2025 | Place: Mumbai | Target submission before statutory deadline 
                 </div>
               </div>
             </div>
+
+            {/* 4 Distinct Statutory Confidence Tiers */}
+            <div className="mt-4 pt-3 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
+              <div className="p-2 rounded bg-white/5 border border-white/10 flex flex-col justify-between">
+                <span className="text-white/60 text-[10px] uppercase font-semibold">1. Financial</span>
+                <span className={`font-bold mt-1 ${localReport.financialConsistency ? 'text-[#119B72]' : 'text-[#EF4444]'}`}>
+                  {localReport.financialConsistency ? '✓ Consistent' : '✗ Mismatch'}
+                </span>
+              </div>
+              <div className="p-2 rounded bg-white/5 border border-white/10 flex flex-col justify-between">
+                <span className="text-white/60 text-[10px] uppercase font-semibold">2. Source Data</span>
+                <span className={`font-bold mt-1 ${localReport.sourceDataConsistency ? 'text-[#119B72]' : 'text-[#EF4444]'}`}>
+                  {localReport.sourceDataConsistency ? '✓ Grounded' : '✗ Unverified'}
+                </span>
+              </div>
+              <div className="p-2 rounded bg-white/5 border border-white/10 flex flex-col justify-between">
+                <span className="text-white/60 text-[10px] uppercase font-semibold">3. Legal Rules</span>
+                <span className={`font-bold mt-1 ${localReport.legalVerification ? 'text-[#119B72]' : 'text-[#EF4444]'}`}>
+                  {localReport.legalVerification ? '✓ Validated' : '✗ Review Citations'}
+                </span>
+              </div>
+              <div className="p-2 rounded bg-white/5 border border-white/10 flex flex-col justify-between">
+                <span className="text-white/60 text-[10px] uppercase font-semibold">4. CA Review</span>
+                <span className="text-[#F59E0B] font-bold mt-1">
+                  ⏳ Action Required (Step 6)
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* LAYER 1: Deterministic Code Checks */}

@@ -208,6 +208,19 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
     total_checks = len(checks)
     is_overall_passed = (passed_count == total_checks)
 
+    # 4 Distinct Statutory Confidence Tiers
+    financial_consistency = bool(amount_passed)
+    source_data_consistency = bool(dates_passed and gstin_passed)
+    legal_verification = bool(sections_passed)
+    human_approval_required = True
+
+    if is_overall_passed:
+        verification_level = "VERIFIED_READY_FOR_CA"
+    elif financial_consistency and (source_data_consistency or legal_verification):
+        verification_level = "PARTIALLY_CONSISTENT"
+    else:
+        verification_level = "FAILED_MISMATCH"
+
     return VerificationReport(
         passed=is_overall_passed,
         totalChecks=total_checks,
@@ -215,5 +228,10 @@ def verify_draft(draft_text: str, confirmed: Dict[str, Any]) -> VerificationRepo
         checks=checks,
         errors=errors,
         divergenceAmount=float(delta_statutory),
-        assertedAmount=float(primary_draft_statutory)
+        assertedAmount=float(primary_draft_statutory),
+        financialConsistency=financial_consistency,
+        sourceDataConsistency=source_data_consistency,
+        legalVerification=legal_verification,
+        humanApprovalRequired=human_approval_required,
+        verificationLevel=verification_level
     )

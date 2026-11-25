@@ -387,11 +387,28 @@ async def upload_notice_metadata(file: UploadFile = File(...)):
         if pypdf:
             try:
                 reader = pypdf.PdfReader(io.BytesIO(file_bytes))
+                if getattr(reader, "is_encrypted", False):
+                    return JSONResponse(
+                        status_code=getattr(status, "HTTP_422_UNPROCESSABLE_CONTENT", 422),
+                        content={
+                            "error": "PASSWORD_PROTECTED_PDF",
+                            "message": "The uploaded PDF is password-protected. Please upload an unprotected document or enter notice details manually."
+                        }
+                    )
                 for page in reader.pages:
                     txt = page.extract_text()
                     if txt:
                         extracted_text += "\n" + txt
             except Exception as pdf_err:
+                err_msg = str(pdf_err).lower()
+                if "password" in err_msg or "encrypt" in err_msg:
+                    return JSONResponse(
+                        status_code=getattr(status, "HTTP_422_UNPROCESSABLE_CONTENT", 422),
+                        content={
+                            "error": "PASSWORD_PROTECTED_PDF",
+                            "message": "The uploaded PDF is encrypted or password-protected."
+                        }
+                    )
                 logger.warning(f"pypdf reader encountered an issue on {file.filename}: {pdf_err}")
                 pypdf_failed = True
 
@@ -464,17 +481,30 @@ async def verify_draft_endpoint(payload: DraftVerifyRequest):
             severity="WARNING"
         ))
 
+    amount_match = amount_in_text
+    section_match = (payload.confirmed_section in payload.draft_text)
+    period_match = (payload.confirmed_period.lower() in payload.draft_text.lower()) if payload.confirmed_period else True
+
     if len(mismatches) == 0:
         return DraftVerifyResponse(
             status="PASS",
             message="Checks passed.",
-            checks={"amount_match": True, "section_match": True, "period_match": True}
+            checks={"amount_match": True, "section_match": True, "period_match": True},
+            financial_consistency=amount_match,
+            source_data_consistency=period_match,
+            legal_verification=section_match,
+            human_approval_required=True
         )
     else:
         return DraftVerifyResponse(
             status="FAIL",
             message="Export blocked.",
-            mismatches=mismatches
+            mismatches=mismatches,
+            checks={"amount_match": amount_match, "section_match": section_match, "period_match": period_match},
+            financial_consistency=amount_match,
+            source_data_consistency=period_match,
+            legal_verification=section_match,
+            human_approval_required=True
         )
 
 @app.get("/api/explain/{language}")

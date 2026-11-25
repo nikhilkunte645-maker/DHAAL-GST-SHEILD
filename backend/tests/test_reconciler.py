@@ -136,3 +136,57 @@ def test_canonical_24_invoices_reconciliation():
     assert report.duplicates_count == 0
     assert len(report.matches) == 24
 
+def test_rate_mismatch_detection():
+    purchase_register = [{
+        "invoice_no": "INV-500",
+        "invoice_date": "2024-05-10",
+        "supplier_gstin": "27AAACA1234A1Z5",
+        "taxable_value": 100000,
+        "claimed_itc": 18000, # 18%
+    }]
+    gstr_2b_records = [{
+        "invoice_no": "INV500",
+        "invoice_date": "2024-05-10",
+        "supplier_gstin": "27AAACA1234A1Z5",
+        "taxable_value": 100000,
+        "available_itc": 12000, # 12% in 2B
+    }]
+    report = run_deterministic_reconciliation(
+        purchase_register=purchase_register,
+        gstr_2b_records=gstr_2b_records,
+        target_notice_amount=6000
+    )
+    assert report.rate_mismatch_count == 1
+    assert report.total_questioned_difference == 6000
+    assert report.unexplained_variance == 0
+    match = report.matches[0]
+    assert match.status == "RATE_MISMATCH"
+    assert "Tax rate mismatch" in match.reason
+
+def test_surplus_2b_and_credit_notes():
+    purchase_register = [{
+        "invoice_no": "CN-001",
+        "invoice_date": "2024-04-12",
+        "supplier_gstin": "27AAACA1234A1Z5",
+        "taxable_value": -20000,
+        "claimed_itc": -3600,
+        "doc_type": "CREDIT_NOTE"
+    }]
+    gstr_2b_records = [{
+        "invoice_no": "INV-SURPLUS-99",
+        "invoice_date": "2024-04-15",
+        "supplier_gstin": "27BBBCB5678B1Z6",
+        "taxable_value": 50000,
+        "available_itc": 9000
+    }]
+    report = run_deterministic_reconciliation(
+        purchase_register=purchase_register,
+        gstr_2b_records=gstr_2b_records,
+        target_notice_amount=0
+    )
+    assert report.credit_notes_count == 1
+    assert report.surplus_2b_count == 1
+    surplus_match = next((m for m in report.matches if m.status == "SURPLUS_IN_2B"), None)
+    assert surplus_match is not None
+    assert "omitted from books" in surplus_match.reason
+

@@ -24,6 +24,11 @@ export interface VerificationReport {
   errors: string[];
   divergenceAmount?: number;
   assertedAmount?: number;
+  financialConsistency?: boolean;
+  sourceDataConsistency?: boolean;
+  legalVerification?: boolean;
+  humanApprovalRequired?: boolean;
+  verificationLevel?: 'VERIFIED_READY_FOR_CA' | 'PARTIALLY_CONSISTENT' | 'FAILED_MISMATCH';
 }
 
 /**
@@ -202,6 +207,17 @@ export function verifyDraft(draftText: string, confirmed: ConfirmedFields): Veri
   const totalChecks = checks.length;
   const isOverallPassed = passedCount === totalChecks;
 
+  const financialConsistency = amountPassed;
+  const sourceDataConsistency = datesPassed && gstinPassed;
+  const legalVerification = sectionsPassed;
+  const humanApprovalRequired = true;
+  let verificationLevel: 'VERIFIED_READY_FOR_CA' | 'PARTIALLY_CONSISTENT' | 'FAILED_MISMATCH' = 'FAILED_MISMATCH';
+  if (isOverallPassed) {
+    verificationLevel = 'VERIFIED_READY_FOR_CA';
+  } else if (financialConsistency && (sourceDataConsistency || legalVerification)) {
+    verificationLevel = 'PARTIALLY_CONSISTENT';
+  }
+
   return {
     passed: isOverallPassed,
     totalChecks,
@@ -210,5 +226,10 @@ export function verifyDraft(draftText: string, confirmed: ConfirmedFields): Veri
     errors,
     divergenceAmount: Math.abs(primaryDraftAmount - confirmed.confirmedAmount),
     assertedAmount: primaryDraftAmount,
+    financialConsistency,
+    sourceDataConsistency,
+    legalVerification,
+    humanApprovalRequired,
+    verificationLevel,
   };
 }

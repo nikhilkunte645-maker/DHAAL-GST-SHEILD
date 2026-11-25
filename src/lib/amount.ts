@@ -60,3 +60,11 @@ export function validateConfirmedAmount(inputVal: string | number): AmountValida
     tableGstr2b: row2.gstr2b,
   };
 }
+
+/**
+ * Statutory Section 170 CGST Rounding:
+ * Parts of 50 paise or more round UP to +1; less than 50 paise is ignored.
+ */
+export function roundStatutoryINR(val: number): number {
+  return Math.floor(val + 0.5);
+}

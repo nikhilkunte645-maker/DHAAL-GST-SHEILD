@@ -534,15 +534,29 @@ export const Screen1Upload: React.FC = () => {
                 </span>
               </div>
             </div>
-            <Button
-              type="button"
-              variant="danger"
-              size="sm"
-              onClick={() => setUploadError('none')}
-              className="shrink-0"
-            >
-              Try Higher Resolution
-            </Button>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <Button
+                type="button"
+                variant="danger"
+                size="sm"
+                onClick={() => setUploadError('none')}
+                className="shrink-0"
+              >
+                Try Higher Resolution
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setUploadError('none');
+                  setStep(2);
+                }}
+                className="shrink-0"
+              >
+                Enter Details Manually
+              </Button>
+            </div>
           </div>
         )}
 

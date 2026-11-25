@@ -28,6 +28,10 @@ class DraftVerifyResponse(BaseModel):
     message: str
     mismatches: Optional[List[VerificationMismatch]] = None
     checks: Optional[Dict[str, bool]] = None
+    financial_consistency: bool = False
+    source_data_consistency: bool = False
+    legal_verification: bool = False
+    human_approval_required: bool = True
 
 class BriefGenerateRequest(BaseModel):
     notice_id: str
@@ -148,6 +152,11 @@ class VerificationReport(BaseModel):
     errors: List[str]
     divergenceAmount: float = 0.0
     assertedAmount: float = 0.0
+    financialConsistency: bool = False
+    sourceDataConsistency: bool = False
+    legalVerification: bool = False
+    humanApprovalRequired: bool = True
+    verificationLevel: str = "PENDING_REVIEW"
 
 class VerificationResponse(BaseModel):
     caseId: str
