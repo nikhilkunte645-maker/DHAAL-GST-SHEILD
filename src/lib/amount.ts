@@ -63,8 +63,12 @@ export function validateConfirmedAmount(inputVal: string | number): AmountValida
 
 /**
  * Statutory Section 170 CGST Rounding:
- * Parts of 50 paise or more round UP to +1; less than 50 paise is ignored.
+ * Parts of 50 paise or more round UP to +1 rupee; less than 50 paise is ignored.
+ * Evaluated symmetrically on absolute magnitude for credit notes and negative amounts
+ * ensuring exact alignment with Python's Decimal.quantize(ROUND_HALF_UP).
  */
 export function roundStatutoryINR(val: number): number {
-  return Math.floor(val + 0.5);
+  const roundedMag = Math.floor(Math.abs(val) + 0.5);
+  if (roundedMag === 0) return 0;
+  return val < 0 ? -roundedMag : roundedMag;
 }

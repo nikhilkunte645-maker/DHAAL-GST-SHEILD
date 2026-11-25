@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { formatINR, formatNumberINR } from '../format';
-import { validateConfirmedAmount } from '../amount';
+import { validateConfirmedAmount, roundStatutoryINR } from '../amount';
 import {
   RECONCILIATION_ROWS,
   TOTAL_QUESTIONED_ITC,
@@ -9,6 +9,22 @@ import {
 } from '../../data/reconciliationData';
 
 describe('Financial Precision & Statutory Reconciliation Policy', () => {
+  describe('roundStatutoryINR Section 170 Policy', () => {
+    it('rounds positive 50 paise boundary up to nearest rupee', () => {
+      expect(roundStatutoryINR(184250.50)).toBe(184251);
+      expect(roundStatutoryINR(184250.49)).toBe(184250);
+      expect(roundStatutoryINR(100.00)).toBe(100);
+      expect(roundStatutoryINR(0.0)).toBe(0);
+    });
+
+    it('rounds negative amounts (credit notes) symmetrically per Section 170', () => {
+      expect(roundStatutoryINR(-1800.50)).toBe(-1801);
+      expect(roundStatutoryINR(-1800.49)).toBe(-1800);
+      expect(roundStatutoryINR(-0.50)).toBe(-1);
+      expect(roundStatutoryINR(-0.49)).toBe(0);
+    });
+  });
+
   describe('formatINR utility', () => {
     it('formats integer amounts in Indian currency notation', () => {
       expect(formatINR(184250)).toBe('₹1,84,250');

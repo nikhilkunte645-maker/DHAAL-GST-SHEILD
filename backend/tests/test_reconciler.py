@@ -22,6 +22,10 @@ def test_section_170_rounding_policy():
     assert round_statutory_inr(Decimal("100.49")) == Decimal("100")
     assert round_statutory_inr(Decimal("100.00")) == Decimal("100")
     assert round_statutory_inr(Decimal("100.99")) == Decimal("101")
+    # Negative values (credit notes) rounded symmetrically per Section 170
+    assert round_statutory_inr(Decimal("-1800.50")) == Decimal("-1801")
+    assert round_statutory_inr(Decimal("-1800.49")) == Decimal("-1800")
+    assert round_statutory_inr(Decimal("0.00")) == Decimal("0")
 
 def test_exact_and_fuzzy_reconciliation():
     purchase_register = [
